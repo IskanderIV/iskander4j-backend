@@ -2,9 +2,11 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff:
+.idea/
 .idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/dictionaries
+**/*.iml
 
 # Sensitive or high-churn files:
 .idea/**/dataSources/
@@ -32,6 +34,7 @@ cmake-build-release/
 
 # IntelliJ
 out/
+target/
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
