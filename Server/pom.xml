@@ -6,15 +6,25 @@
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
     <name>cleverhauseServer Maven Webapp</name>
-    <url>http://maven.apache.org</url>
+    <url>http://cleverhause.ru</url>
 
     <properties>
-        <java.version>1.7</java.version>
+        <spring.version>4.3.12.RELEASE</spring.version>
+        <spring-security.version>4.0.2.RELEASE</spring-security.version>
+        <spring-data-jpa.version>2.0.0.RELEASE</spring-data-jpa.version>
+        <hibernate.version>5.2.13.Final</hibernate.version>
+        <hibernate-validator.version>6.0.7.Final</hibernate-validator.version>
+        <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
+        <commons-dbcp.version>1.4</commons-dbcp.version>
+        <jstl.version>1.2.1</jstl.version>
+        <jackson.databind-version>2.9.2</jackson.databind-version>
+        <junit.version>3.8.1</junit.version>
+        <lombok.version>1.16.10</lombok.version>
+        <log4j.version>1.2.17</log4j.version>
         <maven.war.plugin>2.6</maven.war.plugin>
         <maven.compiler.plugin>3.3</maven.compiler.plugin>
-        <spring.version>4.3.12.RELEASE</spring.version>
-        <lombok.version>1.16.10</lombok.version>
-        <jackson.databind-version>2.9.2</jackson.databind-version>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -27,7 +37,7 @@
         <dependency>
             <groupId>javax.servlet.jsp.jstl</groupId>
             <artifactId>javax.servlet.jsp.jstl-api</artifactId>
-            <version>1.2.1</version>
+            <version>${jstl.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -51,6 +61,31 @@
             <version>${spring.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>${spring-data-jpa.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate-validator.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>${commons-dbcp.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.databind-version}</version>
@@ -62,9 +97,14 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>3.8.1</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -76,8 +116,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven.compiler.plugin}</version>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
             <plugin>
