@@ -1,4 +1,4 @@
-package ru.cleverhause.services;
+package ru.cleverhause.service;
 
 import ru.cleverhause.rest.model.ArduinoJSON;
 

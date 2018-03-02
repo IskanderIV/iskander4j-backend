@@ -3,10 +3,13 @@ package ru.cleverhause.rest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import ru.cleverhause.repository.ArduinoDataRepository;
 import ru.cleverhause.rest.model.ArduinoJSON;
-import ru.cleverhause.services.ArduinoDataService;
+import ru.cleverhause.service.ArduinoDataService;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -24,7 +27,8 @@ public class ArduinoRestAPI {
     private ArduinoDataService arduinoDataService;
 
     @RequestMapping(value = "/data", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ArduinoJSON fromArduino(@RequestBody ArduinoJSON fromArduinoJson) {
+    public @ResponseBody
+    ArduinoJSON fromArduino(@RequestBody ArduinoJSON fromArduinoJson) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         String arduinoDataKey = calendar.getTime().toString();
@@ -34,7 +38,8 @@ public class ArduinoRestAPI {
     }
 
     @RequestMapping(value = "/data", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ArduinoJSON getLastArduinoData() {
+    public @ResponseBody
+    ArduinoJSON getLastArduinoData() {
         return arduinoDataService.getLast();
     }
 
