@@ -1,6 +1,7 @@
 package ru.cleverhause.validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
@@ -16,6 +17,8 @@ import ru.cleverhause.service.UserService;
  * @version v1.0.0
  * @date 3/4/2018.
  */
+
+@Component
 public class UserValidator implements Validator {
 
     @Autowired
