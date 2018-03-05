@@ -9,9 +9,9 @@
     <url>http://cleverhause.ru</url>
 
     <properties>
-        <spring.version>4.2.0.RELEASE</spring.version>
-        <spring-web.version>4.3.12.RELEASE</spring-web.version>
-        <spring-security.version>4.0.2.RELEASE</spring-security.version>
+        <spring.version>5.0.3.RELEASE</spring.version>
+        <spring-webmvc.version>5.0.3.RELEASE</spring-webmvc.version>
+        <spring-security.version>4.2.3.RELEASE</spring-security.version>
         <spring-data-jpa.version>2.0.0.RELEASE</spring-data-jpa.version>
         <hibernate.version>4.3.11.Final</hibernate.version>
         <hibernate-validator.version>5.2.1.Final</hibernate-validator.version>
@@ -49,9 +49,9 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>${spring-web.version}</version>
+            <version>${spring-webmvc.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>

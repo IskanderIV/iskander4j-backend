@@ -1,4 +1,4 @@
-package ru.cleverhause.service.impl;
+package ru.cleverhause.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
@@ -7,7 +7,6 @@ import ru.cleverhause.dao.RoleDao;
 import ru.cleverhause.dao.UserDao;
 import ru.cleverhause.model.Role;
 import ru.cleverhause.model.User;
-import ru.cleverhause.service.UserService;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -32,7 +31,6 @@ public class UserServiceImpl implements UserService {
     private Md5PasswordEncoder md5PasswordEncoder;
 
     @Override
-
     public void save(User user) {
         user.setPassword(md5PasswordEncoder.encodePassword(user.getPassword(), user.getUsername()));
         Set<Role> defRoles = new HashSet<Role>();

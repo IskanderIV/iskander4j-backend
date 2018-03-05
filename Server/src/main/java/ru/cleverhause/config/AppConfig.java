@@ -4,7 +4,9 @@ import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -17,12 +19,23 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @EnableWebMvc
 @Configuration
 @ComponentScan(basePackages = {"ru.cleverhause"})
-@PropertySource(value={"classpath:application.properties"})
+@PropertySource(value = {"classpath:application.properties"})
+@Import(value = {AppConfigData.class, AppConfigSecurity.class})
 public class AppConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+    }
+
+    @Bean
+    public ReloadableResourceBundleMessageSource messageSource() {
+        ReloadableResourceBundleMessageSource resourceBundleMessageSource =
+                new ReloadableResourceBundleMessageSource();
+        String basename = "classpath:validator";
+        resourceBundleMessageSource.setBasename(basename);
+
+        return resourceBundleMessageSource;
     }
 
     @Bean
@@ -44,4 +57,5 @@ public class AppConfig extends WebMvcConfigurerAdapter {
         jsonConverter.setPrettyPrint(true);
         return jsonConverter;
     }
+
 }

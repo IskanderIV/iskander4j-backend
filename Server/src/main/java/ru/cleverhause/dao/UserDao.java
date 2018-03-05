@@ -9,6 +9,7 @@ import ru.cleverhause.model.User;
  * @author Aleksandr_Ivanov1
  * @date 3/2/2018.
  */
+
 public interface UserDao extends JpaRepository<User, Long> {
     User findByUsername(String username);
 }

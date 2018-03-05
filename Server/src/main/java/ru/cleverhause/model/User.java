@@ -10,6 +10,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.io.Serializable;
 import java.util.Set;
 
 /**
@@ -23,7 +24,9 @@ import java.util.Set;
 
 @Entity
 @Table
-public class User {
+public class User implements Serializable {
+
+    private static final long serialVersionUID = -1836672544422348442L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

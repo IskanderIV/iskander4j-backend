@@ -1,10 +1,9 @@
-package ru.cleverhause.service.impl;
+package ru.cleverhause.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.cleverhause.repository.ArduinoDataRepository;
 import ru.cleverhause.rest.model.ArduinoJSON;
-import ru.cleverhause.service.ArduinoDataService;
 
 /**
  * Created by

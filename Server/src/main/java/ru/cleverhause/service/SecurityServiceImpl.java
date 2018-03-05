@@ -1,4 +1,4 @@
-package ru.cleverhause.service.impl;
+package ru.cleverhause.service;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-import ru.cleverhause.service.SecurityService;
 
 /**
  * Implementation of {@link org.springframework.security.core.userdetails.UserDetailsService} interface
@@ -23,6 +22,7 @@ import ru.cleverhause.service.SecurityService;
 public class SecurityServiceImpl implements SecurityService {
 
     private static final Logger logger = Logger.getLogger(SecurityServiceImpl.class);
+
     @Autowired
     private AuthenticationManager authenticationManager;
 
