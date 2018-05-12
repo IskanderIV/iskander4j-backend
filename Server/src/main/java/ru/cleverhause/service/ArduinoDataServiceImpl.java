@@ -1,10 +1,9 @@
-package ru.cleverhause.services.impl;
+package ru.cleverhause.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.cleverhause.repository.ArduinoDataRepository;
 import ru.cleverhause.rest.model.ArduinoJSON;
-import ru.cleverhause.services.ArduinoDataService;
 
 /**
  * Created by
@@ -13,7 +12,7 @@ import ru.cleverhause.services.ArduinoDataService;
  * @date 12/2/2017.
  */
 @Service
-public class ArduinoDataServiceImpl implements ArduinoDataService{
+public class ArduinoDataServiceImpl implements ArduinoDataService {
     @Autowired
     private ArduinoDataRepository arduinoDataRepository;
 

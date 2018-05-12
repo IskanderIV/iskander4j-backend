@@ -15,14 +15,17 @@
 <body>
 <div class="container">
 
-    <form class="form-signin" role="form">
+    <form class="form-signin" method="post" role="form">
         <h2 class="form-signin-heading">Please sign in</h2>
-        <input type="email" class="form-control" placeholder="Login" required autofocus>
-        <input type="password" class="form-control" placeholder="Password" required>
-        <label class="checkbox">
-            <input type="checkbox" value="remember-me"> Remember me
-        </label>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <div class="form-group ${error != null ? 'has-error' : ''}">
+            <span>${message}</span>
+            <input type="text" class="form-control" name="username" placeholder="Login" required autofocus>
+            <input type="password" class="form-control" name="password" placeholder="Password" required>
+            <span>${error}</span>
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+            <h4 class="text-center"><a href="${contextPath}/registration">Create an account</a></h4>
+        </div>
     </form>
 
 </div> <!-- /container -->
