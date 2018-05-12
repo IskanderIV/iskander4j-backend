@@ -29,15 +29,14 @@
         </spring:bind>
         <spring:bind path="password">
             <div class="form-group ${status.error ? 'has-error' : ''}">
-                <form:input type="password" path="password" class="form-control" placeholder="Password"
-                            autofocus="true"></form:input>
+                <form:input type="password" path="password" class="form-control" placeholder="Password"></form:input>
                 <form:errors path="password"></form:errors>
             </div>
         </spring:bind>
         <spring:bind path="confirmPassword">
             <div class="form-group ${status.error ? 'has-error' : ''}">
-                <form:input type="password" path="confirmPassword" class="form-control" placeholder="Confirm password"
-                            autofocus="true"></form:input>
+                <form:input type="password" path="confirmPassword" class="form-control"
+                            placeholder="Confirm password"></form:input>
                 <form:errors path="confirmPassword"></form:errors>
             </div>
         </spring:bind>

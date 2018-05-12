@@ -10,6 +10,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.authentication.dao.ReflectionSaltSource;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -28,7 +29,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  * @date 3/5/2018.
  */
 
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 @Configuration
 @ComponentScan(basePackages = {"ru.cleverhause.security", "ru.cleverhause.service"})
 @PropertySource(value = {"classpath:security.properties"})
@@ -66,10 +67,18 @@ public class AppConfigSecurity extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    public ReflectionSaltSource saltSource() {
+        ReflectionSaltSource saltSource = new ReflectionSaltSource();
+        saltSource.setUserPropertyToUse(usernameParam);
+        return saltSource;
+    }
+
+    @Bean
     public AuthenticationProvider daoAuthenticatedProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService);
         authenticationProvider.setPasswordEncoder(encoder());
+        authenticationProvider.setSaltSource(saltSource());
         return authenticationProvider;
     }
 
@@ -86,26 +95,28 @@ public class AppConfigSecurity extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/", "/home").hasAnyRole(adminRole, userRole, anonimousRole)
+        http
+                .authorizeRequests()
+//                .antMatchers("/", "/home").hasAnyRole(adminRole, userRole, anonimousRole)
                 .antMatchers("/admin").hasRole(adminRole)
 //                .antMatchers("/admin").authenticated()
-//                .antMatchers("/arduino").authenticated()
+                .antMatchers("/arduino").authenticated()
+                .anyRequest().permitAll()
 //                .antMatchers("/mobile").authenticated()
 //                .and()
 //                .exceptionHandling()
 //                .authenticationEntryPoint(authenticationEntryPoint)
                 .and()
                 .formLogin()
-                .permitAll()
-                .loginProcessingUrl(loginPage)
+                .loginPage(loginPage)
+                .defaultSuccessUrl("/home")
+                .failureUrl("/login?error")
                 .usernameParameter(usernameParam)
                 .passwordParameter(passwordParam)
 //                .successHandler(authSuccessHandler)
 //                .failureHandler(authFailureHandler)
                 .and()
                 .logout()
-                .permitAll()
 //                .logoutSuccessHandler(logoutSuccessHandler)
                 .logoutUrl(logoutPage)
                 .invalidateHttpSession(true)

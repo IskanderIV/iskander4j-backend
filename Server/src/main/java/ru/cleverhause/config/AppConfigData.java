@@ -30,6 +30,7 @@ public class AppConfigData {
     private static final String PROPERTY_NAME_HIBERNATE_DIALECT = "hibernate.dialect";
     private static final String PROPERTY_NAME_HIBERNATE_SHOW_SQL = "hibernate.show_sql";
     private static final String[] HIBERNATE_ENTITY_PACKAGES = {"ru.cleverhause.model"};
+    private static final Class<?>[] HIBERNATE_ENTITY_ANNOTATED_CLASSES = {ru.cleverhause.model.User.class, ru.cleverhause.model.Role.class};
 
     @Value("${jdbc.driverClassName}")
     private String dataSourceDriverClassName;
@@ -68,7 +69,17 @@ public class AppConfigData {
         return entityManagerFactory;
     }
 
+//    @Bean
+//    public LocalSessionFactoryBean factoryBean() {
+//        LocalSessionFactoryBean localSessionFactoryBean = new LocalSessionFactoryBean();
+//        localSessionFactoryBean.setDataSource(dataSource());
+//        localSessionFactoryBean.setPackagesToScan(HIBERNATE_ENTITY_PACKAGES);
+//        localSessionFactoryBean.setAnnotatedClasses(HIBERNATE_ENTITY_ANNOTATED_CLASSES);
+//        return localSessionFactoryBean;
+//    }
+
     @Bean
+
     public JpaTransactionManager transactionManager() {
         JpaTransactionManager txManager = new JpaTransactionManager();
         txManager.setEntityManagerFactory(entityManagerFactory().getObject());

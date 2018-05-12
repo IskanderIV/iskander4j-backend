@@ -1,5 +1,8 @@
 package ru.cleverhause.model;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,13 +26,13 @@ import java.util.Set;
  */
 
 @Entity
-@Table
+@Table(name = "users")
 public class User implements Serializable {
 
     private static final long serialVersionUID = -1836672544422348442L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "username")
@@ -44,6 +47,7 @@ public class User implements Serializable {
     @ManyToMany
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @LazyCollection(value = LazyCollectionOption.FALSE)
     private Set<Role> roles;
 
     public User() {

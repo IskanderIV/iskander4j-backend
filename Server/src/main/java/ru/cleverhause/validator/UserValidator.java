@@ -34,7 +34,7 @@ public class UserValidator implements Validator {
         User user = (User) o;
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "Requared");
-        if (user.getUsername().length() < 8 || user.getUsername().length() > 32) {
+        if (user.getUsername().length() < 4 || user.getUsername().length() > 32) {
             errors.rejectValue("username", "Loginform.username.size");
         }
 
@@ -43,7 +43,7 @@ public class UserValidator implements Validator {
         }
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "Requared");
-        if (user.getPassword().length() < 8 || user.getPassword().length() > 32) {
+        if (user.getPassword().length() < 3 || user.getPassword().length() > 32) {
             errors.rejectValue("password", "Loginform.password.size");
         }
 

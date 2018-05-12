@@ -32,8 +32,8 @@ public class AppConfig extends WebMvcConfigurerAdapter {
     public ReloadableResourceBundleMessageSource messageSource() {
         ReloadableResourceBundleMessageSource resourceBundleMessageSource =
                 new ReloadableResourceBundleMessageSource();
-        String basename = "classpath:validator";
-        resourceBundleMessageSource.setBasename(basename);
+        String[] basename = {"classpath:validation"};
+        resourceBundleMessageSource.setBasenames(basename);
 
         return resourceBundleMessageSource;
     }
@@ -42,6 +42,14 @@ public class AppConfig extends WebMvcConfigurerAdapter {
     public static PropertyPlaceholderConfigurer placeHolderConfigurer() {
         return new PropertyPlaceholderConfigurer();
     }
+
+    //This is a straightforward mechanism to map views names to URLs with no need for an explicit controller in between
+//    @Override
+//    public void addViewControllers(ViewControllerRegistry registry) {
+//        super.addViewControllers(registry);
+//
+//        registry.addViewController("/somepage.html");
+//    }
 
     @Bean
     public InternalResourceViewResolver viewResolver() {

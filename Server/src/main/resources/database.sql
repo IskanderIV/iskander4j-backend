@@ -25,3 +25,18 @@ CREATE TABLE IF NOT EXISTS user_roles (
 
   UNIQUE (user_id, role_id)
 );
+
+CREATE SEQUENCE users_id_seq MINVALUE 3;
+
+ALTER TABLE users ALTER id SET DEFAULT nextval('users_id_seq');
+
+ALTER SEQUENCE users_id_seq OWNED BY users.id;
+
+CREATE SEQUENCE roles_id_seq MINVALUE 3;
+
+ALTER TABLE roles ALTER id SET DEFAULT nextval('users_id_seq');
+
+ALTER SEQUENCE roles_id_seq OWNED BY roles.id;
+
+ALTER TABLE users ADD CONSTRAINT unique_username UNIQUE (username);
+ALTER TABLE roles ADD CONSTRAINT unique_rolename UNIQUE (rolename);
