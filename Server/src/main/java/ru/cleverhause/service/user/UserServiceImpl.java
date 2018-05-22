@@ -1,4 +1,4 @@
-package ru.cleverhause.service;
+package ru.cleverhause.service.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
@@ -37,6 +37,7 @@ public class UserServiceImpl implements UserService {
         defRoles.add(roleDao.getOne(1L));
         user.setRoles(defRoles);
         userDao.save(user);
+
     }
 
     @Override

@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.cleverhause.model.User;
-import ru.cleverhause.service.SecurityService;
-import ru.cleverhause.service.UserService;
+import ru.cleverhause.service.security.SecurityService;
+import ru.cleverhause.service.user.UserService;
 import ru.cleverhause.validator.UserValidator;
 
 /**

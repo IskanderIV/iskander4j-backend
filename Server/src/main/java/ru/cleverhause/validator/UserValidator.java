@@ -6,7 +6,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 import ru.cleverhause.model.User;
-import ru.cleverhause.service.UserService;
+import ru.cleverhause.service.user.UserService;
 
 /**
  * Validator for {@link ru.cleverhause.model.User} class,

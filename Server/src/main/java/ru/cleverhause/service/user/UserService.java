@@ -1,4 +1,4 @@
-package ru.cleverhause.service;
+package ru.cleverhause.service.user;
 
 import ru.cleverhause.model.User;
 

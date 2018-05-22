@@ -7,9 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import ru.cleverhause.repository.ArduinoDataRepository;
 import ru.cleverhause.rest.model.ArduinoJSON;
-import ru.cleverhause.service.ArduinoDataService;
+import ru.cleverhause.service.arduino.ArduinoDataService;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -21,8 +20,6 @@ import java.util.Date;
 @RequestMapping(value = "/arduino")
 public class ArduinoRestAPI {
 
-    @Autowired
-    private ArduinoDataRepository arduinoRepo;
     @Autowired
     private ArduinoDataService arduinoDataService;
 
