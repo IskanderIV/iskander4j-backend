@@ -15,7 +15,7 @@ public interface ArduinoDataService {
 
     ArduinoJSON getLast();
 
-    boolean delete(String key);
+//    boolean delete(String key);
 
-    ArduinoJSON find(String arduinoJsonKey);
+//    ArduinoJSON find(String arduinoJsonKey);
 }

@@ -7,10 +7,11 @@ import javax.servlet.annotation.WebInitParam;
 import java.io.IOException;
 
 @WebFilter(filterName = "UserFilter", urlPatterns = {"/*"},
-initParams = {@WebInitParam(name = "paramName", value = "someString")})
+        initParams = {@WebInitParam(name = "paramName", value = "someString")})
 public class UserFilter implements Filter {
     private FilterConfig cfg;
     private ServletContext ctx;
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         this.cfg = filterConfig;
@@ -20,11 +21,13 @@ public class UserFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        System.out.println(ctx.getResource("classpath:application.properties"));
+        System.out.println("Inside filter");
+        filterChain.doFilter(servletRequest, servletResponse);
     }
 
     @Override
     public void destroy() {
-
+        cfg = null;
+        ctx = null;
     }
 }

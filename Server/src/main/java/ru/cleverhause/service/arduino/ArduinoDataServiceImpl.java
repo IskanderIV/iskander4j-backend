@@ -1,9 +1,11 @@
 package ru.cleverhause.service.arduino;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
-import ru.cleverhause.repository.ArduinoDataRepository;
 import ru.cleverhause.rest.model.ArduinoJSON;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by
@@ -13,36 +15,27 @@ import ru.cleverhause.rest.model.ArduinoJSON;
  */
 @Service
 public class ArduinoDataServiceImpl implements ArduinoDataService {
-    @Autowired
-    private ArduinoDataRepository arduinoDataRepository;
+
+    private Map<String, ArduinoJSON> arduinoDataRepository = new HashMap<>();
+
+    private static final Logger logger = Logger.getLogger(ArduinoDataServiceImpl.class);
 
     @Override
     public boolean put(String key, ArduinoJSON arduinoJSON) {
         arduinoDataRepository.put(key, arduinoJSON);
-        System.out.println(arduinoDataRepository);
-        arduinoDataRepository.setLast(arduinoJSON);
-        System.out.println("PUT operation");
+        logger.info("PUT operation");
         return true;
     }
 
     @Override
     public ArduinoJSON getLast() {
-        System.out.println("GETLAST operation");
-        return arduinoDataRepository.getLast();
-    }
-
-    @Override
-    public boolean delete(String arduinoJsonKey) {
-        arduinoDataRepository.remove(arduinoJsonKey);
-        System.out.println("DELETE operation");
-        return find(arduinoJsonKey) == null;
-    }
-
-    public ArduinoJSON find(String arduinoJsonKey) {
-        System.out.println("FIND operation");
-        if (arduinoDataRepository.isEmpty()) {
-            return null;
+        int capacity = arduinoDataRepository.size();
+        if (capacity > 0) {
+            for (String key: arduinoDataRepository.keySet()) {
+                return arduinoDataRepository.get(key);
+            }
         }
-        return arduinoDataRepository.get(arduinoJsonKey);
+        logger.info("Get operation");
+        return null;
     }
 }

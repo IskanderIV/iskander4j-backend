@@ -26,7 +26,23 @@
         <maven.compiler.plugin>3.3</maven.compiler.plugin>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <tomcat7.path>C:\Program Files\Tomcat\apache-tomcat-7.0.75\webapps</tomcat7.path>
     </properties>
+    <!--Declaration of remote repo for deploy phase. Where I should deploy to-->
+    <!--<distributionManagement>-->
+        <!--<repository>-->
+            <!--<id>TomcatWebApps</id>-->
+            <!--<url>file://c:\Program Files\Tomcat\apache-tomcat-7.0.75\webapps</url>-->
+        <!--</repository>-->
+    <!--</distributionManagement>-->
+
+    <!--Declaration From I should upload dependencies to my project during install phase-->
+    <!--<repositories>-->
+    <!--<repository>-->
+    <!--<id>localRepo</id>-->
+    <!--<url>C:\Users\Alexandr\.m2\repository</url>-->
+    <!--</repository>-->
+    <!--</repositories>-->
 
     <dependencies>
         <dependency>
@@ -115,7 +131,7 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>cleverhause</finalName>
+        <finalName>my</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -131,20 +147,39 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>${maven.war.plugin}</version>
                 <configuration>
+                    <warName>cleverhause</warName>
+                    <outputDirectory>${tomcat7.path}</outputDirectory>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.2</version>
-                <configuration>
-                    <url>http://localhost:8080/manager/text</url>
-                    <server>apache-tomcat-7.0.75</server>
-                    <port>8090</port>
-                    <path>/</path>
-                </configuration>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.apache.tomcat.maven</groupId>-->
+                <!--<artifactId>tomcat7-maven-plugin</artifactId>-->
+                <!--<version>2.2</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>run-embeded-tomcat</id>-->
+                        <!--<phase>-->
+                            <!--install-->
+                        <!--</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>-->
+                                <!--run-->
+                            <!--</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<warSourceDirectory></warSourceDirectory>-->
+                            <!--<port></port>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+                <!--<configuration>-->
+                    <!--<url>http://localhost:8080/manager/text</url>-->
+                    <!--<server>TomcatServer</server>-->
+                    <!--<port>8090</port>-->
+                    <!--<path>/${build.finalName}</path>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
         </plugins>
     </build>
 </project>
