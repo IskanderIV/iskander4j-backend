@@ -20,7 +20,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @Configuration
 @ComponentScan(basePackages = {"ru.cleverhause"})
 @PropertySource(value = {"classpath:application.properties"})
-@Import(value = {AppConfigData.class, AppConfigSecurity.class})
+@Import(value = {DataSourceConfig.class, SecurityConfig.class, SessionConfig.class})
 public class AppConfig extends WebMvcConfigurerAdapter {
 
     @Override
