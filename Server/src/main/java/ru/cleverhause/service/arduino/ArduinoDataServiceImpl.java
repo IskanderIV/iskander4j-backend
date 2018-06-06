@@ -2,7 +2,7 @@ package ru.cleverhause.service.arduino;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
-import ru.cleverhause.rest.model.ArduinoJSON;
+import ru.cleverhause.rest.dto.ArduinoJSON;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +31,7 @@ public class ArduinoDataServiceImpl implements ArduinoDataService {
     public ArduinoJSON getLast() {
         int capacity = arduinoDataRepository.size();
         if (capacity > 0) {
-            for (String key: arduinoDataRepository.keySet()) {
+            for (String key : arduinoDataRepository.keySet()) {
                 return arduinoDataRepository.get(key);
             }
         }

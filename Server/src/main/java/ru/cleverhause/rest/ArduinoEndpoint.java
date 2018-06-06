@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import ru.cleverhause.rest.model.ArduinoJSON;
+import ru.cleverhause.rest.dto.ArduinoJSON;
 import ru.cleverhause.service.arduino.ArduinoDataService;
 
 import java.util.Calendar;
@@ -18,12 +18,12 @@ import java.util.Date;
  */
 @Controller
 @RequestMapping(value = "/arduino")
-public class ArduinoRestAPI {
+public class ArduinoEndpoint {
 
     @Autowired
     private ArduinoDataService arduinoDataService;
 
-    @RequestMapping(value = "/data", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/data", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
     ArduinoJSON fromArduino(@RequestBody ArduinoJSON fromArduinoJson) {
         Calendar calendar = Calendar.getInstance();

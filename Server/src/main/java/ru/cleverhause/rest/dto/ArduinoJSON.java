@@ -1,6 +1,8 @@
-package ru.cleverhause.rest.model;
+package ru.cleverhause.rest.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
@@ -13,6 +15,8 @@ import java.util.List;
  * @author Aleksandr_Ivanov1
  * @date 12/1/2017.
  */
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 public class ArduinoJSON implements Serializable {
@@ -29,9 +33,4 @@ public class ArduinoJSON implements Serializable {
         stringBuilder.append("]}");
         return stringBuilder.toString();
     }
-
-//    public static void main(String[] args) {
-//        ArduinoJSON ard = new ArduinoJSON();
-//        System.out.println(ard);
-//    }
 }

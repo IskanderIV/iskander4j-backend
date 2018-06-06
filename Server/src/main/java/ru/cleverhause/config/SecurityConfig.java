@@ -18,6 +18,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
@@ -122,9 +124,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .invalidateHttpSession(true)
                 .deleteCookies(COOKIES_JSESSIONID)
                 .logoutRequestMatcher(new AntPathRequestMatcher(logoutPage, POST));
+
+//        http.sessionManagement()
+//                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+//                .sessionAuthenticationStrategy(sas())
+//                .invalidSessionStrategy(new SimpleRedirectInvalidSessionStrategy("/pages/home.jsp"))
+//                .sessionAuthenticationErrorUrl("/pages/home.jsp")
+//                .maximumSessions(1);
     }
 
-
+    @Bean
+    public SessionAuthenticationStrategy sas() {
+        return new SessionFixationProtectionStrategy();
+    }
 
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfig() {

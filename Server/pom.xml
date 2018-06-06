@@ -18,6 +18,7 @@
         <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
         <commons-dbcp.version>1.4</commons-dbcp.version>
         <jackson.databind-version>2.9.2</jackson.databind-version>
+        <okhttp>3.10.0</okhttp>
         <jstl.version>1.2</jstl.version>
         <junit.version>4.12</junit.version>
         <lombok.version>1.16.10</lombok.version>
@@ -26,14 +27,14 @@
         <maven.compiler.plugin>3.3</maven.compiler.plugin>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <tomcat7.path>C:\Program Files\Tomcat\apache-tomcat-7.0.75\webapps</tomcat7.path>
+        <tomcat7.path>c:\Program Files (x86)\Tomcat\apache-tomcat-7.0.75\webapps</tomcat7.path>
     </properties>
     <!--Declaration of remote repo for deploy phase. Where I should deploy to-->
     <!--<distributionManagement>-->
-        <!--<repository>-->
-            <!--<id>TomcatWebApps</id>-->
-            <!--<url>file://c:\Program Files\Tomcat\apache-tomcat-7.0.75\webapps</url>-->
-        <!--</repository>-->
+    <!--<repository>-->
+    <!--<id>TomcatWebApps</id>-->
+    <!--<url>file://c:\Program Files\Tomcat\apache-tomcat-7.0.75\webapps</url>-->
+    <!--</repository>-->
     <!--</distributionManagement>-->
 
     <!--Declaration From I should upload dependencies to my project during install phase-->
@@ -112,16 +113,28 @@
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.databind-version}</version>
         </dependency>
+
+        <!--LOMBOK-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
+
+        <!--logging-->
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>${log4j.version}</version>
+        </dependency>
+
+        <!--TEST-->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>3.10.0</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -153,32 +166,32 @@
                 </configuration>
             </plugin>
             <!--<plugin>-->
-                <!--<groupId>org.apache.tomcat.maven</groupId>-->
-                <!--<artifactId>tomcat7-maven-plugin</artifactId>-->
-                <!--<version>2.2</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>run-embeded-tomcat</id>-->
-                        <!--<phase>-->
-                            <!--install-->
-                        <!--</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>-->
-                                <!--run-->
-                            <!--</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<warSourceDirectory></warSourceDirectory>-->
-                            <!--<port></port>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-                <!--<configuration>-->
-                    <!--<url>http://localhost:8080/manager/text</url>-->
-                    <!--<server>TomcatServer</server>-->
-                    <!--<port>8090</port>-->
-                    <!--<path>/${build.finalName}</path>-->
-                <!--</configuration>-->
+            <!--<groupId>org.apache.tomcat.maven</groupId>-->
+            <!--<artifactId>tomcat7-maven-plugin</artifactId>-->
+            <!--<version>2.2</version>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<id>run-embeded-tomcat</id>-->
+            <!--<phase>-->
+            <!--install-->
+            <!--</phase>-->
+            <!--<goals>-->
+            <!--<goal>-->
+            <!--run-->
+            <!--</goal>-->
+            <!--</goals>-->
+            <!--<configuration>-->
+            <!--<warSourceDirectory></warSourceDirectory>-->
+            <!--<port></port>-->
+            <!--</configuration>-->
+            <!--</execution>-->
+            <!--</executions>-->
+            <!--<configuration>-->
+            <!--<url>http://localhost:8080/manager/text</url>-->
+            <!--<server>TomcatServer</server>-->
+            <!--<port>8090</port>-->
+            <!--<path>/${build.finalName}</path>-->
+            <!--</configuration>-->
             <!--</plugin>-->
         </plugins>
     </build>

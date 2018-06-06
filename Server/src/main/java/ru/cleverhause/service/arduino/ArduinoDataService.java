@@ -1,6 +1,6 @@
 package ru.cleverhause.service.arduino;
 
-import ru.cleverhause.rest.model.ArduinoJSON;
+import ru.cleverhause.rest.dto.ArduinoJSON;
 
 /**
  * Created by

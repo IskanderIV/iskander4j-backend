@@ -50,6 +50,12 @@ public class User implements Serializable {
     @LazyCollection(value = LazyCollectionOption.FALSE)
     private Set<Role> roles;
 
+    @ManyToMany
+    @JoinTable(name = "user_boards", joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "board_id"))
+    @LazyCollection(value = LazyCollectionOption.FALSE)
+    private Set<Board> boards;
+
     public User() {
     }
 
@@ -93,6 +99,14 @@ public class User implements Serializable {
         this.roles = roles;
     }
 
+    public Set<Board> getBoards() {
+        return boards;
+    }
+
+    public void setBoards(Set<Board> boards) {
+        this.boards = boards;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -101,6 +115,7 @@ public class User implements Serializable {
                 ", password='" + password + '\'' +
                 ", confirmPassword='" + confirmPassword + '\'' +
                 ", roles=" + roles +
+                ", boards=" + boards +
                 '}';
     }
 }

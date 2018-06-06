@@ -1,3 +1,7 @@
+CREATE ROLE clever_admin LOGIN
+  ENCRYPTED PASSWORD 'md593d1079655679037dd4ec5caf1b8e91a'
+  NOSUPERUSER INHERIT CREATEDB NOCREATEROLE NOREPLICATION;
+
 -- Table: users
 
 CREATE TABLE IF NOT EXISTS users (
@@ -24,6 +28,26 @@ CREATE TABLE IF NOT EXISTS user_roles (
   FOREIGN KEY (role_id) REFERENCES roles(id),
 
   UNIQUE (user_id, role_id)
+);
+
+-- Table: boards
+
+CREATE TABLE IF NOT EXISTS boards (
+  id int NOT NULL UNIQUE PRIMARY KEY,
+  boardName varchar(100) NOT NULL,
+  info varchar(4000) NOT NULL
+);
+
+-- Table for mapping users and roles: user_boards
+
+CREATE TABLE IF NOT EXISTS user_boards (
+  user_id int NOT NULL,
+  board_id int NOT NULL,
+
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (board_id) REFERENCES boards(id),
+
+  UNIQUE (user_id, board_id)
 );
 
 CREATE SEQUENCE users_id_seq MINVALUE 3;

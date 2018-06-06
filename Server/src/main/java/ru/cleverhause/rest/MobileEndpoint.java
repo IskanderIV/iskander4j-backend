@@ -2,14 +2,16 @@ package ru.cleverhause.rest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * Created by Alexandr on 15.11.2017.
  */
 @Controller
 @RequestMapping(value = "/mobile")
-public class MobileRestAPI {
+public class MobileEndpoint {
 
     @RequestMapping(value = "/{userName}", method = RequestMethod.GET)
     public String mobileConnect(@PathVariable String userName, Model model) {

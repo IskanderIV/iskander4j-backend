@@ -1,4 +1,4 @@
-package ru.cleverhause.rest.model;
+package ru.cleverhause.rest.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,6 @@ import java.io.Serializable;
 
 /**
  * Created by Alexandr on 04.01.2018.
- *
  */
 
 @NoArgsConstructor
