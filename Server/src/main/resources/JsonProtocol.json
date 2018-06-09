@@ -1,0 +1,69 @@
+//From Board. Request normal work
+{
+  "devices": [
+    {
+      "id": 1,
+      "ack": 5,
+      "adj": false,
+      "ctrlVal": 0,
+      "radioErr": false
+    },
+    {
+      "id": 2,
+      "ack": 0.6,
+      "adj": false,
+      "ctrlVal": 0.6,
+      "radioErr": false
+    },
+    {
+      "id": 3,
+      "ack": 0.5,
+      "adj": true,
+      "ctrlVal": 0.7,
+      "radioErr": true
+    }
+  ],
+  "errors": {
+    "gsm": false,
+    "lcd": false,
+    "radio": false
+  }
+}
+// From server. Response when normal work
+{
+  "errorMessage": "",
+  "output": {
+    "boardPID": "UID"
+  }
+}
+
+// From server to UI. Registration json when UI want to get UID
+{
+  "errorMessage": "",
+  "output": {
+    "boardPID": "UID"
+  }
+}
+
+// Registration json from board. You click on Get UID and enter to board manually.
+// After that send registration request to server and get 200 back
+{
+  "username": "username",
+  "password": "password_in_MD5",
+  "boardPID": "UID",
+  "numOfDevices": 5,
+  "devices": [
+    {
+      "id": 1,
+      "adj": true,
+      "rotate": true,
+      "signaling": true
+    },
+    {
+      "id": 2,
+      "adj": true,
+      "rotate": true,
+      "signaling": true
+    }
+  ]
+}
