@@ -1,4 +1,4 @@
-package ru.cleverhause.rest.dto;
+package ru.cleverhause.rest.board.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

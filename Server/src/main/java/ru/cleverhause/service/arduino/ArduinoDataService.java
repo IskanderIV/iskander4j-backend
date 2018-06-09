@@ -1,6 +1,8 @@
 package ru.cleverhause.service.arduino;
 
-import ru.cleverhause.rest.dto.ArduinoJSON;
+import ru.cleverhause.rest.board.dto.request.BoardReq;
+
+import java.util.List;
 
 /**
  * Created by
@@ -11,11 +13,9 @@ import ru.cleverhause.rest.dto.ArduinoJSON;
 
 public interface ArduinoDataService {
 
-    boolean put(String key, ArduinoJSON arduinoJSON);
+    boolean checkBoardNumber(BoardReq boardReq);
 
-    ArduinoJSON getLast();
+    boolean save(BoardReq boardReq);
 
-//    boolean delete(String key);
-
-//    ArduinoJSON find(String arduinoJsonKey);
+    List<BoardReq> getLast(int num);
 }

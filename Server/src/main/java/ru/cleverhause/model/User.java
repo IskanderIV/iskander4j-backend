@@ -3,14 +3,17 @@ package ru.cleverhause.model;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.io.Serializable;
@@ -50,9 +53,7 @@ public class User implements Serializable {
     @LazyCollection(value = LazyCollectionOption.FALSE)
     private Set<Role> roles;
 
-    @ManyToMany
-    @JoinTable(name = "user_boards", joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "board_id"))
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @LazyCollection(value = LazyCollectionOption.FALSE)
     private Set<Board> boards;
 

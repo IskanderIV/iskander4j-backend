@@ -10,8 +10,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import ru.cleverhause.response.HttpResponse;
-import ru.cleverhause.rest.dto.ArduinoJSON;
-import ru.cleverhause.rest.dto.DeviceInfo;
+import ru.cleverhause.rest.board.dto.request.BoardReq;
+import ru.cleverhause.rest.board.dto.request.DeviceInfo;
 import ru.cleverhause.util.TestJsonUtil;
 
 import java.io.IOException;
@@ -35,12 +35,12 @@ public class BoardsConnectionIT {
         Headers headers = Headers.of(
                 "cookie", "1"
         );
-        ArduinoJSON arduinoJSON = new ArduinoJSON(Arrays.asList(
+        BoardReq boardReq = new BoardReq(Arrays.asList(
                 new DeviceInfo(1, 0.7, false, 0.0, false),
                 new DeviceInfo(2, 0.6, false, 0.0, false),
                 new DeviceInfo(3, 0.5, true, 0.7, true)
         ));
-        RequestBody jsonBody = RequestBody.create(JSON_CONTENT_TYPE, TestJsonUtil.TEST_OBJECT_MAPPER.writeValueAsBytes(arduinoJSON));
+        RequestBody jsonBody = RequestBody.create(JSON_CONTENT_TYPE, TestJsonUtil.TEST_OBJECT_MAPPER.writeValueAsBytes(boardReq));
         Request req = new Request.Builder()
                 .url(localhost)
                 .headers(headers)

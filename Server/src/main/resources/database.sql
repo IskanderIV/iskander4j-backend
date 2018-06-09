@@ -30,12 +30,48 @@ CREATE TABLE IF NOT EXISTS user_roles (
   UNIQUE (user_id, role_id)
 );
 
--- Table: boards
+-- Table: board
 
-CREATE TABLE IF NOT EXISTS boards (
+CREATE TABLE IF NOT EXISTS board (
   id int NOT NULL UNIQUE PRIMARY KEY,
-  boardName varchar(100) NOT NULL,
-  info varchar(4000) NOT NULL
+  boardUID int NOT NULL,
+  boardname varchar(100) NOT NULL,
+  user_id int NOT NULL,
+
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- Table: boardStructure
+
+CREATE TABLE IF NOT EXISTS boardStructure (
+  id int NOT NULL UNIQUE PRIMARY KEY,
+  structure varchar(4000) NOT NULL,
+  board_id int NOT NULL,
+
+  FOREIGN KEY (board_id) REFERENCES boards(id)
+);
+
+-- Table: boardControlData
+
+CREATE TABLE IF NOT EXISTS boardControlData (
+  id int NOT NULL UNIQUE PRIMARY KEY,
+  data varchar(4000) NOT NULL,
+  created timestamp NOT NULL,
+  board_id int NOT NULL,
+
+  FOREIGN KEY (board_id) REFERENCES boards(id)
+);
+
+
+-- Table: boardSavedData
+
+CREATE TABLE IF NOT EXISTS boardSavedData (
+  id int NOT NULL UNIQUE PRIMARY KEY,
+  data varchar(4000) NOT NULL,
+  created timestamp NOT NULL,
+  board_id int NOT NULL,
+
+  FOREIGN KEY (board_id) REFERENCES boards(id)
 );
 
 -- Table for mapping users and roles: user_boards
