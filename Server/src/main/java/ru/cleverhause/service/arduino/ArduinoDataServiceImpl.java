@@ -44,13 +44,13 @@ public class ArduinoDataServiceImpl implements ArduinoDataService {
 
     @Override
     public List<BoardReq> getLast(int num) {
-        boardDao.findByBoardName()
-        int capacity = arduinoDataRepository.size();
-        if (capacity > 0) {
-            for (String key : arduinoDataRepository.keySet()) {
-                return arduinoDataRepository.get(key);
-            }
-        }
+//        boardDao.findByBoardName()
+//        int capacity = arduinoDataRepository.size();
+//        if (capacity > 0) {
+//            for (String key : arduinoDataRepository.keySet()) {
+//                return arduinoDataRepository.get(key);
+//            }
+//        }
         logger.info("Get operation");
         return null;
     }

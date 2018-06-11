@@ -1,12 +1,9 @@
 package ru.cleverhause.rest.board.dto.request;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,15 +12,31 @@ import java.util.List;
  * @author Aleksandr_Ivanov1
  * @date 12/1/2017.
  */
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-public class BoardReq implements Serializable {
-    private List<DeviceInfo> devices = new ArrayList<DeviceInfo>();
+public class BoardReq<T extends Serializable> implements Serializable {
+    private String username;
+    private String password;
+    private String boardPID;
+    private List<T> devices;
 
-    public static class Builder {
-        private List<DeviceInfo> devices;
+    public BoardReq(String username, String password, String boardPID, List<T> devices) {
+        this.username = username;
+        this.password = password;
+        this.boardPID = boardPID;
+        this.devices = devices;
+    }
 
+    public BoardReq() {
+    }
+
+    @Override
+    public String toString() {
+        return "BoardReq{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", boardPID='" + boardPID + '\'' +
+                ", devices=" + devices +
+                '}';
     }
 }

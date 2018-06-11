@@ -1,5 +1,8 @@
 //From Board. Request normal work
 {
+  "username": "username",
+  "password": "password_in_MD5",
+  "boardUID": "UID",
   "devices": [
     {
       "id": 1,
@@ -31,17 +34,17 @@
 }
 // From server. Response when normal work
 {
-  "errorMessage": "",
+  "message": "",
   "output": {
-    "boardPID": "UID"
+    "repeat": "request"
   }
 }
 
 // From server to UI. Registration json when UI want to get UID
 {
-  "errorMessage": "",
+  "message": "",
   "output": {
-    "boardPID": "UID"
+    "boardUID": "UID"
   }
 }
 
@@ -50,8 +53,7 @@
 {
   "username": "username",
   "password": "password_in_MD5",
-  "boardPID": "UID",
-  "numOfDevices": 5,
+  "boardUID": "UID",
   "devices": [
     {
       "id": 1,

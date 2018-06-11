@@ -9,7 +9,7 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.cleverhause.response.HttpResponse;
+import ru.cleverhause.rest.HttpResponse;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,9 +19,14 @@ public class HttpUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpUtil.class);
 
-    public static HttpResponse doPost(final Request request) throws IOException {
+    public static HttpResponse doPost(final Request request) {
         OkHttpClient httpClient = new OkHttpClient();
-        final Response response = httpClient.newCall(request).execute();
+        final Response response;
+        try {
+            response = httpClient.newCall(request).execute();
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
 
         return convertToCleverhauseResponse(response);
     }
@@ -48,17 +53,20 @@ public class HttpUtil {
 //        return HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
 //    }
 
-    private static HttpResponse convertToCleverhauseResponse(final Response response) throws IOException {
+    private static HttpResponse convertToCleverhauseResponse(final Response response) {
         // obtain headers
         // get Headers from standard response for putting it in My Custom response
         final Map<String, List<String>> respHeader = response.headers().toMultimap();
         // obtain body
         final ResponseBody responseBody = response.body();
-        final String body = responseBody != null ? responseBody.string() : null;
-
+        final String body;
+        try {
+            body = responseBody != null ? responseBody.string() : null;
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
         // obtain code
         final int statusCode = response.code();
-
         LOGGER.info("Response: {}, {}", statusCode, body);
 
         return new HttpResponse(statusCode, body, respHeader);

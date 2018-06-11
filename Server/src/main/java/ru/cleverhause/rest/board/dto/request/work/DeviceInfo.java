@@ -1,4 +1,4 @@
-package ru.cleverhause.rest.board.dto.request;
+package ru.cleverhause.rest.board.dto.request.work;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -35,11 +35,7 @@ public class DeviceInfo implements Serializable {
         private Double ctrlVal;
         private Boolean radioErr;
 
-        private Builder() {
-        }
-
-        public DeviceInfo.Builder newBuilder() {
-            return new Builder();
+        public Builder() {
         }
 
         public DeviceInfo.Builder setId(int id) {
