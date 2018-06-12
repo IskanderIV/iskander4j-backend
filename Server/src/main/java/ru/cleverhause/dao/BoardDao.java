@@ -3,6 +3,8 @@ package ru.cleverhause.dao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.cleverhause.model.Board;
 
+import java.util.List;
+
 /**
  * Created by
  *
@@ -10,5 +12,7 @@ import ru.cleverhause.model.Board;
  * @date 5/28/2018.
  */
 public interface BoardDao extends JpaRepository<Board, Long> {
-    Board findByBoardName(String boardName);
+    List<Board> findByBoardname(String boardName);
+
+    Board findByBoardUID(String boardUID);
 }

@@ -3,7 +3,6 @@ package ru.cleverhause.it.arduino;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.internal.http2.Header;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,7 +11,7 @@ import org.springframework.http.HttpMethod;
 import ru.cleverhause.rest.HttpResponse;
 import ru.cleverhause.rest.board.dto.request.BoardReq;
 import ru.cleverhause.rest.board.dto.request.registration.DeviceSetting;
-import ru.cleverhause.rest.board.dto.request.work.DeviceInfo;
+import ru.cleverhause.rest.board.dto.request.work.DeviceData;
 import ru.cleverhause.util.JsonUtil;
 
 import java.net.MalformedURLException;
@@ -32,13 +31,13 @@ public class BoardsConnectionIT {
 
     @Test
     public void successBoardWorkTest() {
-        URL reqURL = getRequestURL("/boards/data");
+        URL reqURL = getRequestURL("/boards/board/data");
 
         BoardReq request = new BoardReq<>("username",
                 "password",
                 "123456",
                 Arrays.asList(
-                        new DeviceInfo.Builder().setId(1).setAck(0.7).setAdj(false).setCtrlVal(0.0).setRadioErr(false).build()
+                        new DeviceData.Builder().setId(1).setAck(0.7).setAdj(false).setCtrlVal(0.0).setRadioErr(false).build()
                 ));
         HttpResponse response = getHttpResponse(HttpMethod.POST, reqURL, request);
         Assert.assertEquals(200, response.getCode());

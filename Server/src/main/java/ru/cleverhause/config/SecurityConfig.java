@@ -102,7 +102,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/", "/home").hasAnyRole(adminRole, userRole, anonimousRole)
                 .antMatchers("/admin").hasRole(adminRole)
 //                .antMatchers("/admin").authenticated()
-                .antMatchers("/arduino").authenticated()
+                .antMatchers("/board").authenticated()
                 .anyRequest().permitAll()
 //                .antMatchers("/mobile").authenticated()
 //                .and()

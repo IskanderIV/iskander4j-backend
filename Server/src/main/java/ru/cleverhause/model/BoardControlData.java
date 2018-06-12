@@ -79,7 +79,7 @@ public class BoardControlData {
 
     @Override
     public String toString() {
-        return "BoardControlData{" +
+        return "DeviceControl{" +
                 "id=" + id +
                 ", data='" + data + '\'' +
                 ", created=" + created +

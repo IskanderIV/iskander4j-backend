@@ -34,8 +34,8 @@ CREATE TABLE IF NOT EXISTS user_roles (
 
 CREATE TABLE IF NOT EXISTS board (
   id int NOT NULL UNIQUE PRIMARY KEY,
-  boardUID int NOT NULL,
-  boardname varchar(100) NOT NULL,
+  boardUID int NOT NULL UNIQUE,
+  boardname varchar(100),
   user_id int NOT NULL,
 
   FOREIGN KEY (user_id) REFERENCES users(id)
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS board (
 
 CREATE TABLE IF NOT EXISTS boardStructure (
   id int NOT NULL UNIQUE PRIMARY KEY,
-  structure varchar(4000) NOT NULL,
+  structure varchar(4000),
   board_id int NOT NULL,
 
   FOREIGN KEY (board_id) REFERENCES boards(id)

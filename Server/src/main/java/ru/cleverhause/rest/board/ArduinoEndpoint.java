@@ -3,17 +3,16 @@ package ru.cleverhause.rest.board;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.cleverhause.model.Board;
-import ru.cleverhause.model.User;
 import ru.cleverhause.rest.board.dto.request.BoardReq;
 import ru.cleverhause.rest.board.dto.request.registration.DeviceSetting;
-import ru.cleverhause.rest.board.dto.request.work.DeviceInfo;
+import ru.cleverhause.rest.board.dto.request.work.DeviceData;
 import ru.cleverhause.rest.board.dto.response.BoardResponse;
-import ru.cleverhause.rest.board.dto.response.ui.BoardUID;
-import ru.cleverhause.service.arduino.ArduinoDataService;
+import ru.cleverhause.rest.frontend.dto.response.BoardUID;
+import ru.cleverhause.service.board.BoardDataService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,23 +27,39 @@ public class ArduinoEndpoint {
     private static final Logger logger = Logger.getLogger(ArduinoEndpoint.class);
 
     @Autowired
-    private ArduinoDataService arduinoDataService;
+    private BoardDataService boardDataService;
 
     @PostMapping(value = "/board/registration")
-    public BoardResponse<BoardReq<DeviceSetting>> registerBoard(@RequestBody BoardReq<DeviceSetting> arduinoRegJson) {
+    public BoardResponse<BoardReq<DeviceSetting>> registerBoard(@RequestBody BoardReq<DeviceSetting> boardRegReq) {
         //here I have a validated ArduinoJson
+        // записываем в boardStructure соотв данные о структуре. По-хорошему надо тащить информацию
+        // о бордах в профиль, чтобы не лазить в базу. А ее обновлять в определенных случаях
+
+        try {
+            boardDataService.saveBoardStructure(boardRegReq.getBoardUID(), boardRegReq.getDevices());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         logger.debug("Inside registerBoard");
-        return new BoardResponse<>("Hello", arduinoRegJson);
+        return new BoardResponse<>("Hello", boardRegReq);
     }
 
-    @PostMapping(value = "/data")
-    public BoardResponse<BoardReq<DeviceInfo>> saveBoardData(@RequestBody BoardReq<DeviceInfo> fromBoardReq) throws Exception {
+    @PostMapping(value = "/board/data")
+    public BoardResponse<BoardReq<DeviceData>> saveBoardData(@RequestBody BoardReq<DeviceData> fromBoardReq) throws Exception {
         //here I have validated ArduinoJson
         logger.info("Inside saveBoardData");
-//        Board board = arduinoDataService.checkBoardNumber(fromBoardReq);
+        String boardUID = fromBoardReq.getBoardUID();
+        String username = fromBoardReq.getUsername();
+        String password = fromBoardReq.getPassword();
+
+        Board board = boardDataService.saveData(boardUID, fromBoardReq);
+        if (board != null) {
+            board = boardDataService.getControl(board);
+        }
+
 //        if (board != null) {
-//            arduinoDataService.saveData(board.getId());
-//            User boardOwner = arduinoDataService.findUserByBoardId(board.getId());
+//            boardDataService.saveData(board.getId());
+//            User boardOwner = boardDataService.findUserByBoardId(board.getId());
             // по-хорошему надо проверить прав юзера, что он зареган и имеет право работать с девайсами
 
 //        }
@@ -52,11 +67,16 @@ public class ArduinoEndpoint {
 ////            throw new Exception();
 ////        }
         // алгоритм такой. надо провалидировать. Если есть такой номер, вытащить юзера по номеру борда. Провалидировать креды юзера.
-        // Для этого надо хранить привязку к юзеру в таблице. Схранить данные. Вытащить данные о контролируемых значениях.
+        // Для этого надо хранить привязку к юзеру в таблице. Сохранить данные. Вытащить данные о контролируемых значениях.
         // Составить джесон согласно структуре, сохраненной в базе и пульнуть обратно и вставить туда еще и уникальный номер платы. Плюсом все надо закэшировать
         // создать схемы валидации для разных джесонов. Сложить их в папке. Использовать в фильтрах
-//        Boolean result = arduinoDataService.put(arduinoDataKey, fromBoardReq);
-        return new BoardResponse<>("Hello", fromBoardReq);
+//        Boolean result = boardDataService.put(arduinoDataKey, fromBoardReq);
+        List<DeviceData> responseDevInfo = new ArrayList<>();
+        for (DeviceData deviceData : board.getControlData().getData()) {
+
+        }
+        BoardReq<DeviceData> response = new BoardReq<>(username, password, boardUID, responseDevInfo);
+        return new BoardResponse<>("Hello", response);
     }
 
     @GetMapping(value = "/data/last/{num}")
@@ -77,6 +97,14 @@ public class ArduinoEndpoint {
         logger.info("Inside getBoardUID");
         return new BoardResponse<>("Hello", new BoardUID("123456"));
     }
+
 //    @ExceptionHandler
-//    public @RequestBody
+//    public BoardResponse handleExceptions(Exception e) {
+//        return new BoardResponse("Exceptiion", new Serializable() {
+//            @Override
+//            public String toString() {
+//                return e.getMessage();
+//            }
+//        });
+//    }
 }

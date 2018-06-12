@@ -1,4 +1,4 @@
-package ru.cleverhause.rest.board.dto.response.ui;
+package ru.cleverhause.rest.frontend.dto.response;
 
 import lombok.Getter;
 import lombok.Setter;
