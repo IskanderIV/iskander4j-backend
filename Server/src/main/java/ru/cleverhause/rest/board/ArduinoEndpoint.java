@@ -1,5 +1,6 @@
 package ru.cleverhause.rest.board;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -8,6 +9,7 @@ import ru.cleverhause.model.Board;
 import ru.cleverhause.model.User;
 import ru.cleverhause.rest.board.dto.request.BoardReq;
 import ru.cleverhause.rest.board.dto.request.registration.DeviceSetting;
+import ru.cleverhause.rest.board.dto.request.work.DeviceInfo;
 import ru.cleverhause.rest.board.dto.response.BoardResponse;
 import ru.cleverhause.rest.board.dto.response.ui.BoardUID;
 import ru.cleverhause.service.arduino.ArduinoDataService;
@@ -23,19 +25,22 @@ import java.util.List;
         consumes = MediaType.APPLICATION_JSON_VALUE)
 public class ArduinoEndpoint {
 
+    private static final Logger logger = Logger.getLogger(ArduinoEndpoint.class);
+
     @Autowired
     private ArduinoDataService arduinoDataService;
 
     @PostMapping(value = "/board/registration")
     public BoardResponse<BoardReq<DeviceSetting>> registerBoard(@RequestBody BoardReq<DeviceSetting> arduinoRegJson) {
         //here I have a validated ArduinoJson
-
-        return null;
+        logger.debug("Inside registerBoard");
+        return new BoardResponse<>("Hello", arduinoRegJson);
     }
 
     @PostMapping(value = "/data")
-    public BoardReq saveArduinoData(@RequestBody BoardReq fromBoardReq) throws Exception {
+    public BoardResponse<BoardReq<DeviceInfo>> saveBoardData(@RequestBody BoardReq<DeviceInfo> fromBoardReq) throws Exception {
         //here I have validated ArduinoJson
+        logger.info("Inside saveBoardData");
 //        Board board = arduinoDataService.checkBoardNumber(fromBoardReq);
 //        if (board != null) {
 //            arduinoDataService.saveData(board.getId());
@@ -51,7 +56,7 @@ public class ArduinoEndpoint {
         // Составить джесон согласно структуре, сохраненной в базе и пульнуть обратно и вставить туда еще и уникальный номер платы. Плюсом все надо закэшировать
         // создать схемы валидации для разных джесонов. Сложить их в папке. Использовать в фильтрах
 //        Boolean result = arduinoDataService.put(arduinoDataKey, fromBoardReq);
-        return null;
+        return new BoardResponse<>("Hello", fromBoardReq);
     }
 
     @GetMapping(value = "/data/last/{num}")
@@ -69,7 +74,8 @@ public class ArduinoEndpoint {
     @GetMapping(value = "/board/uid")
     public
     BoardResponse<BoardUID> getBoardUID() {
-        return null;
+        logger.info("Inside getBoardUID");
+        return new BoardResponse<>("Hello", new BoardUID("123456"));
     }
 //    @ExceptionHandler
 //    public @RequestBody

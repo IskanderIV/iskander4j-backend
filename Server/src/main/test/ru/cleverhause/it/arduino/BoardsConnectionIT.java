@@ -1,30 +1,29 @@
 package ru.cleverhause.it.arduino;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.internal.http2.Header;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.http.HttpMethod;
 import ru.cleverhause.rest.HttpResponse;
 import ru.cleverhause.rest.board.dto.request.BoardReq;
 import ru.cleverhause.rest.board.dto.request.registration.DeviceSetting;
 import ru.cleverhause.rest.board.dto.request.work.DeviceInfo;
 import ru.cleverhause.util.JsonUtil;
-import ru.cleverhause.util.TestJsonUtil;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 
-import static ru.cleverhause.util.HttpUtil.doPost;
+import static ru.cleverhause.util.HttpUtil.execute;
 
 public class BoardsConnectionIT {
     public static final MediaType JSON_CONTENT_TYPE = MediaType.parse("application/json; charset=utf-8");
-    private static final String BASE_ADRESS_PATH = "/claverhause";
+    private static final String BASE_ADRESS_PATH = "/cleverhause";
     private static final Logger logger = Logger.getLogger(BoardsConnectionIT.class);
 
     @Before
@@ -41,14 +40,14 @@ public class BoardsConnectionIT {
                 Arrays.asList(
                         new DeviceInfo.Builder().setId(1).setAck(0.7).setAdj(false).setCtrlVal(0.0).setRadioErr(false).build()
                 ));
-        HttpResponse response = getHttpResponse(reqURL, request);
+        HttpResponse response = getHttpResponse(HttpMethod.POST, reqURL, request);
         Assert.assertEquals(200, response.getCode());
     }
 
     @Test
     public void getBoardUIDTest() {
-        URL reqURL = getRequestURL("/boards/board/uid/username");
-        HttpResponse response = getHttpResponse(reqURL, null);
+        URL reqURL = getRequestURL("/boards/board/uid");
+        HttpResponse response = getHttpResponse(HttpMethod.GET, reqURL, null);
         Assert.assertEquals(200, response.getCode());
     }
 
@@ -62,11 +61,11 @@ public class BoardsConnectionIT {
                 Arrays.asList(
                         new DeviceSetting.Builder().setId(1).setAdj(true).setRotate(false).setSignaling(false).build()
                 ));
-        HttpResponse response = getHttpResponse(reqURL, request);
+        HttpResponse response = getHttpResponse(HttpMethod.POST, reqURL, request);
         Assert.assertEquals(200, response.getCode());
     }
 
-    private HttpResponse getHttpResponse(URL reqURL, BoardReq body) {
+    private HttpResponse getHttpResponse(HttpMethod method, URL reqURL, BoardReq body) {
         RequestBody jsonBody = null;
         try {
             if (body != null) {
@@ -75,11 +74,14 @@ public class BoardsConnectionIT {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
-        Request req = new Request.Builder()
-                .url(reqURL)
-                .post(jsonBody)
-                .build();
-        return doPost(req);
+        Request.Builder reqBuilder = new Request.Builder();
+        reqBuilder.url(reqURL);
+        switch(method) {
+            case POST: reqBuilder.post(jsonBody); break;
+            case GET:
+            default: reqBuilder.get().addHeader("Content-type", org.springframework.http.MediaType.APPLICATION_JSON_VALUE);
+        }
+        return execute(reqBuilder.build());
     }
 
     private URL getRequestURL(String path) {

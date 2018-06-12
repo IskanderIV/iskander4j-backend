@@ -1,8 +1,7 @@
 package ru.cleverhause.rest.board.dto.request.work;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
@@ -24,6 +23,30 @@ public class Errors implements Serializable {
     }
 
     public Errors() {
+    }
+
+    public Boolean getGsm() {
+        return gsm;
+    }
+
+    public void setGsm(Boolean gsm) {
+        this.gsm = gsm;
+    }
+
+    public Boolean getLcd() {
+        return lcd;
+    }
+
+    public void setLcd(Boolean lcd) {
+        this.lcd = lcd;
+    }
+
+    public Boolean getRadio() {
+        return radio;
+    }
+
+    public void setRadio(Boolean radio) {
+        this.radio = radio;
     }
 
     @Override

@@ -1,5 +1,9 @@
 package ru.cleverhause.rest.board.dto.request.registration;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 
 /**
@@ -14,11 +18,53 @@ public class DeviceSetting implements Serializable {
     private Boolean rotate;
     private Boolean signaling;
 
+    public DeviceSetting(int id, Boolean adj, Boolean rotate, Boolean signaling) {
+        this.id = id;
+        this.adj = adj;
+        this.rotate = rotate;
+        this.signaling = signaling;
+    }
+
+    public DeviceSetting() {
+    }
+
     public DeviceSetting(DeviceSetting.Builder builder) {
         this.id = builder.id;
         this.adj = builder.adj;
         this.rotate = builder.rotate;
         this.signaling = builder.signaling;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Boolean getAdj() {
+        return adj;
+    }
+
+    public void setAdj(Boolean adj) {
+        this.adj = adj;
+    }
+
+    public Boolean getRotate() {
+        return rotate;
+    }
+
+    public void setRotate(Boolean rotate) {
+        this.rotate = rotate;
+    }
+
+    public Boolean getSignaling() {
+        return signaling;
+    }
+
+    public void setSignaling(Boolean signaling) {
+        this.signaling = signaling;
     }
 
     public static class Builder {

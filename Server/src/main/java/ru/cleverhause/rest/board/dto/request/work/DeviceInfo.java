@@ -1,5 +1,6 @@
 package ru.cleverhause.rest.board.dto.request.work;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +20,17 @@ public class DeviceInfo implements Serializable {
     private Boolean adj;
     private Double ctrlVal;
     private Boolean radioErr;
+
+    public DeviceInfo(int id, Double ack, Boolean adj, Double ctrlVal, Boolean radioErr) {
+        this.id = id;
+        this.ack = ack;
+        this.adj = adj;
+        this.ctrlVal = ctrlVal;
+        this.radioErr = radioErr;
+    }
+
+    public DeviceInfo() {
+    }
 
     public DeviceInfo(DeviceInfo.Builder builder) {
         this.id = builder.id;

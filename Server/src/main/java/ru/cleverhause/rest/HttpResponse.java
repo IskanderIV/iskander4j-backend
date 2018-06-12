@@ -1,7 +1,7 @@
 package ru.cleverhause.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.deploy.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;

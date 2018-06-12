@@ -7,8 +7,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import ru.cleverhause.rest.HttpResponse;
 
 import java.io.IOException;
@@ -17,9 +16,9 @@ import java.util.Map;
 
 public class HttpUtil {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(HttpUtil.class);
+    private static final Logger LOGGER = Logger.getLogger(HttpUtil.class);
 
-    public static HttpResponse doPost(final Request request) {
+    public static HttpResponse execute(final Request request) {
         OkHttpClient httpClient = new OkHttpClient();
         final Response response;
         try {
@@ -31,7 +30,7 @@ public class HttpUtil {
         return convertToCleverhauseResponse(response);
     }
 
-    public static HttpResponse doPost(final HttpUrl url, final RequestBody body, final Headers headers) throws IOException {
+    public static HttpResponse execute(final HttpUrl url, final RequestBody body, final Headers headers) throws IOException {
         OkHttpClient httpClient = new OkHttpClient();
 //        RequestBody jsonBody = RequestBody.create(JSON_CONTENT_TYPE, bodyInString);
         Request request = new Request.Builder()
@@ -67,7 +66,7 @@ public class HttpUtil {
         }
         // obtain code
         final int statusCode = response.code();
-        LOGGER.info("Response: {}, {}", statusCode, body);
+        LOGGER.info("Response: " + statusCode + ", " + body);
 
         return new HttpResponse(statusCode, body, respHeader);
     }
