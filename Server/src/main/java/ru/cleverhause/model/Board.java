@@ -31,7 +31,7 @@ public class Board implements Serializable {
     private Long id;
 
     @Column(name = "boardUID")
-    private String boardUID;
+    private Long boardUID;
 
     @Column(name = "boardname")
     private String boardName;
@@ -50,7 +50,7 @@ public class Board implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "board_id"))
     private User user;
 
-    public Board(Long id, String boardUID, String boardName, BoardStructure structure, List<BoardSavedData> savedData, BoardControlData controlData, User user) {
+    public Board(Long id, Long boardUID, String boardName, BoardStructure structure, List<BoardSavedData> savedData, BoardControlData controlData, User user) {
         this.id = id;
         this.boardUID = boardUID;
         this.boardName = boardName;
@@ -71,11 +71,11 @@ public class Board implements Serializable {
         this.id = id;
     }
 
-    public String getBoardUID() {
+    public Long getBoardUID() {
         return boardUID;
     }
 
-    public void setBoardUID(String boardUID) {
+    public void setBoardUID(Long boardUID) {
         this.boardUID = boardUID;
     }
 

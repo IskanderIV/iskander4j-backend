@@ -3,9 +3,11 @@ package ru.cleverhause.rest.board.dto.structure;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
-public class DeviceStructure {
+public class DeviceStructure implements Serializable {
     private Long id;
     private int min;
     private int max;

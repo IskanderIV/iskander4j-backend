@@ -1,4 +1,4 @@
-package ru.cleverhause.rest.board.dto.request;
+package ru.cleverhause.rest.frontend.dto.request;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,20 +10,20 @@ import java.util.List;
  * @author Aleksandr_Ivanov1
  * @date 12/1/2017.
  */
-public class BoardReq<T extends Serializable> implements Serializable {
+public class UIRequest<T extends Serializable> implements Serializable {
     private String username;
     private String password;
     private Long boardUID;
-    private List<T> devices = new ArrayList<>();
+    private T input;
 
-    public BoardReq(String userName, String pass, Long boardUID, List<T> devs) {
+    public UIRequest(String userName, String pass, Long boardUID, T devs) {
         this.username = userName;
         this.password = pass;
         this.boardUID = boardUID;
-        this.devices = devs;
+        this.input = devs;
     }
 
-    public BoardReq() {
+    public UIRequest() {
     }
 
     public String getUsername() {
@@ -50,12 +50,12 @@ public class BoardReq<T extends Serializable> implements Serializable {
         this.boardUID = boardUID;
     }
 
-    public List<T> getDevices() {
-        return devices;
+    public T getInput() {
+        return input;
     }
 
-    public void setDevices(List<T> devices) {
-        this.devices = devices;
+    public void setInput(T input) {
+        this.input = input;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class BoardReq<T extends Serializable> implements Serializable {
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", boardUID='" + boardUID + '\'' +
-                ", devices=" + devices +
+                ", input=" + input +
                 '}';
     }
 }

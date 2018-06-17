@@ -3,22 +3,16 @@ package ru.cleverhause.service.board;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.cleverhause.dao.BoardControlDataDao;
-import ru.cleverhause.dao.BoardDao;
-import ru.cleverhause.dao.BoardSavedDataDao;
-import ru.cleverhause.dao.UserDao;
-import ru.cleverhause.model.Board;
-import ru.cleverhause.model.BoardSavedData;
-import ru.cleverhause.model.BoardStructure;
+import ru.cleverhause.dao.*;
+import ru.cleverhause.model.*;
 import ru.cleverhause.rest.board.dto.request.BoardReq;
 import ru.cleverhause.rest.board.dto.request.registration.DeviceSetting;
 import ru.cleverhause.rest.board.dto.request.work.DeviceData;
 import ru.cleverhause.rest.board.dto.structure.DeviceStructure;
+import ru.cleverhause.rest.frontend.dto.request.DeviceControl;
 import ru.cleverhause.util.JsonUtil;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by
@@ -28,12 +22,16 @@ import java.util.List;
  */
 @Service
 public class BoardDataServiceImpl implements BoardDataService {
+    private static Long newId = 1L;
+
     @Autowired
     private BoardDao boardDao;
     @Autowired
     private BoardControlDataDao boardControlDataDao;
     @Autowired
     private BoardSavedDataDao boardSavedDataDao;
+    @Autowired
+    private BoardStructureDao boardStructureDao;
     @Autowired
     private UserDao userDao;
 
@@ -45,44 +43,64 @@ public class BoardDataServiceImpl implements BoardDataService {
     }
 
     @Override
-    public Board saveBoardStructure(String boardUID, List<DeviceSetting> boardReq) throws Exception {
-        Board board = findByUID(boardUID);
-        if (board != null) {
-            BoardStructure boardStructure = new BoardStructure(board.getId(), JsonUtil.toJson(boardReq), board);
-            board.setStructure(boardStructure);
-            board = boardDao.save(board);
-        }
+    public Board registerBoard(BoardReq<DeviceStructure> boardRegReq) throws Exception {
+        Long id = newId++;
+        User user = userDao.findByUsername(boardRegReq.getUsername());
+        String structureJson = JsonUtil.toJson(boardRegReq.getDevices());
 
-        return board;
+        BoardStructure boardStructure = new BoardStructure();
+        boardStructure.setId(id);
+        boardStructure.setStructure(structureJson);
+        boardStructureDao.save(boardStructure);
+
+        BoardControlData boardControlData = new BoardControlData();
+        boardControlData.setId(id);
+        boardControlData.setCreated(new Date());
+
+        List<DeviceControl> devicesControl = new ArrayList<>();
+        List<DeviceStructure> devicesStructure = boardRegReq.getDevices();
+
+        for (DeviceStructure dev : devicesStructure) {
+            DeviceControl control = new DeviceControl();
+            control.setId(dev.getId());
+            control.setControl(new Double(dev.getMin()));
+            devicesControl.add(control);
+        }
+        boardControlData.setData(JsonUtil.toJson(devicesControl));
+        boardControlDataDao.save(boardControlData);
+
+        Board board = new Board(123L, boardRegReq.getBoardUID(), "", null, null, null, user);
+
+        return boardDao.save(board);
     }
 
     @Override
-    public Board saveData(String boardUID, BoardReq<DeviceData> boardSaveReq) {
+    public Long generateBoardUID() throws Exception {
+        Random rand = new Random();
+        Long newBoardUID;
+        do {
+            newBoardUID = rand.nextLong();
+        } while (boardDao.findByBoardUID(newBoardUID) != null);
+
+        return newBoardUID;
+    }
+
+    @Override
+    public Board saveData(Long boardUID, BoardReq<DeviceData> boardSaveReq) throws Exception {
         logger.info("saveData operation");
         Board savedBoard = findByUID(boardUID);
         if (savedBoard != null) {
             BoardStructure boardStructure = savedBoard.getStructure();
-            List<DeviceStructure> deviceStructureList = getDeviceStructList(boardStructure);
-            if (deviceStructureList != null) {
-                dsLoop:
-                for (DeviceStructure ds : deviceStructureList) {
-                    List<BoardSavedData> savedDataList = savedBoard.getSavedData();
-                    for (BoardSavedData sd : savedDataList) {
-                        if (ds.getId() == sd.getId()) {
-                            sd.setData();
-                            continue dsLoop;
-                        }
-                    }
 
-                }
-            }
+            List<BoardSavedData> boardSavedData = savedBoard.getSavedData();
+            List<DeviceData> actualDataList = boardSaveReq.getDevices();
+            List<DeviceStructure> deviceStructureList = getDeviceStructList(boardStructure);
+            savedBoard.setSavedData(Arrays.asList(
+                    new BoardSavedData(savedBoard.getId(), JsonUtil.toJson(boardSaveReq.getDevices()), new Date(), savedBoard)));
+            savedBoard = boardDao.save(savedBoard);
         }
 
-        board.setSavedData(Arrays.asList(
-                new BoardSavedData(board.getId(), JsonUtil.toJson(boardSaveReq.getDevices()), new Date(), board)
-        ));
-
-        return boardDao.save(board);
+        return savedBoard;
     }
 
     private List<DeviceStructure> getDeviceStructList(BoardStructure boardStructure) {
@@ -97,12 +115,12 @@ public class BoardDataServiceImpl implements BoardDataService {
     }
 
     @Override
-    public Board getData(String boardUID){
+    public Board getData(Long boardUID){
         return null;
     }
 
     @Override
-    public Board saveControl(String boardUID, BoardReq<DeviceData> boardSaveReq) {
+    public Board saveControl(Long boardUID, BoardReq<DeviceData> boardSaveReq) {
         return null;
     }
 
@@ -112,7 +130,7 @@ public class BoardDataServiceImpl implements BoardDataService {
     }
 
     @Override
-    public Board findByUID(String boardUID) {
+    public Board findByUID(Long boardUID) {
         return boardDao.findByBoardUID(boardUID);
     }
 

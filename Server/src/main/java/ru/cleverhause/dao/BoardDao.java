@@ -12,7 +12,7 @@ import java.util.List;
  * @date 5/28/2018.
  */
 public interface BoardDao extends JpaRepository<Board, Long> {
-    List<Board> findByBoardname(String boardName);
+    List<Board> findByBoardname(String boardname);
 
-    Board findByBoardUID(String boardUID);
+    Board findByBoardUID(Long boardUID);
 }

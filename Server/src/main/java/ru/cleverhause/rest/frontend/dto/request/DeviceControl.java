@@ -3,13 +3,15 @@ package ru.cleverhause.rest.frontend.dto.request;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
-public class DeviceControl {
-    private int id;
+public class DeviceControl implements Serializable {
+    private Long id;
     private Double control;
 
-    public DeviceControl(int id, Double control) {
+    public DeviceControl(Long id, Double control) {
         this.id = id;
         this.control = control;
     }
