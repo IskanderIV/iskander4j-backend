@@ -35,7 +35,7 @@ public class BoardsConnectionIT {
 
         BoardReq request = new BoardReq<>("username",
                 "password",
-                "123456",
+                123456L,
                 Arrays.asList(
                         new DeviceData.Builder().setId(1).setAck(0.7).setAdj(false).setCtrlVal(0.0).setRadioErr(false).build()
                 ));
@@ -56,7 +56,7 @@ public class BoardsConnectionIT {
 
         BoardReq request = new BoardReq<>("username",
                 "password",
-                "123456",
+                123456L,
                 Arrays.asList(
                         new DeviceSetting.Builder().setId(1).setAdj(true).setRotate(false).setSignaling(false).build()
                 ));
@@ -75,10 +75,13 @@ public class BoardsConnectionIT {
         }
         Request.Builder reqBuilder = new Request.Builder();
         reqBuilder.url(reqURL);
-        switch(method) {
-            case POST: reqBuilder.post(jsonBody); break;
+        switch (method) {
+            case POST:
+                reqBuilder.post(jsonBody);
+                break;
             case GET:
-            default: reqBuilder.get().addHeader("Content-type", org.springframework.http.MediaType.APPLICATION_JSON_VALUE);
+            default:
+                reqBuilder.get().addHeader("Content-type", org.springframework.http.MediaType.APPLICATION_JSON_VALUE);
         }
         return execute(reqBuilder.build());
     }

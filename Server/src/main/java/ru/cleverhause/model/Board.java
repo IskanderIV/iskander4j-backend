@@ -5,14 +5,15 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,45 +25,46 @@ import java.util.List;
 @Entity
 @Table(name = "board")
 public class Board implements Serializable {
-
-    @Id
-    @Column(name = "id")
-    @GeneratedValue
     private Long id;
-
-    @Column(name = "boardUID")
     private Long boardUID;
-
-    @Column(name = "boardname")
     private String boardName;
-
-    @OneToOne(mappedBy = "board", cascade = CascadeType.ALL)
     private BoardStructure structure;
-
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<BoardSavedData> savedData;
-
-    @OneToOne(mappedBy = "board", cascade = CascadeType.ALL)
+    private List<BoardSavedData> savedData = new ArrayList<>();
     private BoardControlData controlData;
-
-    @ManyToOne
-    @JoinTable(name = "user_boards", joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "board_id"))
     private User user;
 
-    public Board(Long id, Long boardUID, String boardName, BoardStructure structure, List<BoardSavedData> savedData, BoardControlData controlData, User user) {
-        this.id = id;
+    public Board(Long boardUID, String boardName, BoardStructure structure, List<BoardSavedData> savedData, BoardControlData controlData, User user) {
+//        this.id = id;
         this.boardUID = boardUID;
         this.boardName = boardName;
         this.structure = structure;
+        if (structure != null) {
+//            this.structure.setId(id);
+            this.structure.setBoard(this);
+        }
+
         this.savedData = savedData;
+        if (savedData != null) {
+            for (BoardSavedData saved : savedData) {
+//                saved.setId(id);
+                saved.setBoard(this);
+            }
+        }
+
         this.controlData = controlData;
+        if (structure != null) {
+//            this.controlData.setId(id);
+            this.controlData.setBoard(this);
+        }
         this.user = user;
     }
 
     public Board() {
     }
 
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //generator = "board_id_seq"
     public Long getId() {
         return id;
     }
@@ -71,6 +73,7 @@ public class Board implements Serializable {
         this.id = id;
     }
 
+    @Column(name = "boardUID")
     public Long getBoardUID() {
         return boardUID;
     }
@@ -79,6 +82,7 @@ public class Board implements Serializable {
         this.boardUID = boardUID;
     }
 
+    @Column(name = "boardname")
     public String getBoardName() {
         return boardName;
     }
@@ -87,6 +91,7 @@ public class Board implements Serializable {
         this.boardName = boardName;
     }
 
+    @OneToOne(mappedBy = "board", cascade = CascadeType.ALL)
     public BoardStructure getStructure() {
         return structure;
     }
@@ -95,6 +100,7 @@ public class Board implements Serializable {
         this.structure = structure;
     }
 
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     public List<BoardSavedData> getSavedData() {
         return savedData;
     }
@@ -103,6 +109,7 @@ public class Board implements Serializable {
         this.savedData = savedData;
     }
 
+    @OneToOne(mappedBy = "board", cascade = CascadeType.ALL)
     public BoardControlData getControlData() {
         return controlData;
     }
@@ -111,6 +118,8 @@ public class Board implements Serializable {
         this.controlData = controlData;
     }
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     public User getUser() {
         return user;
     }
@@ -119,16 +128,4 @@ public class Board implements Serializable {
         this.user = user;
     }
 
-    @Override
-    public String toString() {
-        return "Board{" +
-                "id=" + id +
-                ", boardUID='" + boardUID + '\'' +
-                ", boardName='" + boardName + '\'' +
-                ", structure=" + structure +
-                ", savedData=" + savedData +
-                ", controlData=" + controlData +
-                ", user=" + user +
-                '}';
-    }
 }

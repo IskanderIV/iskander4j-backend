@@ -3,16 +3,24 @@ package ru.cleverhause.service.board;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.cleverhause.dao.*;
-import ru.cleverhause.model.*;
+import ru.cleverhause.dao.BoardControlDataDao;
+import ru.cleverhause.dao.BoardDao;
+import ru.cleverhause.dao.BoardSavedDataDao;
+import ru.cleverhause.dao.BoardStructureDao;
+import ru.cleverhause.dao.UserDao;
+import ru.cleverhause.model.Board;
+import ru.cleverhause.model.BoardSavedData;
+import ru.cleverhause.model.BoardStructure;
+import ru.cleverhause.model.User;
 import ru.cleverhause.rest.board.dto.request.BoardReq;
-import ru.cleverhause.rest.board.dto.request.registration.DeviceSetting;
 import ru.cleverhause.rest.board.dto.request.work.DeviceData;
 import ru.cleverhause.rest.board.dto.structure.DeviceStructure;
-import ru.cleverhause.rest.frontend.dto.request.DeviceControl;
 import ru.cleverhause.util.JsonUtil;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Created by
@@ -22,8 +30,6 @@ import java.util.*;
  */
 @Service
 public class BoardDataServiceImpl implements BoardDataService {
-    private static Long newId = 1L;
-
     @Autowired
     private BoardDao boardDao;
     @Autowired
@@ -44,45 +50,44 @@ public class BoardDataServiceImpl implements BoardDataService {
 
     @Override
     public Board registerBoard(BoardReq<DeviceStructure> boardRegReq) throws Exception {
-        Long id = newId++;
         User user = userDao.findByUsername(boardRegReq.getUsername());
-        String structureJson = JsonUtil.toJson(boardRegReq.getDevices());
-
-        BoardStructure boardStructure = new BoardStructure();
-        boardStructure.setId(id);
-        boardStructure.setStructure(structureJson);
-        boardStructureDao.save(boardStructure);
-
-        BoardControlData boardControlData = new BoardControlData();
-        boardControlData.setId(id);
-        boardControlData.setCreated(new Date());
-
-        List<DeviceControl> devicesControl = new ArrayList<>();
-        List<DeviceStructure> devicesStructure = boardRegReq.getDevices();
-
-        for (DeviceStructure dev : devicesStructure) {
-            DeviceControl control = new DeviceControl();
-            control.setId(dev.getId());
-            control.setControl(new Double(dev.getMin()));
-            devicesControl.add(control);
-        }
-        boardControlData.setData(JsonUtil.toJson(devicesControl));
-        boardControlDataDao.save(boardControlData);
-
-        Board board = new Board(123L, boardRegReq.getBoardUID(), "", null, null, null, user);
-
+        Board board = new Board();
+        board.setBoardUID(boardRegReq.getBoardUID());
+        board.setBoardName("Kitchen");
+        board.setUser(user);
+        user.getBoards().add(board);
         return boardDao.save(board);
+//        String structureJson = JsonUtil.toJson(boardRegReq.getDevices());
+//
+//        BoardStructure boardStructure = new BoardStructure();
+//        boardStructure.setStructure(structureJson);
+//
+//        BoardControlData boardControlData = new BoardControlData();
+//        boardControlData.setCreated(new Date());
+//
+//        List<DeviceControl> devicesControl = new ArrayList<>();
+//        List<DeviceStructure> devicesStructure = boardRegReq.getDevices();
+//
+//        for (DeviceStructure dev : devicesStructure) {
+//            DeviceControl control = new DeviceControl();
+//            control.setControl(new Double(dev.getMin()));
+//            devicesControl.add(control);
+//        }
+//        boardControlData.setData(JsonUtil.toJson(devicesControl));
+//
+//        Board board = new Board(boardRegReq.getBoardUID(), "", boardStructure, Arrays.asList(new BoardSavedData()), boardControlData, user);
+//        return boardDao.save(board);
     }
 
     @Override
     public Long generateBoardUID() throws Exception {
         Random rand = new Random();
-        Long newBoardUID;
+        int nextId;
         do {
-            newBoardUID = rand.nextLong();
-        } while (boardDao.findByBoardUID(newBoardUID) != null);
+            nextId = rand.nextInt(1000000) + 1000000;
+        } while (boardDao.findByBoardUID((long) nextId) != null);
 
-        return newBoardUID;
+        return (long) nextId;
     }
 
     @Override
@@ -96,7 +101,7 @@ public class BoardDataServiceImpl implements BoardDataService {
             List<DeviceData> actualDataList = boardSaveReq.getDevices();
             List<DeviceStructure> deviceStructureList = getDeviceStructList(boardStructure);
             savedBoard.setSavedData(Arrays.asList(
-                    new BoardSavedData(savedBoard.getId(), JsonUtil.toJson(boardSaveReq.getDevices()), new Date(), savedBoard)));
+                    new BoardSavedData(JsonUtil.toJson(boardSaveReq.getDevices()), new Date(), savedBoard)));
             savedBoard = boardDao.save(savedBoard);
         }
 
@@ -115,7 +120,7 @@ public class BoardDataServiceImpl implements BoardDataService {
     }
 
     @Override
-    public Board getData(Long boardUID){
+    public Board getData(Long boardUID) {
         return null;
     }
 

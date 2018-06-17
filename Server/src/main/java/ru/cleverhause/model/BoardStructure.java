@@ -3,6 +3,7 @@ package ru.cleverhause.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
@@ -20,7 +21,7 @@ import javax.persistence.Table;
 public class BoardStructure {
     @Id
     @Column(name = "id")
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "structure")
@@ -31,8 +32,8 @@ public class BoardStructure {
     @JoinColumn(name = "board_id")
     private Board board;
 
-    public BoardStructure(Long id, String structure, Board board) {
-        this.id = id;
+    public BoardStructure(String structure, Board board) {
+//        this.id = id;
         this.structure = structure;
         this.board = board;
     }
@@ -64,12 +65,12 @@ public class BoardStructure {
         this.board = board;
     }
 
-    @Override
-    public String toString() {
-        return "BoardStructure{" +
-                "id=" + id +
-                ", structure='" + structure + '\'' +
-                ", board=" + board +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "BoardStructure{" +
+//                "id=" + id +
+//                ", structure='" + structure + '\'' +
+//                ", board=" + board +
+//                '}';
+//    }
 }

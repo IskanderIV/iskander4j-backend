@@ -4,7 +4,12 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.cleverhause.model.Board;
 import ru.cleverhause.rest.board.dto.request.BoardReq;
 import ru.cleverhause.rest.board.dto.request.registration.DeviceSetting;
@@ -12,7 +17,6 @@ import ru.cleverhause.rest.board.dto.request.work.DeviceData;
 import ru.cleverhause.rest.board.dto.response.BoardResponse;
 import ru.cleverhause.rest.board.dto.structure.DeviceStructure;
 import ru.cleverhause.rest.frontend.dto.request.DeviceControl;
-import ru.cleverhause.rest.frontend.dto.request.UIRequest;
 import ru.cleverhause.rest.frontend.dto.response.BoardUID;
 import ru.cleverhause.rest.frontend.dto.response.UIResponseBody;
 import ru.cleverhause.service.board.BoardDataService;
@@ -89,17 +93,17 @@ public class ArduinoEndpoint {
     }
 
     @GetMapping(value = "/data/last/{num}")
-    public BoardResponse<BoardReq<DeviceSetting>> getLastArduinoData(@RequestAttribute(name = "num") Integer num) {
+    public BoardResponse<BoardReq<DeviceSetting>> getLastArduinoData(@PathVariable(name = "num") Integer num) {
         return null;
     }
 
     @GetMapping(value = "/{username}")
-    public BoardResponse<BoardReq<DeviceSetting>> getBoards(@RequestAttribute(name = "username") String username) {
+    public BoardResponse<BoardReq<DeviceSetting>> getBoards(@PathVariable(name = "username") String username) {
         return null;
     }
 
-    @GetMapping(value = "/board/uid")
-    public UIResponseBody<BoardUID> getBoardUID(@RequestBody UIRequest uiRequest) throws Exception {
+    @GetMapping(value = "/board/uid/{username}")
+    public UIResponseBody<BoardUID> getBoardUID(@PathVariable(name = "username") String username) throws Exception {
         logger.info("Inside getBoardUID");
         Long newBoardUID = boardDataService.generateBoardUID();
 

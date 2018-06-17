@@ -3,6 +3,7 @@ package ru.cleverhause.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -22,7 +23,7 @@ import java.util.Date;
 public class BoardSavedData {
     @Id
     @Column(name = "id")
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "data")
@@ -36,8 +37,8 @@ public class BoardSavedData {
     @JoinColumn(name = "board_id")
     private Board board;
 
-    public BoardSavedData(Long id, String data, Date created, Board board) {
-        this.id = id;
+    public BoardSavedData(String data, Date created, Board board) {
+//        this.id = id;
         this.data = data;
         this.created = created;
         this.board = board;
@@ -78,13 +79,13 @@ public class BoardSavedData {
         this.board = board;
     }
 
-    @Override
-    public String toString() {
-        return "BoardSavedData{" +
-                "id=" + id +
-                ", data='" + data + '\'' +
-                ", created=" + created +
-                ", board=" + board +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "BoardSavedData{" +
+//                "id=" + id +
+//                ", data='" + data + '\'' +
+//                ", created=" + created +
+//                ", board=" + board +
+//                '}';
+//    }
 }
