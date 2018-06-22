@@ -1,11 +1,8 @@
 package ru.cleverhause.converter;
 
-import ru.cleverhause.rest.board.dto.request.BoardReq;
-import ru.cleverhause.rest.board.dto.request.work.DeviceData;
 import ru.cleverhause.util.JsonUtil;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.List;
 
 public class BoardConverter {

@@ -45,7 +45,7 @@
 
 //Response. BOARD. Send registration answer 200 OK
 
-//From Board. Request normal work
+//Request. BOARD. Normal work
 {
   "username": "username",
   "password": "password_in_MD5",
@@ -80,24 +80,10 @@
   }
 }
 
-//Request. UI. Control data choosed by user
-{
-  "username": "username",
-  "password": "password_in_MD5",
-  "boardUID": "UID",
-  "devices": [
-    {
-      "id": 1,
-      "ctrlVal": 0
-    }
-  ]
-}
-// From server. Response when normal work
+// Response. BOARD. Normal work
 {
   "message": "",
   "output": {
-    "username": "username",
-    "password": "password_in_MD5",
     "boardUID": "UID",
     "devices": [
       {
@@ -130,6 +116,30 @@
   }
 }
 
+//Request. UI. Control data
+{
+  "username": "username",
+  "password": "password_in_MD5",
+  "boardUID": "UID",
+  "devices": [
+    {
+      "id": 1,
+      "ctrlVal": 0
+    }
+  ]
+}
 
-
-
+//Response. UI. Control data 200 ok
+{
+  "message": "",
+  "output": {
+    // controlled by saved structure
+    "boardUID": "UID",
+    "devices": [
+      {
+        "id": 1,
+        "ctrlVal": 0
+      }
+    ]
+  }
+}

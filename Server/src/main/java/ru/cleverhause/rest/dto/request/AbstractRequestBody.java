@@ -1,8 +1,6 @@
-package ru.cleverhause.rest.frontend.dto.request;
+package ru.cleverhause.rest.dto.request;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by
@@ -10,20 +8,18 @@ import java.util.List;
  * @author Aleksandr_Ivanov1
  * @date 12/1/2017.
  */
-public class UIRequest<T extends Serializable> implements Serializable {
+public abstract class AbstractRequestBody implements Serializable {
     private String username;
     private String password;
     private Long boardUID;
-    private T input;
 
-    public UIRequest(String userName, String pass, Long boardUID, T devs) {
+    protected AbstractRequestBody(String userName, String pass, Long boardUID) {
         this.username = userName;
         this.password = pass;
         this.boardUID = boardUID;
-        this.input = devs;
     }
 
-    public UIRequest() {
+    protected AbstractRequestBody() {
     }
 
     public String getUsername() {
@@ -48,23 +44,5 @@ public class UIRequest<T extends Serializable> implements Serializable {
 
     public void setBoardUID(Long boardUID) {
         this.boardUID = boardUID;
-    }
-
-    public T getInput() {
-        return input;
-    }
-
-    public void setInput(T input) {
-        this.input = input;
-    }
-
-    @Override
-    public String toString() {
-        return "BoardReq{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", boardUID='" + boardUID + '\'' +
-                ", input=" + input +
-                '}';
     }
 }

@@ -19,23 +19,12 @@ import java.util.Date;
 @Entity
 @Table(name = "boardControlData")
 public class BoardControlData {
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "data")
     private String data;
-
-    @Column(name = "created")
     private Date created;
-
-    @OneToOne
-    @JoinColumn(name = "board_id")
     private Board board;
 
     public BoardControlData(String data, Date created, Board board) {
-//        this.id = id;
         this.data = data;
         this.created = created;
         this.board = board;
@@ -44,6 +33,9 @@ public class BoardControlData {
     public BoardControlData() {
     }
 
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {
         return id;
     }
@@ -52,6 +44,7 @@ public class BoardControlData {
         this.id = id;
     }
 
+    @Column(name = "data")
     public String getData() {
         return data;
     }
@@ -60,6 +53,7 @@ public class BoardControlData {
         this.data = data;
     }
 
+    @Column(name = "created")
     public Date getCreated() {
         return created;
     }
@@ -68,6 +62,8 @@ public class BoardControlData {
         this.created = created;
     }
 
+    @OneToOne
+    @JoinColumn(name = "board_id")
     public Board getBoard() {
         return board;
     }

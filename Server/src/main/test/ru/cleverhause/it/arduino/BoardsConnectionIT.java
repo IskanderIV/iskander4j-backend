@@ -8,10 +8,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpMethod;
-import ru.cleverhause.rest.HttpResponse;
-import ru.cleverhause.rest.board.dto.request.BoardReq;
-import ru.cleverhause.rest.board.dto.request.registration.DeviceSetting;
-import ru.cleverhause.rest.board.dto.request.work.DeviceData;
+import ru.cleverhause.rest.dto.DeviceData;
+import ru.cleverhause.rest.dto.DeviceSetting;
+import ru.cleverhause.rest.dto.request.BoardRequestBody;
+import ru.cleverhause.rest.dto.response.HttpResponse;
 import ru.cleverhause.util.JsonUtil;
 
 import java.net.MalformedURLException;
@@ -33,7 +33,7 @@ public class BoardsConnectionIT {
     public void successBoardWorkTest() {
         URL reqURL = getRequestURL("/boards/board/data");
 
-        BoardReq request = new BoardReq<>("username",
+        BoardRequestBody request = new BoardRequestBody<>("username",
                 "password",
                 123456L,
                 Arrays.asList(
@@ -54,7 +54,7 @@ public class BoardsConnectionIT {
     public void successBoardRegistrationTest() {
         URL reqURL = getRequestURL("/boards/board/registration");
 
-        BoardReq request = new BoardReq<>("username",
+        BoardRequestBody request = new BoardRequestBody<>("username",
                 "password",
                 123456L,
                 Arrays.asList(
@@ -64,7 +64,7 @@ public class BoardsConnectionIT {
         Assert.assertEquals(200, response.getCode());
     }
 
-    private HttpResponse getHttpResponse(HttpMethod method, URL reqURL, BoardReq body) {
+    private HttpResponse getHttpResponse(HttpMethod method, URL reqURL, BoardRequestBody body) {
         RequestBody jsonBody = null;
         try {
             if (body != null) {

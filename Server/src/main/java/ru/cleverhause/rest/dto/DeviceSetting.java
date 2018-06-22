@@ -1,8 +1,4 @@
-package ru.cleverhause.rest.board.dto.request.registration;
-
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import lombok.Getter;
-import lombok.Setter;
+package ru.cleverhause.rest.dto;
 
 import java.io.Serializable;
 

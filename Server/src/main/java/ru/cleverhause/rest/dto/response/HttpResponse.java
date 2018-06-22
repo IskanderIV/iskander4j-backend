@@ -1,4 +1,4 @@
-package ru.cleverhause.rest;
+package ru.cleverhause.rest.dto.response;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;

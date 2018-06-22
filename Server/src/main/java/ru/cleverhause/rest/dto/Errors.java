@@ -1,6 +1,5 @@
-package ru.cleverhause.rest.board.dto.request.work;
+package ru.cleverhause.rest.dto;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Getter;
 import lombok.Setter;
 

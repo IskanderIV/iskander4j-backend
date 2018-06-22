@@ -1,6 +1,7 @@
 package ru.cleverhause.service.board;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.cleverhause.dao.BoardControlDataDao;
@@ -9,14 +10,17 @@ import ru.cleverhause.dao.BoardSavedDataDao;
 import ru.cleverhause.dao.BoardStructureDao;
 import ru.cleverhause.dao.UserDao;
 import ru.cleverhause.model.Board;
+import ru.cleverhause.model.BoardControlData;
 import ru.cleverhause.model.BoardSavedData;
 import ru.cleverhause.model.BoardStructure;
 import ru.cleverhause.model.User;
-import ru.cleverhause.rest.board.dto.request.BoardReq;
-import ru.cleverhause.rest.board.dto.request.work.DeviceData;
-import ru.cleverhause.rest.board.dto.structure.DeviceStructure;
+import ru.cleverhause.rest.dto.DeviceControl;
+import ru.cleverhause.rest.dto.DeviceData;
+import ru.cleverhause.rest.dto.DeviceStructure;
+import ru.cleverhause.rest.dto.request.BoardRequestBody;
 import ru.cleverhause.util.JsonUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -41,42 +45,58 @@ public class BoardDataServiceImpl implements BoardDataService {
     @Autowired
     private UserDao userDao;
 
-    private static final Logger logger = Logger.getLogger(BoardDataServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(BoardDataServiceImpl.class);
 
     @Override
-    public boolean checkBoardNumber(BoardReq boardReq) {
+    public boolean checkBoardNumber(BoardRequestBody boardRequestBody) {
         return true;
     }
 
     @Override
-    public Board registerBoard(BoardReq<DeviceStructure> boardRegReq) throws Exception {
+    public Board registerBoard(BoardRequestBody<DeviceStructure> boardRegReq) throws Exception {
         User user = userDao.findByUsername(boardRegReq.getUsername());
         Board board = new Board();
         board.setBoardUID(boardRegReq.getBoardUID());
         board.setBoardName("Kitchen");
         board.setUser(user);
         user.getBoards().add(board);
+
+        String structureJson = JsonUtil.toJson(boardRegReq.getDevices());
+
+        BoardStructure boardStructure = new BoardStructure();
+        boardStructure.setStructure(structureJson);
+        boardStructure.setBoard(board);
+        try {
+            boardStructureDao.save(boardStructure);
+        } catch (Exception e) {
+            logger.debug("Exception while save board structure! ", e);
+        }
+
+        BoardControlData boardControlData = new BoardControlData();
+        boardControlData.setCreated(new Date());
+        boardControlData.setBoard(board);
+
+        List<DeviceControl> defaultControl = new ArrayList<>();
+        List<DeviceStructure> devicesStructure = boardRegReq.getDevices();
+
+        for (DeviceStructure singleDeviceStruct : devicesStructure) {
+            DeviceControl control = new DeviceControl();
+            control.setId(singleDeviceStruct.getId());
+            control.setControl(new Double(singleDeviceStruct.getMin()));
+            defaultControl.add(control);
+        }
+        boardControlData.setData(JsonUtil.toJson(defaultControl));
+        try {
+            boardControlDataDao.save(boardControlData);
+        } catch (Exception e) {
+            logger.debug("Exception while save board default control data! ", e);
+        }
+
+        board.setStructure(boardStructure);
+        board.setSavedData((List<BoardSavedData>) null);
+        board.setControlData(boardControlData);
+
         return boardDao.save(board);
-//        String structureJson = JsonUtil.toJson(boardRegReq.getDevices());
-//
-//        BoardStructure boardStructure = new BoardStructure();
-//        boardStructure.setStructure(structureJson);
-//
-//        BoardControlData boardControlData = new BoardControlData();
-//        boardControlData.setCreated(new Date());
-//
-//        List<DeviceControl> devicesControl = new ArrayList<>();
-//        List<DeviceStructure> devicesStructure = boardRegReq.getDevices();
-//
-//        for (DeviceStructure dev : devicesStructure) {
-//            DeviceControl control = new DeviceControl();
-//            control.setControl(new Double(dev.getMin()));
-//            devicesControl.add(control);
-//        }
-//        boardControlData.setData(JsonUtil.toJson(devicesControl));
-//
-//        Board board = new Board(boardRegReq.getBoardUID(), "", boardStructure, Arrays.asList(new BoardSavedData()), boardControlData, user);
-//        return boardDao.save(board);
     }
 
     @Override
@@ -91,18 +111,23 @@ public class BoardDataServiceImpl implements BoardDataService {
     }
 
     @Override
-    public Board saveData(Long boardUID, BoardReq<DeviceData> boardSaveReq) throws Exception {
+    public Board saveData(Long boardUID, BoardRequestBody<DeviceData> boardSaveReq) {
         logger.info("saveData operation");
         Board savedBoard = findByUID(boardUID);
         if (savedBoard != null) {
-            BoardStructure boardStructure = savedBoard.getStructure();
-
-            List<BoardSavedData> boardSavedData = savedBoard.getSavedData();
-            List<DeviceData> actualDataList = boardSaveReq.getDevices();
-            List<DeviceStructure> deviceStructureList = getDeviceStructList(boardStructure);
-            savedBoard.setSavedData(Arrays.asList(
-                    new BoardSavedData(JsonUtil.toJson(boardSaveReq.getDevices()), new Date(), savedBoard)));
-            savedBoard = boardDao.save(savedBoard);
+            List<DeviceData> persistDeviceList = boardSaveReq.getDevices();
+            BoardSavedData persistData = new BoardSavedData();
+            persistData.setCreated(new Date());
+            persistData.setBoard(savedBoard);
+            String persistJsonData = "";
+            try {
+                persistJsonData = JsonUtil.toJson(persistDeviceList);
+            } catch (Exception e) {
+                logger.debug("Exception while saveData when toJson converting! ", e);
+            }
+            persistData.setData(persistJsonData);
+            savedBoard.getSavedData().add(persistData);
+            boardSavedDataDao.save(persistData);
         }
 
         return savedBoard;
@@ -125,7 +150,7 @@ public class BoardDataServiceImpl implements BoardDataService {
     }
 
     @Override
-    public Board saveControl(Long boardUID, BoardReq<DeviceData> boardSaveReq) {
+    public Board saveControl(Long boardUID, BoardRequestBody<DeviceData> boardSaveReq) {
         return null;
     }
 
@@ -140,7 +165,7 @@ public class BoardDataServiceImpl implements BoardDataService {
     }
 
     @Override
-    public List<BoardReq> getLast(int num) {
+    public List<BoardRequestBody> getLast(int num) {
         logger.info("Get operation");
         return null;
     }

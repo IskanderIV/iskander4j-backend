@@ -1,4 +1,4 @@
-package ru.cleverhause.rest.frontend.dto.request;
+package ru.cleverhause.rest.dto;
 
 import lombok.Getter;
 import lombok.Setter;

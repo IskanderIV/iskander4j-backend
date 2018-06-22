@@ -8,7 +8,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.apache.log4j.Logger;
-import ru.cleverhause.rest.HttpResponse;
+import ru.cleverhause.rest.dto.response.HttpResponse;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,7 +32,7 @@ public class HttpUtil {
 
     public static HttpResponse execute(final HttpUrl url, final RequestBody body, final Headers headers) throws IOException {
         OkHttpClient httpClient = new OkHttpClient();
-//        RequestBody jsonBody = RequestBody.create(JSON_CONTENT_TYPE, bodyInString);
+//        UIRequestBody jsonBody = UIRequestBody.create(JSON_CONTENT_TYPE, bodyInString);
         Request request = new Request.Builder()
                 .url(url)
                 .headers(headers)

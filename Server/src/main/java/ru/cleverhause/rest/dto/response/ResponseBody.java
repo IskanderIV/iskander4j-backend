@@ -1,4 +1,4 @@
-package ru.cleverhause.rest.board.dto.response;
+package ru.cleverhause.rest.dto.response;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,22 +13,22 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
-public class BoardResponse<T extends Serializable> implements Serializable {
+public class ResponseBody<T extends Serializable> implements Serializable {
     private String message;
     // при ответе в output подставляется соответствующий request
     private T output;
 
-    public BoardResponse(String message, T output) {
+    public ResponseBody(String message, T output) {
         this.message = message;
         this.output = output;
     }
 
-    public BoardResponse() {
+    public ResponseBody() {
     }
 
     @Override
     public String toString() {
-        return "BoardResponse{" +
+        return "BoardResponseBody{" +
                 "message='" + message + '\'' +
                 ", output=" + output +
                 '}';

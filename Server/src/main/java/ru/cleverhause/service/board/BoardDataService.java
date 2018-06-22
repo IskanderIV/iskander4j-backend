@@ -1,10 +1,9 @@
 package ru.cleverhause.service.board;
 
 import ru.cleverhause.model.Board;
-import ru.cleverhause.rest.board.dto.request.BoardReq;
-import ru.cleverhause.rest.board.dto.request.registration.DeviceSetting;
-import ru.cleverhause.rest.board.dto.request.work.DeviceData;
-import ru.cleverhause.rest.board.dto.structure.DeviceStructure;
+import ru.cleverhause.rest.dto.DeviceData;
+import ru.cleverhause.rest.dto.DeviceStructure;
+import ru.cleverhause.rest.dto.request.BoardRequestBody;
 
 import java.util.List;
 
@@ -17,21 +16,21 @@ import java.util.List;
 
 public interface BoardDataService {
 
-    boolean checkBoardNumber(BoardReq boardReq);
+    boolean checkBoardNumber(BoardRequestBody boardRequestBody);
 
-    Board registerBoard(BoardReq<DeviceStructure> boardRegReq) throws Exception;
+    Board registerBoard(BoardRequestBody<DeviceStructure> boardRegReq) throws Exception;
 
     Long generateBoardUID() throws Exception;
 
-    Board saveData(Long boardUID, BoardReq<DeviceData> boardSaveReq) throws Exception;
+    Board saveData(Long boardUID, BoardRequestBody<DeviceData> boardSaveReq) throws Exception;
 
     Board getData(Long boardUID) throws Exception;
 
-    Board saveControl(Long boardUID, BoardReq<DeviceData> boardSaveReq) throws Exception;
+    Board saveControl(Long boardUID, BoardRequestBody<DeviceData> boardSaveReq) throws Exception;
 
     Board getControl(Board board) throws Exception;
 
     Board findByUID(Long boardUID);
 
-    List<BoardReq> getLast(int num);
+    List<BoardRequestBody> getLast(int num);
 }

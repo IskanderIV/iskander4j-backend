@@ -19,21 +19,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "boardStructure")
 public class BoardStructure {
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "structure")
     private String structure;
-
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "board_id")
     private Board board;
 
     public BoardStructure(String structure, Board board) {
-//        this.id = id;
         this.structure = structure;
         this.board = board;
     }
@@ -41,6 +31,9 @@ public class BoardStructure {
     public BoardStructure() {
     }
 
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {
         return id;
     }
@@ -49,6 +42,7 @@ public class BoardStructure {
         this.id = id;
     }
 
+    @Column(name = "structure")
     public String getStructure() {
         return structure;
     }
@@ -57,6 +51,9 @@ public class BoardStructure {
         this.structure = structure;
     }
 
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "board_id")
     public Board getBoard() {
         return board;
     }
