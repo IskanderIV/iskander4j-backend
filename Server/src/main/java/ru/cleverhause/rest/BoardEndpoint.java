@@ -62,7 +62,7 @@ public class BoardEndpoint {
         } catch (Exception e) {
             message = "Can't save data";
         }
-        // after that we need to put control data into response
+        // after that we need to put ctrlVal data into response
         // взять список сохраненных данных, взять список сохраненного управления, скопировать второе в первое по id
         // создать output объект, создать респонз и выдать его
         List<DeviceData> unionDeviceInfo = null;
@@ -75,7 +75,7 @@ public class BoardEndpoint {
                 for (DeviceData savedData : unionDeviceInfo) {
                     for (DeviceControl control : deviceControlList) {
                         if (savedData.getId() == control.getId()) {
-                            savedData.setCtrlVal(control.getControl());
+                            savedData.setCtrlVal(control.getCtrlVal());
                         }
                     }
                 }
@@ -84,7 +84,7 @@ public class BoardEndpoint {
             }
         }
 
-        OutputBoard<DeviceData> output = new OutputBoard<>(unionDeviceInfo);
+        OutputBoard<DeviceData> output = new OutputBoard<>(unionDeviceInfo, null);
         response.setOutput(output);
         response.setMessage(message);
 

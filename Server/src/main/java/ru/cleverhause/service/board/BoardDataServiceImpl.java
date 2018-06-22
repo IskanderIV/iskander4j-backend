@@ -18,10 +18,11 @@ import ru.cleverhause.rest.dto.DeviceControl;
 import ru.cleverhause.rest.dto.DeviceData;
 import ru.cleverhause.rest.dto.DeviceStructure;
 import ru.cleverhause.rest.dto.request.BoardRequestBody;
+import ru.cleverhause.rest.dto.request.InputBoardControls;
+import ru.cleverhause.rest.dto.request.UIRequestBody;
 import ru.cleverhause.util.JsonUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -82,14 +83,14 @@ public class BoardDataServiceImpl implements BoardDataService {
         for (DeviceStructure singleDeviceStruct : devicesStructure) {
             DeviceControl control = new DeviceControl();
             control.setId(singleDeviceStruct.getId());
-            control.setControl(new Double(singleDeviceStruct.getMin()));
+            control.setCtrlVal(new Double(singleDeviceStruct.getMin()));
             defaultControl.add(control);
         }
         boardControlData.setData(JsonUtil.toJson(defaultControl));
         try {
             boardControlDataDao.save(boardControlData);
         } catch (Exception e) {
-            logger.debug("Exception while save board default control data! ", e);
+            logger.debug("Exception while save board default ctrlVal data! ", e);
         }
 
         board.setStructure(boardStructure);
@@ -133,30 +134,41 @@ public class BoardDataServiceImpl implements BoardDataService {
         return savedBoard;
     }
 
-    private List<DeviceStructure> getDeviceStructList(BoardStructure boardStructure) {
-        List<DeviceStructure> deviceStructure = null;
-        try {
-            deviceStructure = Arrays.asList(JsonUtil.fromString(boardStructure.getStructure(), DeviceStructure[].class));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return deviceStructure;
-    }
-
     @Override
     public Board getData(Long boardUID) {
         return null;
     }
 
     @Override
-    public Board saveControl(Long boardUID, BoardRequestBody<DeviceData> boardSaveReq) {
-        return null;
+    public Board saveControl(Long boardUID, UIRequestBody<InputBoardControls<DeviceControl>> boardControlReq) {
+        logger.info("saveControl operation");
+        Board savedBoard = findByUID(boardUID);
+        if (savedBoard != null) {
+            //TODO CHECK LIMITs of CONTROLs
+            List<DeviceControl> persistDeviceControlsList = boardControlReq.getInput().getDevices();
+            BoardControlData persistControl = boardControlDataDao.findByBoardId(savedBoard.getId());
+            if (persistControl == null) {
+                persistControl = new BoardControlData();
+                persistControl.setBoard(savedBoard);
+            }
+            persistControl.setCreated(new Date());
+            String persistControlDataJson = "";
+            try {
+                persistControlDataJson = JsonUtil.toJson(persistDeviceControlsList);
+            } catch (Exception e) {
+                logger.debug("Exception while saveData when toJson converting! ", e);
+            }
+            persistControl.setData(persistControlDataJson);
+            savedBoard.setControlData(persistControl);
+            boardControlDataDao.save(persistControl);
+        }
+
+        return savedBoard;
     }
 
     @Override
-    public Board getControl(Board board) {
-        return null;
+    public BoardControlData getControl(Board board) {
+        return boardControlDataDao.findByBoardId(board.getId());
     }
 
     @Override

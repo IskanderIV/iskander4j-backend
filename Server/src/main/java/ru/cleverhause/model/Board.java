@@ -33,29 +33,13 @@ public class Board implements Serializable {
     private BoardControlData controlData;
     private User user;
 
-    public Board(Long boardUID, String boardName, BoardStructure structure, List<BoardSavedData> savedData, BoardControlData controlData, User user) {
-//        this.id = id;
+    public Board(Long id, Long boardUID, String boardName, BoardStructure structure, List<BoardSavedData> savedData, BoardControlData controlData, User user) {
+        this.id = id;
         this.boardUID = boardUID;
         this.boardName = boardName;
         this.structure = structure;
-        if (structure != null) {
-//            this.structure.setId(id);
-            this.structure.setBoard(this);
-        }
-
         this.savedData = savedData;
-        if (savedData != null) {
-            for (BoardSavedData saved : savedData) {
-//                saved.setId(id);
-                saved.setBoard(this);
-            }
-        }
-
         this.controlData = controlData;
-        if (structure != null) {
-//            this.controlData.setId(id);
-            this.controlData.setBoard(this);
-        }
         this.user = user;
     }
 

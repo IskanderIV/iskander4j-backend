@@ -19,8 +19,8 @@
         <h2 class="form-signin-heading">Please sign in</h2>
         <div class="form-group ${error != null ? 'has-error' : ''}">
             <span>${message}</span>
-            <input type="text" class="form-control" name="username" placeholder="Login" required autofocus>
-            <input type="password" class="form-control" name="password" placeholder="Password" required>
+            <input type="text" class="form-ctrlVal" name="username" placeholder="Login" required autofocus>
+            <input type="password" class="form-ctrlVal" name="password" placeholder="Password" required>
             <span>${error}</span>
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
             <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>

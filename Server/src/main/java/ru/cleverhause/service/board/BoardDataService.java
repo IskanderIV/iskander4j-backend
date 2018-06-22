@@ -1,9 +1,13 @@
 package ru.cleverhause.service.board;
 
 import ru.cleverhause.model.Board;
+import ru.cleverhause.model.BoardControlData;
+import ru.cleverhause.rest.dto.DeviceControl;
 import ru.cleverhause.rest.dto.DeviceData;
 import ru.cleverhause.rest.dto.DeviceStructure;
 import ru.cleverhause.rest.dto.request.BoardRequestBody;
+import ru.cleverhause.rest.dto.request.InputBoardControls;
+import ru.cleverhause.rest.dto.request.UIRequestBody;
 
 import java.util.List;
 
@@ -22,13 +26,13 @@ public interface BoardDataService {
 
     Long generateBoardUID() throws Exception;
 
-    Board saveData(Long boardUID, BoardRequestBody<DeviceData> boardSaveReq) throws Exception;
+    Board saveData(Long boardUID, BoardRequestBody<DeviceData> dataReq) throws Exception;
 
     Board getData(Long boardUID) throws Exception;
 
-    Board saveControl(Long boardUID, BoardRequestBody<DeviceData> boardSaveReq) throws Exception;
+    Board saveControl(Long boardUID, UIRequestBody<InputBoardControls<DeviceControl>> controlReq) throws Exception;
 
-    Board getControl(Board board) throws Exception;
+    BoardControlData getControl(Board board) throws Exception;
 
     Board findByUID(Long boardUID);
 

@@ -10,4 +10,5 @@ import ru.cleverhause.model.BoardControlData;
  * @date 6/10/2018.
  */
 public interface BoardControlDataDao extends JpaRepository<BoardControlData, Long> {
+    BoardControlData findByBoardId(Long boardId);
 }

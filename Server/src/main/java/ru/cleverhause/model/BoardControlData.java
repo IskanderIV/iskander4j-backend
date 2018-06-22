@@ -24,7 +24,8 @@ public class BoardControlData {
     private Date created;
     private Board board;
 
-    public BoardControlData(String data, Date created, Board board) {
+    public BoardControlData(Long id, String data, Date created, Board board) {
+        this.id = id;
         this.data = data;
         this.created = created;
         this.board = board;
@@ -72,13 +73,13 @@ public class BoardControlData {
         this.board = board;
     }
 
-//    @Override
+    //    @Override
 //    public String toString() {
 //        return "DeviceControl{" +
 //                "id=" + id +
 //                ", data='" + data + '\'' +
 //                ", created=" + created +
-//                ", board=" + board +
+//                ", boardId=" + boardId +
 //                '}';
 //    }
 }

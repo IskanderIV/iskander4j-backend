@@ -9,11 +9,11 @@ import java.io.Serializable;
 @Setter
 public class DeviceControl implements Serializable {
     private Long id;
-    private Double control;
+    private Double ctrlVal;
 
-    public DeviceControl(Long id, Double control) {
+    public DeviceControl(Long id, Double ctrlVal) {
         this.id = id;
-        this.control = control;
+        this.ctrlVal = ctrlVal;
     }
 
     public DeviceControl() {
@@ -23,7 +23,7 @@ public class DeviceControl implements Serializable {
     public String toString() {
         return "DeviceControl{" +
                 "id=" + id +
-                ", control=" + control +
+                ", ctrlVal=" + ctrlVal +
                 '}';
     }
 }
