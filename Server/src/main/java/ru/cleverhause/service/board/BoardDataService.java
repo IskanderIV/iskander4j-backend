@@ -1,13 +1,13 @@
 package ru.cleverhause.service.board;
 
-import ru.cleverhause.model.Board;
-import ru.cleverhause.model.BoardControlData;
-import ru.cleverhause.rest.dto.DeviceControl;
-import ru.cleverhause.rest.dto.DeviceData;
-import ru.cleverhause.rest.dto.DeviceStructure;
-import ru.cleverhause.rest.dto.request.BoardRequestBody;
-import ru.cleverhause.rest.dto.request.InputBoardControls;
-import ru.cleverhause.rest.dto.request.UIRequestBody;
+import ru.cleverhause.app.dto.DeviceControl;
+import ru.cleverhause.app.dto.DeviceData;
+import ru.cleverhause.app.dto.DeviceStructure;
+import ru.cleverhause.app.dto.request.BoardRequestBody;
+import ru.cleverhause.app.dto.request.InputBoardControls;
+import ru.cleverhause.app.dto.request.UIRequestBody;
+import ru.cleverhause.persist.entities.Board;
+import ru.cleverhause.persist.entities.BoardControlData;
 
 import java.util.List;
 

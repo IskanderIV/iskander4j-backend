@@ -2,6 +2,22 @@ CREATE ROLE clever_admin LOGIN
   ENCRYPTED PASSWORD 'md593d1079655679037dd4ec5caf1b8e91a'
   NOSUPERUSER INHERIT CREATEDB NOCREATEROLE NOREPLICATION;
 
+-- Table: profile
+
+CREATE TABLE IF NOT EXISTS profiles (
+  id int NOT NULL UNIQUE PRIMARY KEY,
+  username varchar(255) NOT NULL,
+  sessionId varchar(255),
+  isExpired varchar(255),
+  isLogged varchar(255),
+  address varchar(255),
+  phone varchar(255),
+  created timestamp,
+  loginTime timestamp,
+
+  CONSTRAINT voidUserName CHECK (username <> '')
+);
+
 -- Table: users
 
 CREATE TABLE IF NOT EXISTS users (
@@ -85,6 +101,10 @@ CREATE TABLE IF NOT EXISTS user_board (
 
   UNIQUE (user_id, board_id)
 );
+
+CREATE SEQUENCE profiles_id_seq MINVALUE 1;
+ALTER TABLE profiles ALTER id SET DEFAULT nextval('profiles_id_seq');
+ALTER SEQUENCE profiles_id_seq OWNED BY profiles.id;
 
 CREATE SEQUENCE users_id_seq MINVALUE 3;
 ALTER TABLE users ALTER id SET DEFAULT nextval('users_id_seq');

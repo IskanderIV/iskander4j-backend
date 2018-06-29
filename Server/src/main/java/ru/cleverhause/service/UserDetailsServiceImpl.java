@@ -7,9 +7,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import ru.cleverhause.dao.UserDao;
-import ru.cleverhause.model.Role;
-import ru.cleverhause.model.User;
+import ru.cleverhause.persist.dao.UserDao;
+import ru.cleverhause.persist.entities.Role;
+import ru.cleverhause.persist.entities.User;
 
 import java.util.HashSet;
 import java.util.Set;

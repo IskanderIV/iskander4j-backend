@@ -1,6 +1,6 @@
 package ru.cleverhause.service.user;
 
-import ru.cleverhause.model.User;
+import ru.cleverhause.persist.entities.User;
 
 /**
  * Service for {@link User}

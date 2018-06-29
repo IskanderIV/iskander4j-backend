@@ -3,10 +3,10 @@ package ru.cleverhause.service.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.cleverhause.dao.RoleDao;
-import ru.cleverhause.dao.UserDao;
-import ru.cleverhause.model.Role;
-import ru.cleverhause.model.User;
+import ru.cleverhause.persist.dao.RoleDao;
+import ru.cleverhause.persist.dao.UserDao;
+import ru.cleverhause.persist.entities.Role;
+import ru.cleverhause.persist.entities.User;
 
 import java.util.HashSet;
 import java.util.Set;

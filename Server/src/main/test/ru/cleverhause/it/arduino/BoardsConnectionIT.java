@@ -8,10 +8,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpMethod;
-import ru.cleverhause.rest.dto.DeviceData;
-import ru.cleverhause.rest.dto.DeviceSetting;
-import ru.cleverhause.rest.dto.request.BoardRequestBody;
-import ru.cleverhause.rest.dto.response.HttpResponse;
+import ru.cleverhause.app.dto.DeviceData;
+import ru.cleverhause.app.dto.DeviceSetting;
+import ru.cleverhause.app.dto.request.BoardRequestBody;
+import ru.cleverhause.app.dto.response.HttpResponse;
 import ru.cleverhause.util.JsonUtil;
 
 import java.net.MalformedURLException;
