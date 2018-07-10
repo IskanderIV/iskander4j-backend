@@ -1,7 +1,9 @@
 package ru.cleverhause.app.config;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * Created by
@@ -9,12 +11,12 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
  * @author Aleksandr_Ivanov1
  * @date 7/9/2018.
  */
-//@Configuration
-//@EnableWebMvc
-//@ComponentScan(basePackages = {"ru.cleverhause.app.rest.site"})
+@Configuration
+@EnableWebMvc
+@ComponentScan(basePackages = {"ru.cleverhause.app.rest.site"})
 //@PropertySource(value = {"classpath:application.properties"})
 //@Import(value = {FrontWebSecurityConfig.class})
-public class FrontConfig {
+public class FrontConfig implements WebMvcConfigurer {
 
 //    @Bean
 //    public static PropertyPlaceholderConfigurer placeHolderConfigurer() {
@@ -29,11 +31,11 @@ public class FrontConfig {
 //        registry.addViewController("/somepage.html");
 //    }
 
-    @Bean
-    public InternalResourceViewResolver viewResolver() {
-        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-        viewResolver.setPrefix("/WEB-INF/pages/"); //
-        viewResolver.setSuffix(".jsp");
-        return viewResolver;
-    }
+//    @Bean
+//    public InternalResourceViewResolver viewResolver() {
+//        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+//        viewResolver.setPrefix("/WEB-INF/pages/"); //
+//        viewResolver.setSuffix(".jsp");
+//        return viewResolver;
+//    }
 }

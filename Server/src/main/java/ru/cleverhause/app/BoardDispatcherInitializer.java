@@ -10,7 +10,7 @@ import ru.cleverhause.app.config.BoardConfig;
  * @version v1-0 $Date 3/5/2017
  */
 @Order(value = 2)
-public class WebAppContextInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
+public class BoardDispatcherInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
 //    @Override
 //    public void onStartup(ServletContext servletContext) throws ServletException {

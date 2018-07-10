@@ -16,7 +16,7 @@ import ru.cleverhause.service.security.SecurityService;
  * @date 6/30/2018.
  */
 @RestController
-@RequestMapping(value = "/site",
+@RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         consumes = MediaType.APPLICATION_JSON_VALUE)
 public class SiteEndpoint {
@@ -28,12 +28,12 @@ public class SiteEndpoint {
 
     @GetMapping(value = {"/home"})
     public String home() {
-        return "HomeGet";
+        return "Site Get";
     }
 
     // TODO Test only
     @PostMapping(value = {"/home"})
     public String homePost() {
-        return "HomePost";
+        return "Site Post";
     }
 }
