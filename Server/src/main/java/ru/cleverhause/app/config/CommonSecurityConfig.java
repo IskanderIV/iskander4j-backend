@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
@@ -23,11 +24,10 @@ import java.util.Arrays;
  * @date 3/5/2018.
  */
 @Configuration
-//@EnableWebSecurity(debug = true)
 @ComponentScan(basePackages = {"ru.cleverhause.service"})
-//@Import(value = {BoardWebSecurityConfig.class})
+@Import(value = {BoardWebSecurityConfig.class, FrontWebSecurityConfig.class})
 public class CommonSecurityConfig {
-    
+
     @Autowired
     private UserDetailsService userDetailsService;
 

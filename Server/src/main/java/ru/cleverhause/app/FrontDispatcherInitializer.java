@@ -9,7 +9,7 @@ import ru.cleverhause.app.config.FrontConfig;
  * @author Aleksandr Ivanov
  * @version v1-0 $Date 3/5/2017
  */
-@Order(value = 3)
+@Order(value = 4)
 public class FrontDispatcherInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     @Override

@@ -13,7 +13,7 @@ import ru.cleverhause.app.config.ApplicationContextConfig;
  * @author Aleksandr_Ivanov1
  * @date 7/11/2018.
  */
-@Order(value = 1)
+@Order(value = 2)
 public class RootWebAppInitializer extends AbstractContextLoaderInitializer {
     @Nullable
     @Override
