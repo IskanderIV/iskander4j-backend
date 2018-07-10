@@ -11,7 +11,7 @@
     <properties>
         <spring.version>5.0.3.RELEASE</spring.version>
         <spring-webmvc.version>5.0.3.RELEASE</spring-webmvc.version>
-        <spring-security.version>4.2.3.RELEASE</spring-security.version>
+        <spring-security.version>5.0.6.RELEASE</spring-security.version>
         <spring-data-jpa.version>2.0.0.RELEASE</spring-data-jpa.version>
         <hibernate.version>4.3.11.Final</hibernate.version>
         <hibernate-validator.version>5.2.1.Final</hibernate-validator.version>
@@ -22,6 +22,7 @@
         <jstl.version>1.2</jstl.version>
         <junit.version>4.12</junit.version>
         <lombok.version>1.16.10</lombok.version>
+        <slf4j.version>1.7.25</slf4j.version>
         <log4j.version>1.2.17</log4j.version>
         <maven.war.plugin>2.6</maven.war.plugin>
         <maven.compiler.plugin>3.3</maven.compiler.plugin>
@@ -67,6 +68,12 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${spring-webmvc.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -131,9 +138,28 @@
 
         <!--logging-->
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>${log4j.version}</version>
+            <scope>compile</scope>
         </dependency>
 
         <!--TEST-->

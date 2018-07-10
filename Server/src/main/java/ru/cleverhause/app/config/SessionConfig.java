@@ -1,10 +1,7 @@
 package ru.cleverhause.app.config;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-
-@Configuration
-@ComponentScan(basePackages = {"ru.cleverhause.app.session"})
+//@Configuration
+//@ComponentScan(basePackages = {"ru.cleverhause.app.session"})
 public class SessionConfig {
 //    @Override
 //    protected void configure(HttpSecurity http) throws Exception {

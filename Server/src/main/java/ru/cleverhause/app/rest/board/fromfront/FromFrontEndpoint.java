@@ -1,4 +1,4 @@
-package ru.cleverhause.app.rest;
+package ru.cleverhause.app.rest.board.fromfront;
 
 
 import org.slf4j.Logger;
@@ -27,12 +27,12 @@ import java.util.Arrays;
  * @date 6/22/2018.
  */
 @RestController
-@RequestMapping(value = "/boards",
+@RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         consumes = MediaType.APPLICATION_JSON_VALUE)
-public class UIEndpoint {
+public class FromFrontEndpoint {
 
-    private static final Logger logger = LoggerFactory.getLogger(UIEndpoint.class);
+    private static final Logger logger = LoggerFactory.getLogger(FromFrontEndpoint.class);
 
     @Autowired
     private BoardDataService boardDataService;

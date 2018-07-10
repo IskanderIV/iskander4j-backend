@@ -1,7 +1,7 @@
 package ru.cleverhause.service.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.cleverhause.persist.dao.RoleDao;
 import ru.cleverhause.persist.dao.UserDao;
@@ -28,11 +28,11 @@ public class UserServiceImpl implements UserService {
     private RoleDao roleDao;
 
     @Autowired
-    private Md5PasswordEncoder md5PasswordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public void save(User user) {
-        user.setPassword(md5PasswordEncoder.encodePassword(user.getPassword(), user.getUsername()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         Set<Role> defRoles = new HashSet<Role>();
         defRoles.add(roleDao.getOne(1L));
         user.setRoles(defRoles);

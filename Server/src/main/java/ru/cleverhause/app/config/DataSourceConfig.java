@@ -102,7 +102,7 @@ public class DataSourceConfig {
 
 
     @Bean
-    public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
+    public static PropertySourcesPlaceholderConfigurer placeHolderConfigurer() {
         return new PropertySourcesPlaceholderConfigurer();
     }
 }

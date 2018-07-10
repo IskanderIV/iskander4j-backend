@@ -1,4 +1,4 @@
-package ru.cleverhause.app.rest;
+package ru.cleverhause.app.rest.board.fromboard;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +28,18 @@ import java.util.List;
  * Created by Alexandr on 15.11.2017.
  */
 @RestController
-@RequestMapping(value = "/boards",
+@RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         consumes = MediaType.APPLICATION_JSON_VALUE)
-public class BoardEndpoint {
+public class FromBoardEndpoint {
 
-    private static final Logger logger = Logger.getLogger(BoardEndpoint.class);
+    private static final Logger logger = Logger.getLogger(FromBoardEndpoint.class);
+
+    // TODO Test only
+    @PostMapping(value = {"/board"})
+    public String boardsPost() {
+        return "Boards Post";
+    }
 
     @Autowired
     private BoardDataService boardDataService;
