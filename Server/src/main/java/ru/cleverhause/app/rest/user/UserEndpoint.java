@@ -39,7 +39,6 @@ public class UserEndpoint {
     private UserValidator userValidator;
 
 //    @Autowired
-//    @Qualifier(value = "springSecurityFilterChain")
 //    private FilterChainProxy filterChainProxy;
 
 

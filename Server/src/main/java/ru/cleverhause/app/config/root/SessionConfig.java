@@ -1,4 +1,4 @@
-package ru.cleverhause.app.config;
+package ru.cleverhause.app.config.root;
 
 //@Configuration
 //@ComponentScan(basePackages = {"ru.cleverhause.app.session"})

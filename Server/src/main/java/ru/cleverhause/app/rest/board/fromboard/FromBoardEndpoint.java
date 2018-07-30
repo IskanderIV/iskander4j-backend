@@ -2,7 +2,7 @@ package ru.cleverhause.app.rest.board.fromboard;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.security.web.FilterChainProxy;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,17 +28,34 @@ import java.util.List;
  * Created by Alexandr on 15.11.2017.
  */
 @RestController
-@RequestMapping(
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        consumes = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping
 public class FromBoardEndpoint {
 
     private static final Logger logger = Logger.getLogger(FromBoardEndpoint.class);
 
+    @Autowired
+    private FilterChainProxy filterChainProxy;
+
     // TODO Test only
     @PostMapping(value = {"/board"})
     public String boardsPost() {
-        return "Boards Post";
+        StringBuffer filterNames = new StringBuffer("filters");
+//        List<SecurityFilterChain> filters = filterChainProxy.getFilterChains();
+//        for (SecurityFilterChain sfc : filters) {
+//            for (Filter filter : sfc.getFilters()) {
+//                filterNames.append(filter.getClass().getSimpleName());
+//                filterNames.append('\n');
+//            }
+//            filterNames.append('\n');
+//        }
+
+        return filterNames.toString();
+    }
+
+    // TODO Test only
+    @GetMapping(value = {"/board"})
+    public String boardsGet() {
+        return "Boards Get";
     }
 
     @Autowired

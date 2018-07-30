@@ -1,4 +1,4 @@
-package ru.cleverhause.service;
+package ru.cleverhause.service.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,7 +23,7 @@ import java.util.Set;
  * @date 3/4/2018.
  */
 
-@Component
+@Component("daoUserDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired

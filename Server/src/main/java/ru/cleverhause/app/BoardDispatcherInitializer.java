@@ -3,7 +3,7 @@ package ru.cleverhause.app;
 import org.springframework.core.annotation.Order;
 import org.springframework.lang.Nullable;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
-import ru.cleverhause.app.config.BoardConfig;
+import ru.cleverhause.app.config.board.BoardConfig;
 
 /**
  * @author Aleksandr Ivanov
@@ -50,7 +50,7 @@ public class BoardDispatcherInitializer extends AbstractAnnotationConfigDispatch
     @Nullable
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[]{BoardConfig.class};
+        return new Class[]{BoardConfig.class};//, BoardWebSecurityConfig.class};
     }
 
     @Override

@@ -3,7 +3,7 @@ package ru.cleverhause.app;
 import org.springframework.core.annotation.Order;
 import org.springframework.lang.Nullable;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
-import ru.cleverhause.app.config.FrontConfig;
+import ru.cleverhause.app.config.front.FrontConfig;
 
 /**
  * @author Aleksandr Ivanov
@@ -26,7 +26,7 @@ public class FrontDispatcherInitializer extends AbstractAnnotationConfigDispatch
     @Nullable
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[]{FrontConfig.class};
+        return new Class[]{FrontConfig.class};//, FrontWebSecurityConfig.class};
     }
 
     @Override

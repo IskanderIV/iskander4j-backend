@@ -1,4 +1,4 @@
-package ru.cleverhause.app.config;
+package ru.cleverhause.app.config.root;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -15,9 +15,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * Created by Alexandr on 15.11.2017.
  */
 @Configuration
-@ComponentScan(basePackages = {"ru.cleverhause.service"})
+@ComponentScan(basePackages = {"ru.cleverhause.app.config.root"})
 @PropertySource(value = {"classpath:application.properties"})
-@Import(value = {DataSourceConfig.class, CommonSecurityConfig.class})
+@Import(value = {CommonSecurityConfig.class, DataSourceConfig.class})
 public class ApplicationContextConfig implements WebMvcConfigurer {
 
     @Override

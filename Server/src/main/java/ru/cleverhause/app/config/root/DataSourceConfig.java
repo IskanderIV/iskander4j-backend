@@ -1,4 +1,4 @@
-package ru.cleverhause.app.config;
+package ru.cleverhause.app.config.root;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.beans.factory.annotation.Value;

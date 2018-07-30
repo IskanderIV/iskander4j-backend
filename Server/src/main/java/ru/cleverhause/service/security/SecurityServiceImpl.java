@@ -2,6 +2,7 @@ package ru.cleverhause.service.security;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,9 +26,11 @@ public class SecurityServiceImpl implements SecurityService {
     private static final Logger logger = Logger.getLogger(SecurityServiceImpl.class);
 
     @Autowired
+    @Qualifier(value = "frontAuthManager")
     private AuthenticationManager authenticationManager;
 
     @Autowired
+    @Qualifier(value = "daoUserDetailsService")
     private UserDetailsService userDetailsService;
 
     @Override

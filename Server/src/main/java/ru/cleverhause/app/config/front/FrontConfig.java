@@ -1,7 +1,7 @@
-package ru.cleverhause.app.config;
+package ru.cleverhause.app.config.front;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -11,13 +11,21 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @author Aleksandr_Ivanov1
  * @date 7/9/2018.
  */
-@Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = {"ru.cleverhause.app.rest.site"})
+@ComponentScan(basePackages = {
+        "ru.cleverhause.service.user",
+        "ru.cleverhause.app.rest.site",
+        "ru.cleverhause.app.rest.user",
+        "ru.cleverhause.app.validator"})
 //@PropertySource(value = {"classpath:application.properties"})
 //@Import(value = {FrontWebSecurityConfig.class})
 public class FrontConfig implements WebMvcConfigurer {
 
+    @Bean
+    public String getString() {
+        String str = new String("18");
+        return str;
+    }
 //    @Bean
 //    public static PropertyPlaceholderConfigurer placeHolderConfigurer() {
 //        return new PropertyPlaceholderConfigurer();
