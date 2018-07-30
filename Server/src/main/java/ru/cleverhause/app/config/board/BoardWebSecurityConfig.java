@@ -1,9 +1,11 @@
-package ru.cleverhause.app.config.root;
+package ru.cleverhause.app.config.board;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,39 +19,14 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
  * @author Aleksandr_Ivanov1
  * @date 7/9/2018.
  */
-//@Order(value = 1)
-//@Configuration
-//@EnableWebSecurity
-//@ComponentScan(basePackages = {"ru.cleverhause.service.board"})
-//@PropertySource(value = {"classpath:security.properties"})
+@Configuration
+@EnableWebSecurity
 public class BoardWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final String CONTEXT_ADDRESS = "/cleverhause";
-    private static final String BASE_BOARDS_ADDRESS = "/boards";
-    private static final String TEST_BOARD_ADDRESS = "/board*";
-    private static final String ALL_IN_ADDRESS = "/";
-//
-//    @Autowired
-//    private UserDetailsService userDetailsService;
-//
-//    @Bean
-//    public PasswordEncoder encoder() {
-//        return new BCryptPasswordEncoder();
-//    }
-//
-//    @Bean
-//    public AuthenticationProvider daoAuthenticatedProvider() {
-//        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-//        authenticationProvider.setUserDetailsService(userDetailsService);
-//        authenticationProvider.setPasswordEncoder(encoder());
-//        return authenticationProvider;
-//    }
-//
-//    @Bean(name = "boardAuthManager")
-//    public AuthenticationManager authenticationManager() {
-//        ProviderManager providerManager = new ProviderManager(Arrays.asList(daoAuthenticatedProvider()));
-//        return providerManager;
-//    }
+    private static final String CONTEXT = "/cleverhause";
+    private static final String BOARDS = "/boards";
+    private static final String BOARD = "/board";
+    private static final String ALL_INSIDE = "/**";
 
     @Bean(name = "tempUserDetailsService")
     public UserDetailsService userDetailsService() {
@@ -81,28 +58,20 @@ public class BoardWebSecurityConfig extends WebSecurityConfigurerAdapter {
         return entryPoint;
     }
 
-//    @Override
-//    public void configure(WebSecurity web) throws Exception {
-////        web.;
-//    }
-
     @Bean
     public BasicAuthenticationFilter myAuthFilter() throws Exception {
         return new BasicAuthenticationFilter(authenticationManagerBean(), basicAuthEntryPoint());
     }
 
     @Override
-
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
+        http.csrf().disable().antMatcher("/boards/**")
                 .authorizeRequests()
-                .antMatchers(CONTEXT_ADDRESS + BASE_BOARDS_ADDRESS + ALL_IN_ADDRESS).authenticated()
+                .antMatchers(BOARDS + BOARD + ALL_INSIDE).authenticated()
                 .and()
                 .httpBasic()
-                .authenticationEntryPoint(basicAuthEntryPoint())
                 .and()
-                .formLogin()
-        ;
+                .formLogin();
 
         http.addFilterAfter(myAuthFilter(),
                 BasicAuthenticationFilter.class);

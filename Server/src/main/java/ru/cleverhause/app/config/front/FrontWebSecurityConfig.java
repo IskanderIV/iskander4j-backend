@@ -1,17 +1,22 @@
-package ru.cleverhause.app.config.root;
+package ru.cleverhause.app.config.front;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import java.util.Collections;
@@ -22,16 +27,14 @@ import java.util.Collections;
  * @author Aleksandr_Ivanov1
  * @date 7/9/2018.
  */
-//@Order(value = 200)
-//@Configuration
-//@EnableWebSecurity
-//@ComponentScan(basePackages = {"ru.cleverhause.service.security"})
-//@PropertySource(value = {"classpath:security.properties"})
+@Order(value = 200)
+@Configuration
+@EnableWebSecurity
+@ComponentScan(basePackages = {"ru.cleverhause.service.security"})
 public class FrontWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final String POST = "POST";
-    private static final String COOKIES_JSESSIONID = "JSESSIONID";
-    private static final String BASE_ADDRESS = "/cleverhause/site/";
+    private static final String SITE = "/site";
+    private static final String ALL_INSIDE = "/**";
 
     @Autowired
     @Qualifier(value = "daoUserDetailsService")
@@ -57,15 +60,26 @@ public class FrontWebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public BasicAuthenticationFilter myAuthFilter2() throws Exception {
-        return new BasicAuthenticationFilter(authenticationManagerBean());
+    public BasicAuthenticationEntryPoint frontAuthEntryPoint() {
+        BasicAuthenticationEntryPoint entryPoint = new BasicAuthenticationEntryPoint();
+        entryPoint.setRealmName("Front_REST_Realm");
+
+        return entryPoint;
     }
+
+    @Bean
+    public BasicAuthenticationFilter myAuthFilter2() throws Exception {
+        return new BasicAuthenticationFilter(authenticationManager(), frontAuthEntryPoint());
+    }
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
+        http
+                .csrf().disable()
+                .antMatcher("/site/**")
                 .authorizeRequests()
-                .antMatchers("/").authenticated()
+                .antMatchers(SITE + ALL_INSIDE).authenticated()
                 .and()
                 .formLogin();
 
@@ -101,14 +115,4 @@ public class FrontWebSecurityConfig extends WebSecurityConfigurerAdapter {
         //                .sessionAuthenticationErrorUrl("/pages/home.jsp")
         //                .maximumSessions(1);
     }
-
-//    @Bean
-//    public SessionAuthenticationStrategy sas() {
-//        return new SessionFixationProtectionStrategy();
-//    }
-
-//    @Bean
-//    public static PropertyPlaceholderConfigurer placeHolderConfigurer() {
-//        return new PropertyPlaceholderConfigurer();
-//    }
 }

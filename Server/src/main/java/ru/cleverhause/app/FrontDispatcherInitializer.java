@@ -26,7 +26,7 @@ public class FrontDispatcherInitializer extends AbstractAnnotationConfigDispatch
     @Nullable
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[]{FrontConfig.class};//, FrontWebSecurityConfig.class};
+        return new Class[]{FrontConfig.class};
     }
 
     @Override

@@ -49,14 +49,6 @@ public class ApplicationContextConfig implements WebMvcConfigurer {
 //        registry.addViewController("/somepage.html");
 //    }
 
-//    // TODO replace to concrete dispatcher (UI dispatcher)
-//    @Bean
-//    public InternalResourceViewResolver viewResolver() {
-//        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-//        viewResolver.setPrefix("/WEB-INF/pages/"); //
-//        viewResolver.setSuffix(".jsp");
-//        return viewResolver;
-//    }
 
     @Bean
     public MappingJackson2HttpMessageConverter jacksonHttpMessageConverter() {

@@ -23,7 +23,9 @@ import java.util.Properties;
  */
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = {"ru.cleverhause.persist.dao", "ru.cleverhause.persist.entities"})
+@EnableJpaRepositories(basePackages = {
+        "ru.cleverhause.persist.dao",
+        "ru.cleverhause.persist.entities"})
 @PropertySource(value = {"classpath:database.properties"})
 public class DataSourceConfig {
 

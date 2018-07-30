@@ -13,14 +13,6 @@ import ru.cleverhause.app.config.root.ApplicationContextConfig;
 @Order(value = 1)
 public class RootWebAppInitializer extends AbstractSecurityWebApplicationInitializer {
 
-//    @Override
-//    protected WebApplicationContext createRootApplicationContext() {
-//        AnnotationConfigWebApplicationContext rootAppContext = new AnnotationConfigWebApplicationContext();
-//        rootAppContext.register(ApplicationContextConfig.class);
-//
-//        return rootAppContext;
-//    }
-
     public RootWebAppInitializer() {
         super(ApplicationContextConfig.class);
     }

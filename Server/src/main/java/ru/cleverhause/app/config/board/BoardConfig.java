@@ -14,9 +14,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = {"ru.cleverhause.service.board",
-        "ru.cleverhause.app.rest.board"})
-//@Import(value = {BoardWebSecurityConfig.class})
+@ComponentScan(basePackages = {"ru.cleverhause.service.board", "ru.cleverhause.app.rest.board"})
 public class BoardConfig implements WebMvcConfigurer {
 
     @Bean

@@ -50,7 +50,7 @@ public class BoardDispatcherInitializer extends AbstractAnnotationConfigDispatch
     @Nullable
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[]{BoardConfig.class};//, BoardWebSecurityConfig.class};
+        return new Class[]{BoardConfig.class};
     }
 
     @Override
