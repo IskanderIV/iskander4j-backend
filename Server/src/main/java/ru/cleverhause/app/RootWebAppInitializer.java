@@ -4,6 +4,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 import ru.cleverhause.app.config.root.ApplicationContextConfig;
 
+import javax.servlet.ServletContext;
+
 /**
  * Created by
  *
@@ -15,5 +17,11 @@ public class RootWebAppInitializer extends AbstractSecurityWebApplicationInitial
 
     public RootWebAppInitializer() {
         super(ApplicationContextConfig.class);
+    }
+
+    @Override
+    protected void beforeSpringSecurityFilterChain(ServletContext servletContext) {
+        servletContext.setInitParameter("spring.profiles.active", "prod");
+        super.beforeSpringSecurityFilterChain(servletContext);
     }
 }

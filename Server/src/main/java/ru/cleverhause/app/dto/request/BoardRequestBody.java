@@ -1,5 +1,7 @@
 package ru.cleverhause.app.dto.request;
 
+import ru.cleverhause.app.dto.Errors;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +14,9 @@ import java.util.List;
  */
 public class BoardRequestBody<T extends Serializable> extends AbstractRequestBody implements Serializable {
     private List<T> devices = new ArrayList<>();
-    private Error errors;
+    private Errors errors;
 
-    public BoardRequestBody(String userName, String pass, Long boardUID, List<T> devices, Error errors) {
+    public BoardRequestBody(String userName, String pass, Long boardUID, List<T> devices, Errors errors) {
         super(userName, pass, boardUID);
         this.devices = devices;
         this.errors = errors;
@@ -32,11 +34,11 @@ public class BoardRequestBody<T extends Serializable> extends AbstractRequestBod
         this.devices = devices;
     }
 
-    public Error getErrors() {
+    public Errors getErrors() {
         return errors;
     }
 
-    public void setErrors(Error errors) {
+    public void setErrors(Errors errors) {
         this.errors = errors;
     }
 }

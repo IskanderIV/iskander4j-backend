@@ -26,11 +26,10 @@ public class SecurityServiceImpl implements SecurityService {
     private static final Logger logger = Logger.getLogger(SecurityServiceImpl.class);
 
     @Autowired
-    @Qualifier(value = "frontAuthManager")
+    @Qualifier(value = "authManager")
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    @Qualifier(value = "daoUserDetailsService")
     private UserDetailsService userDetailsService;
 
     @Override

@@ -1,6 +1,7 @@
 package ru.cleverhause.service.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,7 +24,8 @@ import java.util.Set;
  * @date 3/4/2018.
  */
 
-@Component("daoUserDetailsService")
+@Component
+@Profile("prod")
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired

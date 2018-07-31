@@ -7,19 +7,11 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-
-import java.util.Collections;
 
 /**
  * Created by
@@ -37,27 +29,9 @@ public class FrontWebSecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String ALL_INSIDE = "/**";
 
     @Autowired
-    @Qualifier(value = "daoUserDetailsService")
-    private UserDetailsService userDetailsService;
+    @Qualifier(value = "authManager")
+    public AuthenticationManager authenticationManager;
 
-    @Bean
-    public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public AuthenticationProvider daoAuthenticatedProvider() {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService);
-        authenticationProvider.setPasswordEncoder(encoder());
-        return authenticationProvider;
-    }
-
-    @Bean(name = "frontAuthManager")
-    public AuthenticationManager authenticationManager() {
-        ProviderManager providerManager = new ProviderManager(Collections.singletonList(daoAuthenticatedProvider()));
-        return providerManager;
-    }
 
     @Bean
     public BasicAuthenticationEntryPoint frontAuthEntryPoint() {
@@ -69,7 +43,7 @@ public class FrontWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public BasicAuthenticationFilter myAuthFilter2() throws Exception {
-        return new BasicAuthenticationFilter(authenticationManager(), frontAuthEntryPoint());
+        return new BasicAuthenticationFilter(authenticationManager, frontAuthEntryPoint());
     }
 
 

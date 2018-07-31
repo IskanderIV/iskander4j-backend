@@ -36,20 +36,10 @@ public class FromBoardEndpoint {
     @Autowired
     private FilterChainProxy filterChainProxy;
 
-    // TODO Test only
+    // TODO For test only
     @PostMapping(value = {"/board"})
     public String boardsPost() {
-        StringBuffer filterNames = new StringBuffer("filters");
-//        List<SecurityFilterChain> filters = filterChainProxy.getFilterChains();
-//        for (SecurityFilterChain sfc : filters) {
-//            for (Filter filter : sfc.getFilters()) {
-//                filterNames.append(filter.getClass().getSimpleName());
-//                filterNames.append('\n');
-//            }
-//            filterNames.append('\n');
-//        }
-
-        return filterNames.toString();
+        return "HAS CONTACT";
     }
 
     // TODO Test only
