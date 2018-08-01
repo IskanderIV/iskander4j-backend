@@ -41,4 +41,12 @@ public class BoardRequestBody<T extends Serializable> extends AbstractRequestBod
     public void setErrors(Errors errors) {
         this.errors = errors;
     }
+
+    @Override
+    public String toString() {
+        return "BoardRequestBody{" +
+                "devices=" + devices +
+                ", errors=" + errors +
+                "} " + super.toString();
+    }
 }

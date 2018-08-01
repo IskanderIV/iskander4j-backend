@@ -41,6 +41,12 @@ public class CommonSecurityConfig {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Bean
+    public String getEncodePassword() {
+        String str = passwordEncoder.encode("password");
+        return str;
+    }
+
     @Profile("dev")
     @Bean
     public UserDetailsService userDetailsService() {

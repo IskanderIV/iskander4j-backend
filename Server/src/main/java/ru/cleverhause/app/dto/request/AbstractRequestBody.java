@@ -45,4 +45,13 @@ public abstract class AbstractRequestBody implements Serializable {
     public void setBoardUID(Long boardUID) {
         this.boardUID = boardUID;
     }
+
+    @Override
+    public String toString() {
+        return "AbstractRequestBody{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", boardUID=" + boardUID +
+                '}';
+    }
 }

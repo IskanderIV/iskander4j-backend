@@ -21,7 +21,7 @@ public class RootWebAppInitializer extends AbstractSecurityWebApplicationInitial
 
     @Override
     protected void beforeSpringSecurityFilterChain(ServletContext servletContext) {
-        servletContext.setInitParameter("spring.profiles.active", "prod");
+        servletContext.setInitParameter("spring.profiles.active", "dev");
         super.beforeSpringSecurityFilterChain(servletContext);
     }
 }

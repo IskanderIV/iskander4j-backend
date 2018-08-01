@@ -2,6 +2,7 @@ package ru.cleverhause.app.rest.board.fromboard;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,14 +22,20 @@ import ru.cleverhause.persist.entities.Board;
 import ru.cleverhause.service.board.BoardDataService;
 import ru.cleverhause.util.JsonUtil;
 
+import javax.servlet.ServletRequest;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by Alexandr on 15.11.2017.
  */
 @RestController
-@RequestMapping
+@RequestMapping(
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        consumes = MediaType.APPLICATION_JSON_VALUE)
 public class FromBoardEndpoint {
 
     private static final Logger logger = Logger.getLogger(FromBoardEndpoint.class);
@@ -38,8 +45,16 @@ public class FromBoardEndpoint {
 
     // TODO For test only
     @PostMapping(value = {"/board"})
-    public String boardsPost() {
-        return "HAS CONTACT";
+    public BoardRequestBody<DeviceData> boardsPost(ServletRequest req) {
+        BoardRequestBody<DeviceData> body = null;
+        try {
+            body = JsonUtil.fromInputStreamToBoardData(req.getInputStream());
+        } catch (IOException e) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            System.out.println(calendar.getTime() + ": FromBoardEndpoint. Can't convert request input stream to json"); //TODO
+        }
+        return body;
     }
 
     // TODO Test only
