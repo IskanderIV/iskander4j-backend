@@ -20,7 +20,7 @@ import java.util.List;
 
 public interface BoardDataService {
 
-    boolean checkBoardNumber(BoardRequestBody boardRequestBody);
+    boolean checkBoardNumber(Long boardUID, String username);
 
     Board registerBoard(BoardRequestBody<DeviceStructure> boardRegReq) throws Exception;
 

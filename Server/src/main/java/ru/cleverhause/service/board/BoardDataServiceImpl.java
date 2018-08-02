@@ -49,8 +49,9 @@ public class BoardDataServiceImpl implements BoardDataService {
     private static final Logger logger = LoggerFactory.getLogger(BoardDataServiceImpl.class);
 
     @Override
-    public boolean checkBoardNumber(BoardRequestBody boardRequestBody) {
-        return true;
+    public boolean checkBoardNumber(Long boardUID, String username) {
+        Board savedBoard = findByUID(boardUID);
+        return username.equals(savedBoard.getUser().getUsername());
     }
 
     @Override

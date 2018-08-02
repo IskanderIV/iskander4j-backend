@@ -15,7 +15,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = {
-        "ru.cleverhause.service.user",
         "ru.cleverhause.app.rest.site",
         "ru.cleverhause.app.rest.user",
         "ru.cleverhause.app.validator"})

@@ -52,7 +52,7 @@ public class FromBoardEndpoint {
         } catch (IOException e) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(new Date());
-            System.out.println(calendar.getTime() + ": FromBoardEndpoint. Can't convert request input stream to json"); //TODO
+            logger.info(calendar.getTime() + ": FromBoardEndpoint. Can't convert request input stream to json"); //TODO
         }
         return body;
     }
@@ -99,7 +99,7 @@ public class FromBoardEndpoint {
         if (board != null) {
             try {
                 List<DeviceControl> deviceControlList = Arrays.asList(JsonUtil.fromString(board.getControlData().getData(), DeviceControl[].class));
-                unionDeviceInfo = Arrays.asList(JsonUtil.fromString(board.getSavedData().get(0).getData(), DeviceData[].class));
+                unionDeviceInfo = Arrays.asList(JsonUtil.fromString(board.getSavedData().get(board.getSavedData().size() - 1).getData(), DeviceData[].class));
                 for (DeviceData savedData : unionDeviceInfo) {
                     for (DeviceControl control : deviceControlList) {
                         if (savedData.getId() == control.getId()) {

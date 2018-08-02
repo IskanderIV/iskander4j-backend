@@ -16,6 +16,7 @@ import ru.cleverhause.app.filters.BoardBasicPreAuthenticationFilter;
 import ru.cleverhause.app.filters.BoardHttpBasicAuthenticationFilter;
 import ru.cleverhause.app.filters.SecurityFilterChainPostProcessor;
 import ru.cleverhause.app.filters.handler.BoardHttpBasicAuthenticationSuccessHandler;
+import ru.cleverhause.service.board.BoardDataService;
 
 /**
  * Created by
@@ -39,6 +40,9 @@ public class BoardWebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     @Qualifier(value = "authManager")
     public AuthenticationManager authenticationManager;
+
+    @Autowired
+    public BoardDataService boardDataService;
 
     @Bean
     public BasicAuthenticationEntryPoint basicAuthEntryPoint() {
@@ -70,6 +74,8 @@ public class BoardWebSecurityConfig extends WebSecurityConfigurerAdapter {
         boardBasicPreAuthenticationFilter.setAuthenticationManager(authenticationManager);
         boardBasicPreAuthenticationFilter.setAuthenticationSuccessHandler(boardBasicAuthSuccessHandler());
         boardBasicPreAuthenticationFilter.setContinueChainBeforeSuccessfulAuthentication(false);
+        boardBasicPreAuthenticationFilter.isNeedCheckBoardBelongsToUser(false);
+        boardBasicPreAuthenticationFilter.setBoardDataService(boardDataService);
 
         return boardBasicPreAuthenticationFilter;
     }
