@@ -6,12 +6,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.session.SimpleRedirectInvalidSessionStrategy;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
  * Created by
@@ -50,43 +54,35 @@ public class FrontWebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
-                .antMatcher("/site/**")
+                .antMatcher("/**")
                 .authorizeRequests()
-                .antMatchers(SITE + ALL_INSIDE).authenticated()
+                .antMatchers("/myboard/myboard").hasRole("USER")
+                .antMatchers("/home").permitAll()
+                .antMatchers("/login").permitAll()
+                .antMatchers("/registration").permitAll()
                 .and()
-                .formLogin();
-
-        http.addFilterAfter(myAuthFilter2(),
-                BasicAuthenticationFilter.class);
-//                .antMatchers(BASE_ADDRESS + "/home").permitAll();
-//                .antMatchers(BASE_ADDRESS + "/admin").hasRole(adminRole)
-//                //                .antMatchers("/mobile").authenticated()
-//                //                .and()
-//                //                .exceptionHandling()
-//                //                .authenticationEntryPoint(authenticationEntryPoint)
-//                .and()
-//                .formLogin();
-//                .loginPage(loginPage)
-//                .defaultSuccessUrl(BASE_ADDRESS + "/home")
-//                .failureUrl(BASE_ADDRESS + "/login?error")
-//                .usernameParameter(usernameParam)
-//                .passwordParameter(passwordParam)
-//                //                .successHandler(authSuccessHandler)
-//                //                .failureHandler(authFailureHandler)
-//                .and()
-//                .logout()
-//                //                .logoutSuccessHandler(logoutSuccessHandler)
-//                .logoutUrl(logoutPage)
-//                .invalidateHttpSession(true)
+                .exceptionHandling().accessDeniedPage("/error/permissionError")
+                .and()
+                .formLogin()
+                .loginPage("/login")
+//                .defaultSuccessUrl("/myboard/myboard")
+                .failureUrl("/login?error")
+                .usernameParameter("username")
+                .passwordParameter("password")
+                //                .successHandler(authSuccessHandler)
+                //                .failureHandler(authFailureHandler)
+                .and()
+                .logout()
+                //                .logoutSuccessHandler(logoutSuccessHandler)
+                .logoutUrl("/login?logout")
+                .invalidateHttpSession(true)
 //                .deleteCookies(COOKIES_JSESSIONID)
-//                .logoutRequestMatcher(new AntPathRequestMatcher(logoutPage, POST));
+                .logoutRequestMatcher(new AntPathRequestMatcher("/login?logout", HttpMethod.POST.name()));
 
-        //        http.sessionManagement()
-        //                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-        //                .sessionAuthenticationStrategy(sas())
-        //                .invalidSessionStrategy(new SimpleRedirectInvalidSessionStrategy("/pages/home.jsp"))
-        //                .sessionAuthenticationErrorUrl("/pages/home.jsp")
-        //                .maximumSessions(1);
+        http.sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                .invalidSessionStrategy(new SimpleRedirectInvalidSessionStrategy("/home"))
+                .sessionAuthenticationErrorUrl("/home")
+                .maximumSessions(1);
     }
 }

@@ -6,10 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * Created by Alexandr on 15.11.2017.
@@ -18,24 +15,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @ComponentScan(basePackages = {"ru.cleverhause.app.config.root"})
 @PropertySource(value = {"classpath:application.properties"})
 @Import(value = {DataSourceConfig.class, CommonSecurityConfig.class, ServiceConfig.class})
-public class ApplicationContextConfig implements WebMvcConfigurer {
+public class ApplicationContextConfig {
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
-    }
-
-    @Bean
-    public ReloadableResourceBundleMessageSource messageSource() {
-        ReloadableResourceBundleMessageSource resourceBundleMessageSource =
-                new ReloadableResourceBundleMessageSource();
-        String[] basename = {"classpath:validation"};
-        resourceBundleMessageSource.setBasenames(basename);
-
-        return resourceBundleMessageSource;
-    }
-
-    //
     @Bean
     public static PropertySourcesPlaceholderConfigurer placeHolderConfigurer() {
         return new PropertySourcesPlaceholderConfigurer();

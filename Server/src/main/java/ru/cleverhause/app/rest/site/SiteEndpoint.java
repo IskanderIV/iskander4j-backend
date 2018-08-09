@@ -2,11 +2,8 @@ package ru.cleverhause.app.rest.site;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import ru.cleverhause.service.security.SecurityService;
 
 /**
@@ -15,10 +12,7 @@ import ru.cleverhause.service.security.SecurityService;
  * @author Aleksandr_Ivanov1
  * @date 6/30/2018.
  */
-@RestController
-@RequestMapping(
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        consumes = MediaType.APPLICATION_JSON_VALUE)
+@Controller
 public class SiteEndpoint {
 
     private static final Logger logger = Logger.getLogger(SiteEndpoint.class);
@@ -26,14 +20,19 @@ public class SiteEndpoint {
     @Autowired
     private SecurityService securityService;
 
-    @GetMapping(value = {"/home"})
+    @GetMapping(value = {"/", "/home"})
     public String home() {
-        return "Site Get";
+        return "home";
     }
 
-    // TODO Test only
-    @PostMapping(value = {"/home"})
-    public String homePost() {
-        return "Site Post";
+    @GetMapping(value = {"/myboard/myboard"})
+    public String myboard() {
+        return "myboard/myboard";
+    }
+
+
+    @GetMapping(value = {"/myboard/newboard"})
+    public String newboard() {
+        return "myboard/myboard";
     }
 }

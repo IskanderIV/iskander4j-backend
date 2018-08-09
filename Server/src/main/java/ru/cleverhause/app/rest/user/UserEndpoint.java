@@ -1,15 +1,13 @@
 package ru.cleverhause.app.rest.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import ru.cleverhause.app.validator.UserValidator;
 import ru.cleverhause.persist.entities.User;
 import ru.cleverhause.service.security.SecurityService;
@@ -23,10 +21,7 @@ import ru.cleverhause.service.user.UserService;
  * @date 11/27/2017.
  */
 
-@RestController
-@RequestMapping(
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        consumes = MediaType.APPLICATION_JSON_VALUE)
+@Controller
 public class UserEndpoint {
 
     @Autowired
@@ -37,10 +32,6 @@ public class UserEndpoint {
 
     @Autowired
     private UserValidator userValidator;
-
-//    @Autowired
-//    private FilterChainProxy filterChainProxy;
-
 
     @GetMapping(value = {"/registration"})
     public String registration(Model model) {
@@ -83,13 +74,12 @@ public class UserEndpoint {
 //        }
 
         securityService.autoLogin(userForm.getUsername(), userForm.getPassword());
-        return "redirect:/home";
+        return "redirect:/myboard/myboard";
     }
 
     @GetMapping(value = {"/admin"})
     public String admin() {
 
-        return "Hello";
-//        return filterChainProxy.getFilterChains().get(0).getFilters().get(0).getClass().getName();
+        return "admin";
     }
 }

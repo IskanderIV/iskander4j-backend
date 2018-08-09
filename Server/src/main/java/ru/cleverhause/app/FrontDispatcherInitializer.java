@@ -14,7 +14,7 @@ public class FrontDispatcherInitializer extends AbstractAnnotationConfigDispatch
 
     @Override
     protected String[] getServletMappings() {
-        return new String[]{"/site/*"};
+        return new String[]{"/"};
     }
 
     @Nullable

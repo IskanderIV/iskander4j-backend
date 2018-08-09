@@ -3,8 +3,11 @@ package ru.cleverhause.app.config.front;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 /**
  * Created by
@@ -20,11 +23,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
         "ru.cleverhause.app.validator"})
 public class FrontConfig implements WebMvcConfigurer {
 
-    @Bean
-    public String getString() {
-        String str = new String("18");
-        return str;
-    }
 //    @Bean
 //    public static PropertyPlaceholderConfigurer placeHolderConfigurer() {
 //        return new PropertyPlaceholderConfigurer();
@@ -37,12 +35,26 @@ public class FrontConfig implements WebMvcConfigurer {
 //
 //        registry.addViewController("/somepage.html");
 //    }
+    @Bean
+    public ReloadableResourceBundleMessageSource messageSource() {
+        ReloadableResourceBundleMessageSource resourceBundleMessageSource =
+                new ReloadableResourceBundleMessageSource();
+        String[] basename = {"classpath:validation"};
+        resourceBundleMessageSource.setBasenames(basename);
 
-//    @Bean
-//    public InternalResourceViewResolver viewResolver() {
-//        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-//        viewResolver.setPrefix("/WEB-INF/pages/"); //
-//        viewResolver.setSuffix(".jsp");
-//        return viewResolver;
-//    }
+        return resourceBundleMessageSource;
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+    }
+
+    @Bean
+    public InternalResourceViewResolver viewResolver() {
+        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+        viewResolver.setPrefix("/WEB-INF/pages/");
+        viewResolver.setSuffix(".jsp");
+        return viewResolver;
+    }
 }
