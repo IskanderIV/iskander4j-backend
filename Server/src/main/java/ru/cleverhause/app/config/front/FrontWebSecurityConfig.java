@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.session.SimpleRedirectInvalidSessionStrategy;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -44,12 +43,6 @@ public class FrontWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         return entryPoint;
     }
-
-    @Bean
-    public BasicAuthenticationFilter myAuthFilter2() throws Exception {
-        return new BasicAuthenticationFilter(authenticationManager, frontAuthEntryPoint());
-    }
-
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

@@ -25,7 +25,7 @@
             <li><a href="#">About</a></li>
             <li><a href="${contextPath}/contacts">Contact</a></li>
         </ul>
-        <h3 class="text-muted">Hello ${userName}</h3>
+        <h3 class="text-muted">Hello, ${userName}!</h3>
     </div>
 
     <div class="jumbotron">

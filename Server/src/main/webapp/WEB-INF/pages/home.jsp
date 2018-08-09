@@ -21,11 +21,14 @@
     <div class="header">
         <ul class="nav nav-pills pull-right">
             <li class="active"><a href="#">Home</a></li>
-            <li><a href="${contextPath}/myboard/myboard">Boards</a></li>
+            <li><a href="${contextPath}/myboard/myboard">
+                Boards
+                <param name="username" value="username"/>
+            </a></li>
             <li><a href="#">About</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="#">Contacts</a></li>
         </ul>
-        <h3 class="text-muted">Hello ${userName}</h3>
+        <h3 class="text-muted">Hello, ${userName}!</h3>
     </div>
 
     <div class="jumbotron">

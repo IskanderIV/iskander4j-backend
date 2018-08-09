@@ -10,6 +10,9 @@ import org.springframework.context.annotation.Configuration;
  * @date 8/2/2018.
  */
 @Configuration
-@ComponentScan(value = {"ru.cleverhause.service.board", "ru.cleverhause.service.user"})
+@ComponentScan(value = {
+        "ru.cleverhause.service.board",
+        "ru.cleverhause.service.user",
+        "ru.cleverhause.service.site"})
 public class ServiceConfig {
 }

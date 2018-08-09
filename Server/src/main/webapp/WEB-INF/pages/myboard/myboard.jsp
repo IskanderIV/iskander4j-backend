@@ -1,9 +1,12 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <c:set var="userName" value="${principal}"/>
 <c:set var="hasUserName" value="${userName != null}"/>
+<c:set var="boards" value="${userBoards}"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -25,7 +28,7 @@
             <li><a href="#">About</a></li>
             <li><a href="${contextPath}/contacts">Contact</a></li>
         </ul>
-        <h3 class="text-muted">Hello ${userName}</h3>
+        <h3 class="text-muted">Hello, ${userName}!</h3>
     </div>
 
     <div class="jumbotron">
@@ -37,10 +40,22 @@
                 </button>
             </a>
         </div>
+        <c:forEach var="board" items="${boards}">
+            <c:set var="boardname" value="${board.name}"/>
 
-        <c:import url="boardlist.jsp">
-            <c:param name="username" value="username"/>
-        </c:import>
+            <c:url value="myboard/board" var="boardURL">
+                <c:param name="boardname" value="${boardname}"/>
+            </c:url>
+            <a href="${contextPath}/${boardURL}">
+                <jsp:include page="boardListElement.jsp">
+                    <jsp:param name="boardname" value="${boardname}"/>
+                </jsp:include>
+            </a>
+
+
+        </c:forEach>
+        <br/>
+
     </div>
 
     <div class="row marketing">
