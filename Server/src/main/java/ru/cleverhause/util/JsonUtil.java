@@ -2,12 +2,12 @@ package ru.cleverhause.util;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ru.cleverhause.app.dto.DeviceData;
 import ru.cleverhause.app.dto.request.BoardRequestBody;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 
 public class JsonUtil {
     private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -31,8 +31,8 @@ public class JsonUtil {
         return MAPPER.writeValueAsString(obj);
     }
 
-    public static BoardRequestBody<DeviceData> fromInputStreamToBoardData(InputStream src) throws IOException {
-        return (BoardRequestBody<DeviceData>) MAPPER.readValue(src, new TypeReference<BoardRequestBody<DeviceData>>() {
+    public static <T extends Serializable> BoardRequestBody<T> fromInputStreamToBoardData(InputStream src) throws IOException {
+        return MAPPER.readValue(src, new TypeReference<BoardRequestBody<T>>() {
         });
     }
 }

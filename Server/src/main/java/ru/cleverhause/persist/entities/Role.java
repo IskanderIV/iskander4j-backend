@@ -24,8 +24,6 @@ import java.util.Set;
 @Table(name = "roles")
 public class Role implements Serializable {
 
-    private static final long serialVersionUID = -6734364190420371719L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // learn about diff types of strategies
     private Long id;

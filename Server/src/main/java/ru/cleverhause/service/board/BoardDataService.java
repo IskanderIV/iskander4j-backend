@@ -3,6 +3,7 @@ package ru.cleverhause.service.board;
 import ru.cleverhause.app.dto.DeviceControl;
 import ru.cleverhause.app.dto.DeviceData;
 import ru.cleverhause.app.dto.DeviceStructure;
+import ru.cleverhause.app.dto.form.NewBoardUidForm;
 import ru.cleverhause.app.dto.request.BoardRequestBody;
 import ru.cleverhause.app.dto.request.InputBoardControls;
 import ru.cleverhause.app.dto.request.UIRequestBody;
@@ -22,9 +23,9 @@ public interface BoardDataService {
 
     boolean checkBoardNumber(Long boardUID, String username);
 
-    Board registerBoard(BoardRequestBody<DeviceStructure> boardRegReq) throws Exception;
+    Boolean registerBoard(BoardRequestBody<DeviceStructure> boardRegReq) throws Exception;
 
-    Long generateBoardUID() throws Exception;
+    NewBoardUidForm generateBoardUID() throws Exception;
 
     Board saveData(Long boardUID, BoardRequestBody<DeviceData> dataReq) throws Exception;
 

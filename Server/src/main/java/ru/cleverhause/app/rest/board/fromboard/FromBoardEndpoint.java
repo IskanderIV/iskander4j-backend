@@ -1,5 +1,6 @@
 package ru.cleverhause.app.rest.board.fromboard;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.cleverhause.app.dto.BoardUID;
 import ru.cleverhause.app.dto.DeviceControl;
 import ru.cleverhause.app.dto.DeviceData;
 import ru.cleverhause.app.dto.DeviceSetting;
@@ -45,8 +45,8 @@ public class FromBoardEndpoint {
 
     // TODO For test only
     @PostMapping(value = {"/board"})
-    public BoardRequestBody<DeviceData> boardsPost(ServletRequest req) {
-        BoardRequestBody<DeviceData> body = null;
+    public BoardRequestBody<?> boardsPost(ServletRequest req) {
+        BoardRequestBody<?> body = null;
         try {
             body = JsonUtil.fromInputStreamToBoardData(req.getInputStream());
         } catch (IOException e) {
@@ -68,10 +68,10 @@ public class FromBoardEndpoint {
 
     @PostMapping(value = "/board/registration")
     public ResponseBody registerBoard(@RequestBody BoardRequestBody<DeviceStructure> boardRegReq) throws Exception {
-        boardDataService.registerBoard(boardRegReq);
+        Boolean result = boardDataService.registerBoard(boardRegReq);
         logger.debug("Inside registerBoard");
 
-        return new ResponseBody<>("Hello", null);
+        return new ResponseBody<>(ObjectUtils.toString(result), null);
     }
 
     @PostMapping(value = "/board/data")
@@ -127,14 +127,6 @@ public class FromBoardEndpoint {
     @GetMapping(value = "/{username}")
     public ResponseBody<OutputBoard<DeviceSetting>> getBoards(@PathVariable(name = "username") String username) {
         return null;
-    }
-
-    @GetMapping(value = "/board/uid/{username}")
-    public ResponseBody<BoardUID> getBoardUID(@PathVariable(name = "username") String username) throws Exception {
-        logger.info("Inside getBoardUID");
-        Long newBoardUID = boardDataService.generateBoardUID();
-
-        return new ResponseBody<>("Hello", new BoardUID(newBoardUID.toString()));
     }
 
 //    @ExceptionHandler()

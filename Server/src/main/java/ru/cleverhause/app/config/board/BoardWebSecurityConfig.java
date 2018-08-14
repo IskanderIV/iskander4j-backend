@@ -16,7 +16,6 @@ import ru.cleverhause.app.filters.BoardBasicPreAuthenticationFilter;
 import ru.cleverhause.app.filters.BoardHttpBasicAuthenticationFilter;
 import ru.cleverhause.app.filters.SecurityFilterChainPostProcessor;
 import ru.cleverhause.app.filters.handler.BoardHttpBasicAuthenticationSuccessHandler;
-import ru.cleverhause.service.board.BoardDataService;
 
 /**
  * Created by
@@ -29,7 +28,6 @@ import ru.cleverhause.service.board.BoardDataService;
 public class BoardWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String BOARDS = "/boards";
-    private static final String BOARD = "/board";
     private static final String ALL_INSIDE = "/**";
 
     @Bean
@@ -39,10 +37,7 @@ public class BoardWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     @Qualifier(value = "authManager")
-    public AuthenticationManager authenticationManager;
-
-    @Autowired
-    public BoardDataService boardDataService;
+    private AuthenticationManager authenticationManager;
 
     @Bean
     public BasicAuthenticationEntryPoint basicAuthEntryPoint() {
@@ -62,7 +57,7 @@ public class BoardWebSecurityConfig extends WebSecurityConfigurerAdapter {
         return boardBasicPreAuthenticationFilter;
     }
 
-    @Bean
+    @Bean(name = "boardBasicAuthSuccessHandler")
     public BoardHttpBasicAuthenticationSuccessHandler boardBasicAuthSuccessHandler() {
         return new BoardHttpBasicAuthenticationSuccessHandler();
     }
@@ -70,12 +65,11 @@ public class BoardWebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public BoardHttpBasicAuthenticationFilter boardBasicAuthFilter() throws Exception {
         BoardHttpBasicAuthenticationFilter boardBasicPreAuthenticationFilter =
-                new BoardHttpBasicAuthenticationFilter("/boards/**");
+                new BoardHttpBasicAuthenticationFilter(BOARDS + ALL_INSIDE);
         boardBasicPreAuthenticationFilter.setAuthenticationManager(authenticationManager);
         boardBasicPreAuthenticationFilter.setAuthenticationSuccessHandler(boardBasicAuthSuccessHandler());
         boardBasicPreAuthenticationFilter.setContinueChainBeforeSuccessfulAuthentication(false);
         boardBasicPreAuthenticationFilter.isNeedCheckBoardBelongsToUser(false);
-        boardBasicPreAuthenticationFilter.setBoardDataService(boardDataService);
 
         return boardBasicPreAuthenticationFilter;
     }
@@ -84,13 +78,11 @@ public class BoardWebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .antMatcher("/boards/**")
+                .antMatcher(BOARDS + ALL_INSIDE)
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, BOARDS + ALL_INSIDE).authenticated()
+                .antMatchers(HttpMethod.POST, BOARDS + ALL_INSIDE).hasAnyRole("USER", "ADMIN")
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//                .and()
-//                .httpBasic().authenticationEntryPoint(basicAuthEntryPoint());
 
         http.addFilterAfter(boardBasicAuthFilter(),
                 SecurityContextHolderAwareRequestFilter.class);

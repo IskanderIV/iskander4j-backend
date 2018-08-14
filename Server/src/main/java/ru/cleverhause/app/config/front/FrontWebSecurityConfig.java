@@ -49,11 +49,12 @@ public class FrontWebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .antMatcher("/**")
                 .authorizeRequests()
-                .antMatchers("/myboard/myboard").hasRole("USER")
+                .antMatchers("/myboard/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/home").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/registration").permitAll()
                 .and()
+                // if role is not correct than we fall down here
                 .exceptionHandling().accessDeniedPage("/error/permissionError")
                 .and()
                 .formLogin()

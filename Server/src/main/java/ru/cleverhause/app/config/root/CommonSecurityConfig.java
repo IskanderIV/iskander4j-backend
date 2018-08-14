@@ -10,16 +10,15 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
 import ru.cleverhause.app.config.board.BoardWebSecurityConfig;
 import ru.cleverhause.app.config.front.FrontWebSecurityConfig;
+import ru.cleverhause.service.security.DaoUserDetailsService;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * Security configuration class
@@ -64,6 +63,12 @@ public class CommonSecurityConfig {
         return manager;
     }
 
+    @Profile("prod")
+    @Bean
+    public UserDetailsService daoUserDetailsService() {
+        return new DaoUserDetailsService();
+    }
+
     @Autowired
     private UserDetailsService userDetailsService;
 
@@ -75,16 +80,16 @@ public class CommonSecurityConfig {
         return authenticationProvider;
     }
 
-    @Bean
-    public PreAuthenticatedAuthenticationProvider preAuthenticatedAuthenticationProvider() {
-        PreAuthenticatedAuthenticationProvider preAuthenticatedAuthenticationProvider = new PreAuthenticatedAuthenticationProvider();
-        preAuthenticatedAuthenticationProvider.setPreAuthenticatedUserDetailsService(new UserDetailsByNameServiceWrapper<>(userDetailsService));
-
-        return preAuthenticatedAuthenticationProvider;
-    }
+//    @Bean
+//    public PreAuthenticatedAuthenticationProvider preAuthenticatedAuthenticationProvider() {
+//        PreAuthenticatedAuthenticationProvider preAuthenticatedAuthenticationProvider = new PreAuthenticatedAuthenticationProvider();
+//        preAuthenticatedAuthenticationProvider.setPreAuthenticatedUserDetailsService(new UserDetailsByNameServiceWrapper<>(userDetailsService));
+//
+//        return preAuthenticatedAuthenticationProvider;
+//    }
 
     @Bean(name = "authManager")
     public AuthenticationManager authenticationManager() {
-        return new ProviderManager(Arrays.asList(daoAuthenticatedProvider(), preAuthenticatedAuthenticationProvider()));
+        return new ProviderManager(Collections.singletonList(daoAuthenticatedProvider()));
     }
 }

@@ -8,15 +8,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpMethod;
-import ru.cleverhause.app.dto.DeviceData;
-import ru.cleverhause.app.dto.DeviceSetting;
 import ru.cleverhause.app.dto.request.BoardRequestBody;
 import ru.cleverhause.app.dto.response.HttpResponse;
 import ru.cleverhause.util.JsonUtil;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
 
 import static ru.cleverhause.util.HttpUtil.execute;
 
@@ -29,19 +26,19 @@ public class BoardsConnectionIT {
     public void setUp() {
     }
 
-    @Test
-    public void successBoardWorkTest() {
-        URL reqURL = getRequestURL("/boards/board/data");
-
-        BoardRequestBody request = new BoardRequestBody<>("username",
-                "password",
-                123456L,
-                Arrays.asList(
-                        new DeviceData.Builder().setId(1).setAck(0.7).setAdj(false).setCtrlVal(0.0).setRadioErr(false).build()
-                ));
-        HttpResponse response = getHttpResponse(HttpMethod.POST, reqURL, request);
-        Assert.assertEquals(200, response.getCode());
-    }
+//    @Test
+//    public void successBoardWorkTest() {
+//        URL reqURL = getRequestURL("/boards/board/data");
+//
+//        BoardRequestBody request = new BoardRequestBody<>("username",
+//                "password",
+//                123456L,
+//                Arrays.asList(
+//                        new DeviceData.Builder().setId(1).setAck(0.7).setAdj(false).setCtrlVal(0.0).setRadioErr(false).build()
+//                ));
+//        HttpResponse response = getHttpResponse(HttpMethod.POST, reqURL, request);
+//        Assert.assertEquals(200, response.getCode());
+//    }
 
     @Test
     public void getBoardUIDTest() {
@@ -50,19 +47,19 @@ public class BoardsConnectionIT {
         Assert.assertEquals(200, response.getCode());
     }
 
-    @Test
-    public void successBoardRegistrationTest() {
-        URL reqURL = getRequestURL("/boards/board/registration");
-
-        BoardRequestBody request = new BoardRequestBody<>("username",
-                "password",
-                123456L,
-                Arrays.asList(
-                        new DeviceSetting.Builder().setId(1).setAdj(true).setRotate(false).setSignaling(false).build()
-                ));
-        HttpResponse response = getHttpResponse(HttpMethod.POST, reqURL, request);
-        Assert.assertEquals(200, response.getCode());
-    }
+//    @Test
+//    public void successBoardRegistrationTest() {
+//        URL reqURL = getRequestURL("/boards/board/registration");
+//
+//        BoardRequestBody<> request = new BoardRequestBody<>("username",
+//                "password",
+//                123456L,
+//                Arrays.asList(
+//                        new DeviceSetting.Builder().setId(1).setAdj(true).setRotate(false).setSignaling(false).build()
+//                ));
+//        HttpResponse response = getHttpResponse(HttpMethod.POST, reqURL, request);
+//        Assert.assertEquals(200, response.getCode());
+//    }
 
     private HttpResponse getHttpResponse(HttpMethod method, URL reqURL, BoardRequestBody body) {
         RequestBody jsonBody = null;

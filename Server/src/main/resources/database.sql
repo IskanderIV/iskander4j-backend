@@ -102,6 +102,17 @@ CREATE TABLE IF NOT EXISTS user_board (
   UNIQUE (user_id, board_id)
 );
 
+-- Table for new User's board UIDs: user_new_board
+
+CREATE TABLE IF NOT EXISTS user_new_board (
+  id int NOT NULL UNIQUE PRIMARY KEY,
+  user_id int NOT NULL,
+  boardUID int NOT NULL UNIQUE,
+  boardname varchar(100) NOT NULL,
+
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
 CREATE SEQUENCE profiles_id_seq MINVALUE 1;
 ALTER TABLE profiles ALTER id SET DEFAULT nextval('profiles_id_seq');
 ALTER SEQUENCE profiles_id_seq OWNED BY profiles.id;
@@ -129,6 +140,11 @@ ALTER SEQUENCE boardControlData_id_seq OWNED BY boardControlData.id;
 CREATE SEQUENCE boardSavedData_id_seq MINVALUE 1;
 ALTER TABLE boardSavedData ALTER id SET DEFAULT nextval('boardSavedData_id_seq');
 ALTER SEQUENCE boardSavedData_id_seq OWNED BY boardSavedData.id;
+
+CREATE SEQUENCE user_new_board_id_seq MINVALUE 1;
+ALTER TABLE user_new_board ALTER id SET DEFAULT nextval('user_new_board_id_seq');
+ALTER SEQUENCE user_new_board_id_seq OWNED BY user_new_board.id;
+--TODO for all sequence there is the same problem - owner. They need have the same owner as table for which they used
 
 ALTER TABLE users ADD CONSTRAINT unique_username UNIQUE (username);
 ALTER TABLE roles ADD CONSTRAINT unique_rolename UNIQUE (rolename);

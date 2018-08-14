@@ -14,7 +14,15 @@
 </head>
 <body>
 <div class="container">
-
+    <div class="header">
+        <ul class="nav nav-pills pull-right">
+            <li><a href="${contextPath}/home">Home</a></li>
+            <li><a href="${contextPath}/myboard/myboard">Boards</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="${contextPath}/contacts">Contact</a></li>
+        </ul>
+        <h3 class="text-muted">Hello, ${userName}!</h3> <a href="${contextPath}/login?logout"><h3>logout</h3></a>
+    </div>
     <form class="form-signin" method="post" role="form">
         <h2 class="form-signin-heading">Please sign in</h2>
         <div class="form-group ${error != null ? 'has-error' : ''}">
@@ -27,6 +35,9 @@
             <h4 class="text-center"><a href="${contextPath}/registration">Create an account</a></h4>
         </div>
     </form>
+    <div class="footer">
+        <p>&copy; Ivanov's 2017</p>
+    </div>
 
 </div> <!-- /container -->
 

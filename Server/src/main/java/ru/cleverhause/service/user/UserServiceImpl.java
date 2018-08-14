@@ -20,6 +20,7 @@ import java.util.Set;
  */
 @Service
 public class UserServiceImpl implements UserService {
+    public static final String DEF_ROLE = "ROLE_USER";
 
     @Autowired
     private UserDao userDao;
@@ -34,7 +35,7 @@ public class UserServiceImpl implements UserService {
     public void save(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Set<Role> defRoles = new HashSet<Role>();
-        defRoles.add(roleDao.getOne(1L));
+        defRoles.add(roleDao.findByRolename(DEF_ROLE));
         user.setRoles(defRoles);
         userDao.save(user);
 

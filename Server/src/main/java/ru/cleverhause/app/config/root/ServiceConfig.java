@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan(value = {
         "ru.cleverhause.service.board",
         "ru.cleverhause.service.user",
-        "ru.cleverhause.service.site"})
+        "ru.cleverhause.service.site",
+        "ru.cleverhause.app.filters.mapper"})
 public class ServiceConfig {
 }

@@ -1,5 +1,6 @@
 package ru.cleverhause.service.security;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -44,9 +45,10 @@ public class SecurityServiceImpl implements SecurityService {
             }
         }
 
-        return null;
+        return StringUtils.EMPTY;
     }
 
+    // TODO think about. maybe not use this if I check all that inside filter (http.login())
     @Override
     public void autoLogin(String username, String password) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);

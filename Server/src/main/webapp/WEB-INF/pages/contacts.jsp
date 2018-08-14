@@ -25,7 +25,7 @@
             <li><a href="#">About</a></li>
             <li class="active"><a href="#">Contact</a></li>
         </ul>
-        <h3 class="text-muted">Hello, ${userName}!</h3>
+        <h3 class="text-muted">Hello, ${userName}!</h3> <a href="${contextPath}/login?logout"><h3>logout</h3></a>
     </div>
 
     <div class="jumbotron">

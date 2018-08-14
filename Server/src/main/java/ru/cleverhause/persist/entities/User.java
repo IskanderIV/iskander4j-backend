@@ -14,9 +14,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -31,35 +33,29 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 public class User implements Serializable {
-
-    private static final long serialVersionUID = -1836672544422348442L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "username")
     private String username;
-
-    @Column(name = "password")
     private String password;
-
-    @Transient
     private String confirmPassword;
+    private Set<Role> roles = Collections.emptySet();
+    private Set<Board> boards = Collections.emptySet();
+    private NewBoardUID newBoardUID;
 
-    @ManyToMany
-    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    @LazyCollection(value = LazyCollectionOption.FALSE)
-    private Set<Role> roles;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @LazyCollection(value = LazyCollectionOption.FALSE)
-    private Set<Board> boards;
+    public User(Long id, String username, String password, String confirmPassword, Set<Role> roles, Set<Board> boards, NewBoardUID newBoardUID) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.confirmPassword = confirmPassword;
+        this.roles = roles;
+        this.boards = boards;
+        this.newBoardUID = newBoardUID;
+    }
 
     public User() {
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {
         return id;
     }
@@ -68,6 +64,7 @@ public class User implements Serializable {
         this.id = id;
     }
 
+    @Column(name = "username")
     public String getUsername() {
         return username;
     }
@@ -76,6 +73,7 @@ public class User implements Serializable {
         this.username = username;
     }
 
+    @Column(name = "password")
     public String getPassword() {
         return password;
     }
@@ -84,6 +82,7 @@ public class User implements Serializable {
         this.password = password;
     }
 
+    @Transient
     public String getConfirmPassword() {
         return confirmPassword;
     }
@@ -92,6 +91,10 @@ public class User implements Serializable {
         this.confirmPassword = confirmPassword;
     }
 
+    @ManyToMany
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @LazyCollection(value = LazyCollectionOption.FALSE)
     public Set<Role> getRoles() {
         return roles;
     }
@@ -100,6 +103,8 @@ public class User implements Serializable {
         this.roles = roles;
     }
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @LazyCollection(value = LazyCollectionOption.FALSE)
     public Set<Board> getBoards() {
         return boards;
     }
@@ -108,15 +113,12 @@ public class User implements Serializable {
         this.boards = boards;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", confirmPassword='" + confirmPassword + '\'' +
-                ", roles=" + roles +
-                ", boards=" + boards +
-                '}';
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    public NewBoardUID getNewBoardUID() {
+        return newBoardUID;
+    }
+
+    public void setNewBoardUID(NewBoardUID newBoardUID) {
+        this.newBoardUID = newBoardUID;
     }
 }

@@ -2,16 +2,20 @@ package ru.cleverhause.app.filters;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import ru.cleverhause.app.dto.DeviceControl;
 import ru.cleverhause.app.dto.DeviceData;
+import ru.cleverhause.app.dto.DeviceStructure;
 import ru.cleverhause.app.dto.request.BoardRequestBody;
+import ru.cleverhause.app.filters.mapper.AbstractRequestBodyToObjectMapper;
+import ru.cleverhause.app.filters.mapper.RequestBodyToObjectMapperFactory;
 import ru.cleverhause.service.board.BoardDataService;
-import ru.cleverhause.util.JsonUtil;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -26,6 +30,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 
 /**
  * Created by
@@ -34,12 +39,34 @@ import java.io.InputStreamReader;
  * @date 8/1/2018.
  */
 public class BoardHttpBasicAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+
+    private static Logger LOGGER = LoggerFactory.getLogger(BoardHttpBasicAuthenticationFilter.class);
+
+    enum DtoClass {
+        CONTROL(DeviceControl.class),
+        DATA(DeviceData.class),
+        STRUCTURE(DeviceStructure.class);
+
+        private Class<? extends Serializable> dtoClass;
+
+        DtoClass(Class<? extends Serializable> dtoClass) {
+            this.dtoClass = dtoClass;
+        }
+
+        public Class<? extends Serializable> getClazz() {
+            return dtoClass;
+        }
+    }
+
+    @Autowired
+    private BoardDataService boardDataService;
+
+    @Autowired
+    private RequestBodyToObjectMapperFactory requestBodyToObjectMapperFactory;
+
     private boolean needCheckBoardBelongsToUser = true;
-    private BoardDataService boardDataService = null;
 
-    private static Logger logger = LoggerFactory.getLogger(BoardHttpBasicAuthenticationFilter.class);
-
-    private BoardRequestBody<DeviceData> body;
+    private BoardRequestBody body;
 
     public BoardHttpBasicAuthenticationFilter(String defaultFilterProcessesUrl) {
         super(defaultFilterProcessesUrl);
@@ -92,22 +119,31 @@ public class BoardHttpBasicAuthenticationFilter extends AbstractAuthenticationPr
     private boolean retrieveBodyFromPostRequest(HttpServletRequest request) {
         if (HttpMethod.POST.matches(request.getMethod())) {
             try {
-                this.body = JsonUtil.fromInputStreamToBoardData(request.getInputStream());
+                this.body = tryMapFrom(request);
             } catch (Exception e) {
-                logger.error("MyFilter. Can't convert request input stream to json", e);
-                System.out.println(); //TODO
+                LOGGER.error("Can't convert request input stream to json", e); //TODO
             }
         }
 
         return body != null;
     }
 
-    public void isNeedCheckBoardBelongsToUser(boolean needCheckBoardBelongsToUser) {
-        this.needCheckBoardBelongsToUser = needCheckBoardBelongsToUser;
+    private BoardRequestBody tryMapFrom(HttpServletRequest request) throws IOException {
+        AbstractRequestBodyToObjectMapper mapper;
+        for (DtoClass dtoClass : DtoClass.values()) {
+            mapper = requestBodyToObjectMapperFactory.create(dtoClass.getClazz());
+            try {
+                return mapper.map(request);
+            } catch (Exception e) {
+                LOGGER.info("Mapper {} couldn't been used for that request", mapper);
+            }
+        }
+
+        return null;
     }
 
-    public void setBoardDataService(BoardDataService boardDataService) {
-        this.boardDataService = boardDataService;
+    public void isNeedCheckBoardBelongsToUser(boolean needCheckBoardBelongsToUser) {
+        this.needCheckBoardBelongsToUser = needCheckBoardBelongsToUser;
     }
 
     private String[] extractCreds() {

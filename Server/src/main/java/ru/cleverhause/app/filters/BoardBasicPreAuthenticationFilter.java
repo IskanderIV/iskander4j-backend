@@ -2,7 +2,6 @@ package ru.cleverhause.app.filters;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
-import ru.cleverhause.app.dto.DeviceData;
 import ru.cleverhause.app.dto.request.BoardRequestBody;
 import ru.cleverhause.util.JsonUtil;
 
@@ -15,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
  * @date 7/31/2018.
  */
 public class BoardBasicPreAuthenticationFilter extends AbstractPreAuthenticatedProcessingFilter {
-    private BoardRequestBody<DeviceData> body;
+    private BoardRequestBody<?> body;
 
     public BoardBasicPreAuthenticationFilter() {
     }

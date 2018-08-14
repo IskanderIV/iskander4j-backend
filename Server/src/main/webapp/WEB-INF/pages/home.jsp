@@ -26,9 +26,9 @@
                 <param name="username" value="username"/>
             </a></li>
             <li><a href="#">About</a></li>
-            <li><a href="#">Contacts</a></li>
+            <li><a href="${contextPath}/contacts">Contacts</a></li>
         </ul>
-        <h3 class="text-muted">Hello, ${userName}!</h3>
+        <h3 class="text-muted">Hello, ${userName}!</h3> <a href="${contextPath}/login?logout"><h3>logout</h3></a>
     </div>
 
     <div class="jumbotron">

@@ -18,6 +18,15 @@
 </head>
 <body>
 <div class="container">
+    <div class="header">
+        <ul class="nav nav-pills pull-right">
+            <li><a href="${contextPath}/home">Home</a></li>
+            <li><a href="${contextPath}/myboard/myboard">Boards</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="${contextPath}/contacts">Contact</a></li>
+        </ul>
+        <h3 class="text-muted">Hello, ${userName}!</h3> <a href="${contextPath}/login?logout"><h3>logout</h3></a>
+    </div>
     <form:form method="post" modelAttribute="userForm" class="form-signin">
         <h2 class="form-signin-heading">Create your account</h2>
         <spring:bind path="username">
@@ -43,6 +52,9 @@
 
         <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
     </form:form>
+    <div class="footer">
+        <p>&copy; Ivanov's 2017</p>
+    </div>
 </div>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <!--<script src="/resources/jQuery/jquery-3.2.1.min.js"></script>-->

@@ -11,4 +11,5 @@ import ru.cleverhause.persist.entities.Role;
  */
 
 public interface RoleDao extends JpaRepository<Role, Long> {
+    Role findByRolename(String roleName);
 }

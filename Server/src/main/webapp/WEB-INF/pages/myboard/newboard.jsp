@@ -32,17 +32,15 @@
     <div class="jumbotron">
         <h2>New Board Registration</h2>
         <div>
-            <form:select path="country">
-                <form:option value="0" label="Select"/>
-                <form:options items="${countryList}" itemValue="countryId" itemLabel="countryName"/>
-            </form:select>
-            <form class="form-signin" method="post" role="form">
+            <form:form class="form-signin" method="post" modelAttribute="newBoardUidForm" role="form">
                 <div class="form-group">
-                    <input type="text" class="form-ctrlVal" name="boardId" required autofocus>
+                    <form:input type="text" path="newBoardUid" name="newBoardUid" class="form-ctrlVal" required="true"
+                                readonly="true"/>
+                    <form:input type="text" path="boardName" name="boardName" class="form-ctrlVal" required="true"/>
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                    <button class="btn btn-lg btn-primary btn-block" type="submit">Get Id</button>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">Get ID</button>
                 </div>
-            </form>
+            </form:form>
         </div>
     </div>
 

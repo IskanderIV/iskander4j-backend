@@ -37,7 +37,7 @@ public class FromFrontEndpoint {
     @Autowired
     private BoardDataService boardDataService;
 
-    @PostMapping(value = "/control")
+    @PostMapping(value = "/board/control")
     public ResponseBody<OutputDevices<DeviceControl>> saveBoardControl(@RequestBody UIRequestBody<InputBoardControls<ru.cleverhause.app.dto.DeviceControl>> requestBody) {
         Long boardUID = requestBody.getBoardUID();
         String message = "";

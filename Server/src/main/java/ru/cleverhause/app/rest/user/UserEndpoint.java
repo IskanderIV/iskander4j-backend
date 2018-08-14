@@ -60,7 +60,8 @@ public class UserEndpoint {
             model.addAttribute("error", "User or password is incorrect.");
         }
         if (logout != null) {
-            model.addAttribute("message", "Logged out successfully");
+            model.addAttribute("logout", true);
+            return "home";
         }
 
         return "login";

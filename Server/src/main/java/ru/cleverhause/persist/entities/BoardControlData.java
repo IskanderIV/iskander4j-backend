@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -18,7 +19,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "boardControlData")
-public class BoardControlData {
+public class BoardControlData implements Serializable {
     private Long id;
     private String data;
     private Date created;
