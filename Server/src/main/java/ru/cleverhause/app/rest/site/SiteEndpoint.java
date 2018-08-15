@@ -8,11 +8,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import ru.cleverhause.app.dto.form.NewBoardUidForm;
-import ru.cleverhause.app.dto.page.UserBoard;
+import ru.cleverhause.app.dto.page.BoardDto_MyBoardsJsp;
+import ru.cleverhause.app.dto.page.DeviceDto_DevicesJsp;
 import ru.cleverhause.service.board.BoardDataService;
 import ru.cleverhause.service.security.SecurityService;
 import ru.cleverhause.service.site.SiteService;
 
+import javax.servlet.ServletRequest;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -43,15 +46,21 @@ public class SiteEndpoint {
         return new ModelAndView("home", model);
     }
 
+    @GetMapping(value = {"/contacts"})
+    public ModelAndView contacts(Map<String, Object> model) {
+        String currUserName = securityService.findLoggedInUsername();
+        model.put("principal", currUserName);
+        return new ModelAndView("contacts", model);
+    }
+
     @GetMapping(value = {"/myboard/myboard"})
-    public ModelAndView myBoard(Map<String, Object> model, @RequestParam(required = false) String username) {
-        String currUserName = username;
-        if (currUserName == null) {
-            currUserName = securityService.findLoggedInUsername();
-        }
-        List<UserBoard> userBoards = siteService.getBoardsByUserName(currUserName);
+    public ModelAndView myBoards(Map<String, Object> model, @RequestParam(required = false) String username) {
+        String currUserName = securityService.findLoggedInUsername();
+        List<BoardDto_MyBoardsJsp> userBoards = siteService.getBoardsByUserName(currUserName);
+
         model.put("userBoards", userBoards);
         model.put("principal", currUserName);
+
         return new ModelAndView("myboard/myboard", model);
     }
 
@@ -73,9 +82,23 @@ public class SiteEndpoint {
     }
 
     @GetMapping(value = {"/myboard/board"})
-    public ModelAndView board(Map<String, Object> model, @RequestParam(required = false) String boardname) {
+    public ModelAndView board(Map<String, Object> model, @RequestParam String boardUID) throws IOException {
+        List<DeviceDto_DevicesJsp> devices = siteService.getDevicesByBoardUID(boardUID);
         String currUserName = securityService.findLoggedInUsername();
+        model.put("deviceList", devices);
+        model.put("devicesNumber", devices.size());
         model.put("principal", currUserName);
+
         return new ModelAndView("myboard/board", model);
+    }
+
+    @PostMapping(value = {"/myboard/board"})
+    public ModelAndView boardControl(Map<String, Object> model, ServletRequest req, @RequestParam String boardUID) throws IOException {
+        List<DeviceDto_DevicesJsp> devices = (List<DeviceDto_DevicesJsp>) model.get("deviceList");
+        String currUserName = securityService.findLoggedInUsername();
+        model.put("deviceList", devices);
+        model.put("devicesNumber", devices.size());
+        model.put("principal", currUserName);
+        return new ModelAndView("myboard/board?boardUID=" + boardUID, model);
     }
 }

@@ -33,6 +33,7 @@
 
     <div class="jumbotron">
         <h2>BOARDS</h2>
+
         <div>
             <a href="${contextPath}/myboard/newboard">
                 <button class="btn btn-lg btn-primary btn-block">
@@ -40,14 +41,16 @@
                 </button>
             </a>
         </div>
+
         <c:forEach var="board" items="${boards}">
             <c:set var="boardname" value="${board.name}"/>
+            <c:set var="boardUID" value="${board.boardUID}"/>
 
             <c:url value="myboard/board" var="boardURL">
-                <c:param name="boardname" value="${boardname}"/>
+                <c:param name="boardUID" value="${boardUID}"/>
             </c:url>
             <a href="${contextPath}/${boardURL}">
-                <jsp:include page="boardListElement.jsp">
+                <jsp:include page="myboardsElement.jsp">
                     <jsp:param name="boardname" value="${boardname}"/>
                 </jsp:include>
             </a>

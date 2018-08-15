@@ -12,7 +12,8 @@ import java.io.Serializable;
  */
 
 @Data
-public class UserBoard implements Serializable {
+public class BoardDto_MyBoardsJsp implements Serializable {
+    private Long boardUID;
     private String name;
     private String numOfDevices;
 }
