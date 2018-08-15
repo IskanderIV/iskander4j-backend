@@ -98,13 +98,12 @@ public class BoardDataServiceImpl implements BoardDataService {
             newBoard.setControlData(boardControlData);
             EntityUtils.addBoardToUser(user, newBoard);
 
+            // TODO make transaction here
             try {
                 boardDao.save(newBoard);
 
                 // delete newBoardUidEntity if "save" operation was succeed
                 if (boardDao.findByBoardUID(passedBoardUID) != null) {
-                    user.setNewBoardUID(null);
-                    savedBoardUidEntity.setUser(null);
                     newBoardUidDao.delete(savedBoardUidEntity);
                 }
 

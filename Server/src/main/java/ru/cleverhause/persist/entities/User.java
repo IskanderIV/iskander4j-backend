@@ -113,7 +113,8 @@ public class User implements Serializable {
         this.boards = boards;
     }
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user")
+    //if I use "cascade = CascadeType.ALL" than no deleting on delete(NewBoardUID). If mappedBy than User is not controller on bidirectional link
     public NewBoardUID getNewBoardUID() {
         return newBoardUID;
     }

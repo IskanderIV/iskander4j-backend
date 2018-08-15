@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS boardStructure (
   structure varchar(4000),
   board_id int NOT NULL,
 
-  FOREIGN KEY (board_id) REFERENCES board(id)
+  FOREIGN KEY (board_id) REFERENCES board(id) ON DELETE CASCADE
 );
 
 -- Table: boardControlData
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS boardControlData (
   created timestamp,
   board_id int NOT NULL,
 
-  FOREIGN KEY (board_id) REFERENCES board(id)
+  FOREIGN KEY (board_id) REFERENCES board(id) ON DELETE CASCADE
 );
 
 
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS boardSavedData (
   created timestamp,
   board_id int NOT NULL,
 
-  FOREIGN KEY (board_id) REFERENCES board(id)
+  FOREIGN KEY (board_id) REFERENCES board(id) ON DELETE CASCADE
 );
 
 -- Table for mapping users and roles: user_board
@@ -106,42 +106,50 @@ CREATE TABLE IF NOT EXISTS user_board (
 
 CREATE TABLE IF NOT EXISTS user_new_board (
   id int NOT NULL UNIQUE PRIMARY KEY,
-  user_id int NOT NULL,
+  user_id int NOT NULL UNIQUE,
   boardUID int NOT NULL UNIQUE,
   boardname varchar(100) NOT NULL,
 
-  FOREIGN KEY (user_id) REFERENCES users(id)
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE profiles_id_seq MINVALUE 1;
+ALTER SEQUENCE profiles_id_seq OWNER TO clever_admin;
 ALTER TABLE profiles ALTER id SET DEFAULT nextval('profiles_id_seq');
 ALTER SEQUENCE profiles_id_seq OWNED BY profiles.id;
 
 CREATE SEQUENCE users_id_seq MINVALUE 3;
+ALTER SEQUENCE users_id_seq OWNER TO clever_admin;
 ALTER TABLE users ALTER id SET DEFAULT nextval('users_id_seq');
 ALTER SEQUENCE users_id_seq OWNED BY users.id;
 
 CREATE SEQUENCE roles_id_seq MINVALUE 3;
+ALTER SEQUENCE roles_id_seq OWNER TO clever_admin;
 ALTER TABLE roles ALTER id SET DEFAULT nextval('roles_id_seq');
 ALTER SEQUENCE roles_id_seq OWNED BY roles.id;
 
 CREATE SEQUENCE board_id_seq MINVALUE 1;
+ALTER SEQUENCE board_id_seq OWNER TO clever_admin;
 ALTER TABLE board ALTER id SET DEFAULT nextval('board_id_seq');
 ALTER SEQUENCE board_id_seq OWNED BY board.id;
 
 CREATE SEQUENCE boardStructure_id_seq MINVALUE 1;
+ALTER SEQUENCE boardStructure_id_seq OWNER TO clever_admin;
 ALTER TABLE boardStructure ALTER id SET DEFAULT nextval('boardStructure_id_seq');
 ALTER SEQUENCE boardStructure_id_seq OWNED BY boardStructure.id;
 
 CREATE SEQUENCE boardControlData_id_seq MINVALUE 1;
+ALTER SEQUENCE boardControlData_id_seq OWNER TO clever_admin;
 ALTER TABLE boardControlData ALTER id SET DEFAULT nextval('boardControlData_id_seq');
 ALTER SEQUENCE boardControlData_id_seq OWNED BY boardControlData.id;
 
 CREATE SEQUENCE boardSavedData_id_seq MINVALUE 1;
+ALTER SEQUENCE boardSavedData_id_seq OWNER TO clever_admin;
 ALTER TABLE boardSavedData ALTER id SET DEFAULT nextval('boardSavedData_id_seq');
 ALTER SEQUENCE boardSavedData_id_seq OWNED BY boardSavedData.id;
 
 CREATE SEQUENCE user_new_board_id_seq MINVALUE 1;
+ALTER SEQUENCE user_new_board_id_seq OWNER TO clever_admin;
 ALTER TABLE user_new_board ALTER id SET DEFAULT nextval('user_new_board_id_seq');
 ALTER SEQUENCE user_new_board_id_seq OWNED BY user_new_board.id;
 --TODO for all sequence there is the same problem - owner. They need have the same owner as table for which they used
