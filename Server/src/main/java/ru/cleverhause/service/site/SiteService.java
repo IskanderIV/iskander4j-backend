@@ -1,8 +1,8 @@
 package ru.cleverhause.service.site;
 
 import org.springframework.lang.Nullable;
+import ru.cleverhause.app.dto.form.Device_DevicesJspForm;
 import ru.cleverhause.app.dto.page.BoardDto_MyBoardsJsp;
-import ru.cleverhause.app.dto.page.DeviceDto_DevicesJsp;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,5 +16,5 @@ import java.util.List;
 public interface SiteService {
     List<BoardDto_MyBoardsJsp> getBoardsByUserName(@Nullable String username);
 
-    List<DeviceDto_DevicesJsp> getDevicesByBoardUID(@Nullable String boardUID) throws IOException;
+    List<Device_DevicesJspForm> getDevicesByBoardUID(@Nullable String boardUID) throws IOException;
 }

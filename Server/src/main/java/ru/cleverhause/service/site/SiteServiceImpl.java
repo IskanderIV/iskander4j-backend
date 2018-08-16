@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import ru.cleverhause.app.dto.DeviceControl;
 import ru.cleverhause.app.dto.DeviceData;
 import ru.cleverhause.app.dto.DeviceStructure;
+import ru.cleverhause.app.dto.form.Device_DevicesJspForm;
 import ru.cleverhause.app.dto.page.BoardDto_MyBoardsJsp;
-import ru.cleverhause.app.dto.page.DeviceDto_DevicesJsp;
 import ru.cleverhause.persist.converter.EntitiesToDtoConverter;
 import ru.cleverhause.persist.entities.Board;
 import ru.cleverhause.persist.entities.BoardSavedData;
@@ -54,8 +54,8 @@ public class SiteServiceImpl implements SiteService {
     }
 
     @Override
-    public List<DeviceDto_DevicesJsp> getDevicesByBoardUID(@Nullable String boardUID) throws IOException {
-        List<DeviceDto_DevicesJsp> devices = Lists.newArrayList();
+    public List<Device_DevicesJspForm> getDevicesByBoardUID(@Nullable String boardUID) throws IOException {
+        List<Device_DevicesJspForm> devices = Lists.newArrayList();
 
         if (!Strings.isNullOrEmpty(boardUID)) {
             Long uID = Longs.tryParse(boardUID, 10);
@@ -71,7 +71,7 @@ public class SiteServiceImpl implements SiteService {
                 }
 
                 for (DeviceStructure deviceStructure : deviceStructureList) {
-                    DeviceDto_DevicesJsp device = new DeviceDto_DevicesJsp();
+                    Device_DevicesJspForm device = new Device_DevicesJspForm();
 
                     DeviceControl control = findControlByDeviceId(deviceStructure.getId(), deviceControlList);
                     fillControlData(device, control);
@@ -108,7 +108,7 @@ public class SiteServiceImpl implements SiteService {
         return null;
     }
 
-    private void fillStructureData(DeviceDto_DevicesJsp device, DeviceStructure deviceStructure) {
+    private void fillStructureData(Device_DevicesJspForm device, DeviceStructure deviceStructure) {
         device.setId(deviceStructure.getId());
         device.setDiscrete(deviceStructure.getDiscrete());
         device.setAdj(deviceStructure.getAdj());
@@ -116,7 +116,7 @@ public class SiteServiceImpl implements SiteService {
         device.setSignaling(deviceStructure.getSignaling());
     }
 
-    private void fillControlData(DeviceDto_DevicesJsp device, DeviceControl control) {
+    private void fillControlData(Device_DevicesJspForm device, DeviceControl control) {
         if (control != null) {
             device.setCtrlVal(control.getCtrlVal());
         } else {
@@ -124,7 +124,7 @@ public class SiteServiceImpl implements SiteService {
         }
     }
 
-    private void fillSavedData(DeviceDto_DevicesJsp device, DeviceData data) {
+    private void fillSavedData(Device_DevicesJspForm device, DeviceData data) {
         if (data != null) {
             device.setAck(data.getAck());
             device.setRadioErr(data.getRadioErr());

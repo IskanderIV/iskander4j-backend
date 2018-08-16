@@ -7,17 +7,5 @@
 <c:set var="devices" value="${requestScope.devices}"/>
 
 <div>
-    <form:form class="form-signin" method="post" modelAttribute="deviceList" role="form">
-        <div class="form-group">
-            <c:forEach var="device" items="${devices}">
-                <c:set var="device" value="${device}" scope="request"/>
-                <c:import url="devices/device.jsp"/>
-            </c:forEach>
 
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Update</button>
-
-        </div>
-    </form:form>
 </div>

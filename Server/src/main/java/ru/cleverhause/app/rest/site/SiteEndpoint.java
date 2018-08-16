@@ -4,17 +4,18 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ru.cleverhause.app.dto.form.DeviceList_DevicesJspForm;
 import ru.cleverhause.app.dto.form.NewBoardUidForm;
 import ru.cleverhause.app.dto.page.BoardDto_MyBoardsJsp;
-import ru.cleverhause.app.dto.page.DeviceDto_DevicesJsp;
 import ru.cleverhause.service.board.BoardDataService;
 import ru.cleverhause.service.security.SecurityService;
 import ru.cleverhause.service.site.SiteService;
 
-import javax.servlet.ServletRequest;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -83,22 +84,24 @@ public class SiteEndpoint {
 
     @GetMapping(value = {"/myboard/board"})
     public ModelAndView board(Map<String, Object> model, @RequestParam String boardUID) throws IOException {
-        List<DeviceDto_DevicesJsp> devices = siteService.getDevicesByBoardUID(boardUID);
+        DeviceList_DevicesJspForm devices = new DeviceList_DevicesJspForm();
+        devices.setDevices(siteService.getDevicesByBoardUID(boardUID));
         String currUserName = securityService.findLoggedInUsername();
-        model.put("deviceList", devices);
-        model.put("devicesNumber", devices.size());
+        model.put("deviceListForm", devices);
+        model.put("deviceNumber", devices.getDevices().size());
         model.put("principal", currUserName);
 
         return new ModelAndView("myboard/board", model);
     }
 
     @PostMapping(value = {"/myboard/board"})
-    public ModelAndView boardControl(Map<String, Object> model, ServletRequest req, @RequestParam String boardUID) throws IOException {
-        List<DeviceDto_DevicesJsp> devices = (List<DeviceDto_DevicesJsp>) model.get("deviceList");
+    public String boardControl(
+            @ModelAttribute(name = "deviceListForm") DeviceList_DevicesJspForm devices,
+            RedirectAttributes redirectAttributes,
+            @RequestParam String boardUID) throws IOException {
         String currUserName = securityService.findLoggedInUsername();
-        model.put("deviceList", devices);
-        model.put("devicesNumber", devices.size());
-        model.put("principal", currUserName);
-        return new ModelAndView("myboard/board?boardUID=" + boardUID, model);
+        redirectAttributes.addFlashAttribute("deviceListForm", devices);
+        redirectAttributes.addFlashAttribute("principal", currUserName);
+        return "redirect:/myboard/board?boardUID=" + boardUID;
     }
 }

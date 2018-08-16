@@ -1,6 +1,7 @@
-package ru.cleverhause.app.dto.page;
+package ru.cleverhause.app.dto.form;
 
 import lombok.Data;
+import lombok.Getter;
 
 import java.io.Serializable;
 
@@ -12,7 +13,8 @@ import java.io.Serializable;
  */
 
 @Data
-public class DeviceDto_DevicesJsp implements Serializable {
+@Getter
+public class Device_DevicesJspForm implements Serializable {
     private Long id;
     private Boolean adj = false;
     private Boolean rotate = false;
