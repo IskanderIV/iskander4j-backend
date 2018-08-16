@@ -48,6 +48,7 @@
 
             <c:url value="myboard/board" var="boardURL">
                 <c:param name="boardUID" value="${boardUID}"/>
+                <c:param name="boardname" value="${boardname}"/>
             </c:url>
             <a href="${contextPath}/${boardURL}">
                 <jsp:include page="myboardsElement.jsp">

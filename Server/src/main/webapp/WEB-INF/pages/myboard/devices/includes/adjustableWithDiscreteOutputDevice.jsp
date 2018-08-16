@@ -4,27 +4,28 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
-<c:set var="deviceItem" value="${requestScope.device}"/>
-<c:set var="deviceId" value="${deviceItem.id}"/>
-<c:set var="isDeviceAdj" value="${deviceItem.adj}"/>
-<c:set var="isDeviceRotate" value="${deviceItem.rotate}"/>
-<c:set var="isDeviceSignaling" value="${deviceItem.signaling}"/>
-<c:set var="deviceAck" value="${deviceItem.ack}"/>
-<c:set var="deviceDiscrete" value="${deviceItem.discrete}"/>
-<c:set var="deviceCtrlVal" value="${deviceItem.ctrlVal}"/>
-<c:set var="hasDeviceRadioError" value="${deviceItem.radioErr}"/>
-<c:set var="hasDeviceDataError" value="${deviceItem.dataError}"/>
-<c:set var="hasDeviceControlError" value="${deviceItem.controlError}"/>
+<c:set var="device" value="${requestScope.device}" scope="request"/>
+<c:set var="index" value="${requestScope.index}"/>
+<c:set var="deviceId" value="${device.id}"/>
+<c:set var="isDeviceAdj" value="${device.adj}"/>
+<c:set var="isDeviceRotate" value="${device.rotate}"/>
+<c:set var="isDeviceSignaling" value="${device.signaling}"/>
+<c:set var="deviceAck" value="${device.ack}"/>
+<c:set var="deviceDiscrete" value="${device.discrete}"/>
+<c:set var="deviceCtrlVal" value="${device.ctrlVal}"/>
+<c:set var="hasDeviceRadioError" value="${device.radioErr}"/>
+<c:set var="hasDeviceDataError" value="${device.dataError}"/>
+<c:set var="hasDeviceControlError" value="${device.controlError}"/>
 <c:set var="error" value="${hasDeviceDataError || (isDeviceAdj && hasDeviceControlError) || hasDeviceRadioError}"/>
 
 <div>
     <h3>Device_${deviceId}</h3>
     <label for="device_${deviceId}_ack">Data</label>
-    <input type="text" id="device_${deviceId}_ack" name="ack" readonly
-           value="${error ? '0' : deviceAck}"/>
+    <form:input type="text" id="device_${deviceId}_ack" path="devices[${index}].ack" value="${error ? '0' : deviceAck}"
+                readonly="true"/>
     <label for="device_${deviceId}_ctrl">Control</label>
-    <input type="text" id="device_${deviceId}_ctrl"
-           value="${error ? '0' : deviceCtrlVal}"/>
+    <form:input type="checkbox" id="device_${deviceId}_ctrl" path="devices[${index}].ctrlVal" checked="checked"
+                value="${error ? '0' : deviceCtrlVal}"/>
 
     <c:set var="errorText" value="Device Error"/>
 

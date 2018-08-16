@@ -6,7 +6,11 @@
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <c:set var="userName" value="${principal}"/>
 <c:set var="hasUserName" value="${userName != null}"/>
-<c:set var="boardname" value="${param.boardname}"/>
+<c:set var="boardname" value="${boardname}"/>
+<c:if test="${param.boardname != null && param.boardname ne ''}">
+    <c:set var="boardname" value="${param.boardname}"/>
+</c:if>
+<c:set var="deviceListForm" value="${deviceListForm}" scope="request"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -34,36 +38,8 @@
     <div class="jumbotron">
         <h2>MY BOARD ${boardname}</h2>
         <div>
-            <form:form class="form-signin" method="post" modelAttribute="deviceListForm" role="form">
-                <div class="form-group">
-                    <c:forEach var="device" items="${deviceListForm.devices}" varStatus="dStatus">
-                        <form:input type="hidden" path="devices[${dStatus.index}].id" value="${device.id}"/>
-                        <form:input type="hidden" path="devices[${dStatus.index}].adj" value="${device.adj}"/>
-                        <form:input type="hidden" path="devices[${dStatus.index}].rotate" value="${device.rotate}"/>
-                        <form:input type="hidden" path="devices[${dStatus.index}].signaling"
-                                    value="${device.signaling}"/>
-                        <form:input type="hidden" path="devices[${dStatus.index}].ack" value="${device.ack}"/>
-                        <form:input type="hidden" path="devices[${dStatus.index}].discrete"
-                                    value="${device.discrete}"/>
-                        <form:input type="hidden" path="devices[${dStatus.index}].ctrlVal"
-                                    value="${device.ctrlVal}"/>
-                        <form:input type="hidden" path="devices[${dStatus.index}].radioErr"
-                                    value="${device.radioErr}"/>
-                        <form:input type="hidden" path="devices[${dStatus.index}].dataError"
-                                    value="${device.dataError}"/>
-                        <form:input type="hidden" path="devices[${dStatus.index}].controlError"
-                                    value="${device.controlError}"/>
-                    </c:forEach>
-
-                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-
-                    <button class="btn btn-lg btn-primary btn-block" type="submit">Update</button>
-
-                </div>
-            </form:form>
+            <c:import url="devices/devices.jsp"/>
         </div>
-
-
     </div>
 
     <div class="row marketing">

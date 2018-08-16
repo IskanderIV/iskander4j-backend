@@ -98,10 +98,11 @@ public class SiteEndpoint {
     public String boardControl(
             @ModelAttribute(name = "deviceListForm") DeviceList_DevicesJspForm devices,
             RedirectAttributes redirectAttributes,
-            @RequestParam String boardUID) throws IOException {
+            @RequestParam String boardUID,
+            @RequestParam(name = "boardname", required = false) String boardName) throws IOException {
         String currUserName = securityService.findLoggedInUsername();
         redirectAttributes.addFlashAttribute("deviceListForm", devices);
         redirectAttributes.addFlashAttribute("principal", currUserName);
-        return "redirect:/myboard/board?boardUID=" + boardUID;
+        return "redirect:/myboard/board?boardUID=" + boardUID + "&boardname=" + boardName;
     }
 }
