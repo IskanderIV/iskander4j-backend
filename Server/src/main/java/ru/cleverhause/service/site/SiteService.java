@@ -16,7 +16,7 @@ import java.util.List;
 public interface SiteService {
     List<BoardDto_MyBoardsJsp> getBoardsByUserName(@Nullable String username);
 
-    List<Device_DevicesJspForm> getDevicesByBoardUID(@Nullable String boardUID) throws IOException;
+    List<Device_DevicesJspForm> getDevicesDtoByBoardUID(@Nullable String boardUID) throws IOException;
 
     boolean updateBoardControl(@Nullable String boardUID, final List<Device_DevicesJspForm> passedDeviceList) throws Exception;
 }

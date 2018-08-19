@@ -14,13 +14,13 @@ import java.io.Serializable;
 @Getter
 @Setter
 public class DeviceData implements Serializable {
-    private int id;
+    private Long id;
     private Double ack;
     private Boolean adj; //POS
     private Double ctrlVal; // POS
     private Boolean radioErr;
 
-    public DeviceData(int id, Double ack, Boolean adj, Double ctrlVal, Boolean radioErr) {
+    public DeviceData(Long id, Double ack, Boolean adj, Double ctrlVal, Boolean radioErr) {
         this.id = id;
         this.ack = ack;
         this.adj = adj;
@@ -40,7 +40,7 @@ public class DeviceData implements Serializable {
     }
 
     public static class Builder {
-        private int id;
+        private Long id;
         private Double ack;
         private Boolean adj;
         private Double ctrlVal;
@@ -49,7 +49,7 @@ public class DeviceData implements Serializable {
         public Builder() {
         }
 
-        public DeviceData.Builder setId(int id) {
+        public DeviceData.Builder setId(Long id) {
             this.id = id;
             return this;
         }

@@ -9,14 +9,14 @@ import java.io.Serializable;
 @Setter
 public class DeviceStructure implements Serializable {
     private Long id;
-    private int min;
-    private int max;
+    private Double min;
+    private Double max;
     private Double discrete;
     private Boolean adj;
     private Boolean rotate;
     private Boolean signaling;
 
-    public DeviceStructure(Long id, int min, int max, Double discrete, Boolean adj, Boolean rotate, Boolean signaling) {
+    public DeviceStructure(Long id, Double min, Double max, Double discrete, Boolean adj, Boolean rotate, Boolean signaling) {
         this.id = id;
         this.min = min;
         this.max = max;
@@ -41,14 +41,14 @@ public class DeviceStructure implements Serializable {
 
     public static class Builder {
         private Long id;
-        private int min;
-        private int max;
+        private Double min;
+        private Double max;
         private Double discrete;
         private Boolean adj;
         private Boolean rotate;
         private Boolean signaling;
 
-        public Builder(Long id, int min, int max, Double discrete, Boolean adj, Boolean rotate, Boolean signaling) {
+        public Builder(Long id, Double min, Double max, Double discrete, Boolean adj, Boolean rotate, Boolean signaling) {
             this.id = id;
             this.min = min;
             this.max = max;

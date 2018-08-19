@@ -5,6 +5,8 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Longs;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.Nullable;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import ru.cleverhause.app.dto.BoardDto;
 import ru.cleverhause.app.dto.DeviceControl;
 import ru.cleverhause.app.dto.DeviceData;
+import ru.cleverhause.app.dto.DeviceDataRecord;
 import ru.cleverhause.app.dto.DeviceStructure;
 import ru.cleverhause.app.dto.form.Device_DevicesJspForm;
 import ru.cleverhause.app.dto.page.BoardDto_MyBoardsJsp;
@@ -34,6 +37,10 @@ import java.util.List;
  */
 @Service
 public class SiteServiceImpl implements SiteService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SiteServiceImpl.class);
+
+    private static final int COMMON_SAVED_DATA_NUMBER = 3;
 
     @Autowired
     private UserDao userDao;
@@ -76,7 +83,7 @@ public class SiteServiceImpl implements SiteService {
 
     // просто вытаскивает всю сохраненную информацию
     @Override
-    public List<Device_DevicesJspForm> getDevicesByBoardUID(@Nullable String boardUID) throws IOException {
+    public List<Device_DevicesJspForm> getDevicesDtoByBoardUID(@Nullable String boardUID) throws IOException {
         List<Device_DevicesJspForm> devices = Lists.newArrayList();
         Board board = findBoardByUID(boardUID);
         BoardDto boardDto = boardEntityToBoardDtoConverter.convert(board);
@@ -88,7 +95,8 @@ public class SiteServiceImpl implements SiteService {
                 DeviceControl control = findControlByDeviceId(deviceStructure.getId(), boardDto.getControlList());
                 fillControlData(device, control);
 
-                DeviceData data = findDataByDeviceId(deviceStructure.getId(), boardDto.getDataList());
+                // npe in getDeviceDataList
+                DeviceData data = findDataByDeviceId(deviceStructure.getId(), findNewestDataRecord(boardDto.getDataRecords()).getDeviceDataList());
                 fillSavedData(device, data);
 
                 fillStructureData(device, deviceStructure);
@@ -97,6 +105,15 @@ public class SiteServiceImpl implements SiteService {
         }
 
         return devices;
+    }
+
+    // TODO
+    private DeviceDataRecord findNewestDataRecord(List<DeviceDataRecord> boardDataRecords) {
+        if (boardDataRecords != null && !boardDataRecords.isEmpty()) {
+            return boardDataRecords.get(COMMON_SAVED_DATA_NUMBER - 1);
+        }
+
+        return null;
     }
 
     private DeviceControl findControlByDeviceId(Long id, List<DeviceControl> deviceControlList) {

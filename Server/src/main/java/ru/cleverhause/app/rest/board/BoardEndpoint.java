@@ -82,13 +82,13 @@ public class BoardEndpoint {
         // Составить джесон согласно структуре, сохраненной в базе и пульнуть обратно и вставить туда еще и уникальный номер платы. Плюсом все надо закэшировать
         // создать схемы валидации для разных джесонов. Сложить их в папке. Использовать в фильтрахlogger.info("Inside saveBoardData");
         Long boardUID = requestBody.getBoardUID();
-        String message = "";
+        String message = "OK";
         Board board = null;
 
         try {
             board = boardDataService.saveData(boardUID, requestBody);
         } catch (Exception e) {
-            message = "Can't save data";
+            message = "Error";
         }
         // after that we need to put ctrlVal data into response
         // взять список сохраненных данных, взять список сохраненного управления, скопировать второе в первое по id
@@ -102,7 +102,7 @@ public class BoardEndpoint {
                 unionDeviceInfo = Arrays.asList(JsonUtil.fromString(board.getSavedData().get(board.getSavedData().size() - 1).getData(), DeviceData[].class));
                 for (DeviceData savedData : unionDeviceInfo) {
                     for (DeviceControl control : deviceControlList) {
-                        if (savedData.getId() == control.getId()) {
+                        if (savedData.getId().equals(control.getId())) {
                             savedData.setCtrlVal(control.getCtrlVal());
                         }
                     }

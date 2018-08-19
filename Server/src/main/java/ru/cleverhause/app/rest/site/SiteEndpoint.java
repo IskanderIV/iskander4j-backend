@@ -85,7 +85,7 @@ public class SiteEndpoint {
     @GetMapping(value = {"/myboard/board"})
     public ModelAndView board(Map<String, Object> model, @RequestParam String boardUID) throws IOException {
         DeviceList_DevicesJspForm devices = new DeviceList_DevicesJspForm();
-        devices.setDevices(siteService.getDevicesByBoardUID(boardUID));
+        devices.setDevices(siteService.getDevicesDtoByBoardUID(boardUID));
         String currUserName = securityService.findLoggedInUsername();
         model.put("deviceListForm", devices);
         model.put("deviceNumber", devices.getDevices().size());

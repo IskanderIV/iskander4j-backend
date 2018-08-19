@@ -9,12 +9,12 @@ import java.io.Serializable;
  * @date 6/9/2018.
  */
 public class DeviceSetting implements Serializable {
-    private int id;
+    private Long id;
     private Boolean adj;
     private Boolean rotate;
     private Boolean signaling;
 
-    public DeviceSetting(int id, Boolean adj, Boolean rotate, Boolean signaling) {
+    public DeviceSetting(Long id, Boolean adj, Boolean rotate, Boolean signaling) {
         this.id = id;
         this.adj = adj;
         this.rotate = rotate;
@@ -31,11 +31,11 @@ public class DeviceSetting implements Serializable {
         this.signaling = builder.signaling;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -64,7 +64,7 @@ public class DeviceSetting implements Serializable {
     }
 
     public static class Builder {
-        private int id;
+        private Long id;
         private Boolean adj;
         private Boolean rotate;
         private Boolean signaling;
@@ -72,7 +72,7 @@ public class DeviceSetting implements Serializable {
         public Builder() {
         }
 
-        public DeviceSetting.Builder setId(int id) {
+        public DeviceSetting.Builder setId(Long id) {
             this.id = id;
             return this;
         }

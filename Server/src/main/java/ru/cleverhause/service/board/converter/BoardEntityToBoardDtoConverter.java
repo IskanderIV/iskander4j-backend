@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import ru.cleverhause.app.dto.BoardDto;
 import ru.cleverhause.app.dto.DeviceControl;
 import ru.cleverhause.app.dto.DeviceData;
+import ru.cleverhause.app.dto.DeviceDataRecord;
 import ru.cleverhause.app.dto.DeviceStructure;
 import ru.cleverhause.persist.entities.Board;
 import ru.cleverhause.persist.entities.BoardControlData;
@@ -36,12 +37,9 @@ public class BoardEntityToBoardDtoConverter extends Converter<Board, BoardDto> {
             boardDto.setControlList(convertBoardControlData(board.getControlData()));
 
             List<BoardSavedData> boardSavedDataList = board.getSavedData();
-            int lastSaveDataIndex = boardSavedDataList.size() - 1;
-            List<DeviceData> deviceDataList = Lists.newArrayList();
-            if (lastSaveDataIndex >= 0) {
-                deviceDataList = convertBoardSavedData(boardSavedDataList.get(lastSaveDataIndex));
-            }
-            boardDto.setDataList(deviceDataList);
+            int numOfSavedDataRows = boardSavedDataList.size();
+            List<DeviceDataRecord> deviceDataRecord = convertBoardSavedData(boardSavedDataList);
+            boardDto.setDataRecords(deviceDataRecord);
         }
 
         return boardDto;
@@ -67,19 +65,28 @@ public class BoardEntityToBoardDtoConverter extends Converter<Board, BoardDto> {
         return deviceStructureList;
     }
 
-    private List<DeviceData> convertBoardSavedData(BoardSavedData boardSavedData) {
-        List<DeviceData> deviceDataList = Lists.newArrayList();
+    private List<DeviceDataRecord> convertBoardSavedData(List<BoardSavedData> boardDataEntries) {
+        List<DeviceDataRecord> boardDataList = Lists.newArrayList();
 
-        if (boardSavedData != null) {
-            try {
-                String data = boardSavedData.getData();
-                deviceDataList = Arrays.asList(MAPPER.readValue(data, DeviceData[].class));
-            } catch (IOException e) {
-                LOGGER.info("Can't convert DeviceData List", e.getStackTrace()[0]);
+        if (boardDataEntries != null) {
+            for (BoardSavedData entry : boardDataEntries) {
+                String entryData = entry.getData();
+                try {
+                    List<DeviceData> deviceDataList = Arrays.asList(MAPPER.readValue(entryData, DeviceData[].class));
+                    DeviceDataRecord deviceDataRecord = new DeviceDataRecord();
+                    deviceDataRecord.setDeviceDataList(deviceDataList);
+                    deviceDataRecord.setId(entry.getId());
+                    deviceDataRecord.setCreated(entry.getCreated());
+                    boardDataList.add(deviceDataRecord);
+
+                } catch (IOException e) {
+                    LOGGER.info("Can't convert DeviceData List", e.getStackTrace()[0]);
+                }
             }
+
         }
 
-        return deviceDataList;
+        return boardDataList;
     }
 
     private List<DeviceControl> convertBoardControlData(BoardControlData boardControlData) {

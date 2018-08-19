@@ -19,7 +19,7 @@ public class BoardDto implements Serializable {
     private int numDevices;
     private List<DeviceDto> devices = Lists.newArrayList();
     private List<DeviceStructure> structureList = Lists.newArrayList();
-    private List<DeviceData> dataList = Lists.newArrayList();
+    private List<DeviceDataRecord> dataRecords = Lists.newArrayList();
     private List<DeviceControl> controlList = Lists.newArrayList();
 
     public int getNumDevices() {
