@@ -1,4 +1,4 @@
-package ru.cleverhause.app.rest.board.fromboard;
+package ru.cleverhause.app.rest.board;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.log4j.Logger;
@@ -36,9 +36,9 @@ import java.util.List;
 @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         consumes = MediaType.APPLICATION_JSON_VALUE)
-public class FromBoardEndpoint {
+public class BoardEndpoint {
 
-    private static final Logger logger = Logger.getLogger(FromBoardEndpoint.class);
+    private static final Logger logger = Logger.getLogger(BoardEndpoint.class);
 
     @Autowired
     private FilterChainProxy filterChainProxy;
@@ -52,7 +52,7 @@ public class FromBoardEndpoint {
         } catch (IOException e) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(new Date());
-            logger.info(calendar.getTime() + ": FromBoardEndpoint. Can't convert request input stream to json"); //TODO
+            logger.info(calendar.getTime() + ": BoardEndpoint. Can't convert request input stream to json"); //TODO
         }
         return body;
     }

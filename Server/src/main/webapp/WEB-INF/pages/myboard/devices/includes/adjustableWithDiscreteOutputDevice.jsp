@@ -16,7 +16,7 @@
 <c:set var="hasDeviceRadioError" value="${device.radioErr}"/>
 <c:set var="hasDeviceDataError" value="${device.dataError}"/>
 <c:set var="hasDeviceControlError" value="${device.controlError}"/>
-<c:set var="error" value="${hasDeviceDataError || (isDeviceAdj && hasDeviceControlError) || hasDeviceRadioError}"/>
+<c:set var="error" value="${hasDeviceDataError || hasDeviceRadioError}"/>
 
 <div>
     <h3>Device_${deviceId}</h3>
@@ -24,8 +24,8 @@
     <form:input type="text" id="device_${deviceId}_ack" path="devices[${index}].ack" value="${error ? '0' : deviceAck}"
                 readonly="true"/>
     <label for="device_${deviceId}_ctrl">Control</label>
-    <form:input type="checkbox" id="device_${deviceId}_ctrl" path="devices[${index}].ctrlVal" checked="checked"
-                value="${error ? '0' : deviceCtrlVal}"/>
+    <form:input type="text" id="device_${deviceId}_ctrl" path="devices[${index}].ctrlVal"
+                value="${deviceCtrlVal}"/>
 
     <c:set var="errorText" value="Device Error"/>
 

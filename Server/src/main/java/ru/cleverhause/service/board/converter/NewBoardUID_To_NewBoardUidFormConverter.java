@@ -19,7 +19,7 @@ public class NewBoardUID_To_NewBoardUidFormConverter implements Converter<NewBoa
 
     @Nullable
     @Override
-    public NewBoardUidForm convert(NewBoardUID newBoardUID) {
+    public NewBoardUidForm convert(@Nullable NewBoardUID newBoardUID) {
         if (newBoardUID == null) {
             return null;
         }

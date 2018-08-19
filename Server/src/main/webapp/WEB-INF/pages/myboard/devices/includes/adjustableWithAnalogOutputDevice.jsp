@@ -16,7 +16,7 @@
 <c:set var="hasDeviceRadioError" value="${device.radioErr}"/>
 <c:set var="hasDeviceDataError" value="${device.dataError}"/>
 <c:set var="hasDeviceControlError" value="${device.controlError}"/>
-<c:set var="error" value="${hasDeviceDataError || (isDeviceAdj && hasDeviceControlError) || hasDeviceRadioError}"/>
+<c:set var="error" value="${hasDeviceDataError || hasDeviceRadioError}"/>
 
 <div>
     <h3>Device_${deviceId}</h3>
@@ -25,7 +25,7 @@
                 readonly="true"/>
     <label for="device_${deviceId}_ctrl">Control</label>
     <form:input type="text" id="device_${deviceId}_ctrl" path="devices[${index}].ctrlVal"
-                value="${error ? '0' : deviceCtrlVal}"/>
+                value="${deviceCtrlVal}"/>
 
     <c:set var="errorText" value="Device Error"/>
 

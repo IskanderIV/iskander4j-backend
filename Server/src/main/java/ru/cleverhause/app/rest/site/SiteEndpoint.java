@@ -96,13 +96,13 @@ public class SiteEndpoint {
 
     @PostMapping(value = {"/myboard/board"})
     public String boardControl(
-            @ModelAttribute(name = "deviceListForm") DeviceList_DevicesJspForm devices,
+            @ModelAttribute(name = "deviceListForm") DeviceList_DevicesJspForm deviceListForm,
             RedirectAttributes redirectAttributes,
             @RequestParam String boardUID,
-            @RequestParam(name = "boardname", required = false) String boardName) throws IOException {
-        String currUserName = securityService.findLoggedInUsername();
-        redirectAttributes.addFlashAttribute("deviceListForm", devices);
-        redirectAttributes.addFlashAttribute("principal", currUserName);
+            @RequestParam(name = "boardname") String boardName) throws Exception {
+
+        boolean updateResult = siteService.updateBoardControl(boardUID, deviceListForm.getDevices());
+
         return "redirect:/myboard/board?boardUID=" + boardUID + "&boardname=" + boardName;
     }
 }
