@@ -33,6 +33,7 @@ import ru.cleverhause.service.security.SecurityService;
 import ru.cleverhause.util.JsonUtil;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -331,9 +332,9 @@ public class BoardDataServiceImpl implements BoardDataService {
     // TODO
     private Long findOldestDataRecordId(List<DeviceDataRecord> boardDataRecords) {
         if (boardDataRecords != null && !boardDataRecords.isEmpty()) {
+            boardDataRecords.sort(Comparator.comparing(DeviceDataRecord::getCreated));
             return boardDataRecords.get(0).getId();
         }
-
         return null;
     }
 

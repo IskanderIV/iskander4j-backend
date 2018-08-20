@@ -26,6 +26,7 @@ import ru.cleverhause.persist.entities.User;
 import ru.cleverhause.util.JsonUtil;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -96,7 +97,11 @@ public class SiteServiceImpl implements SiteService {
                 fillControlData(device, control);
 
                 // npe in getDeviceDataList
-                DeviceData data = findDataByDeviceId(deviceStructure.getId(), findNewestDataRecord(boardDto.getDataRecords()).getDeviceDataList());
+                List<DeviceDataRecord> dataRecords = boardDto.getDataRecords();
+                DeviceData data = null;
+                if (dataRecords != null && !dataRecords.isEmpty()) {
+                    data = findDataByDeviceId(deviceStructure.getId(), findNewestDataRecord(dataRecords).getDeviceDataList());
+                }
                 fillSavedData(device, data);
 
                 fillStructureData(device, deviceStructure);
@@ -110,9 +115,10 @@ public class SiteServiceImpl implements SiteService {
     // TODO
     private DeviceDataRecord findNewestDataRecord(List<DeviceDataRecord> boardDataRecords) {
         if (boardDataRecords != null && !boardDataRecords.isEmpty()) {
-            return boardDataRecords.get(COMMON_SAVED_DATA_NUMBER - 1);
+            boardDataRecords.sort(Comparator.comparing(DeviceDataRecord::getCreated));
+            int size = boardDataRecords.size();
+            return boardDataRecords.get(size - 1);
         }
-
         return null;
     }
 
@@ -128,11 +134,10 @@ public class SiteServiceImpl implements SiteService {
 
     private DeviceData findDataByDeviceId(Long id, List<DeviceData> deviceDataList) {
         for (DeviceData d : deviceDataList) {
-            if (new Long(d.getId()).equals(id)) { // TODO remake when replace in id in DeviceData on Long id
+            if (d.getId().equals(id)) { // TODO remake when replace in id in DeviceData on Long id
                 return d;
             }
         }
-
         return null;
     }
 
