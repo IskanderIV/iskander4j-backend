@@ -38,6 +38,10 @@ void Controller::processLoop() {
 	if (!_inputer) return;
 	if (!_btnManager) return; 
 	ButtonPin pushedBtnCode = obtainPushedBtnCode();
+	if (bShouldShowMenu) {
+		pushedBtnCode = btn_menu;
+		bShouldShowMenu = false;
+	}
 	bool isBtnPushed = pushedBtnCode;
 	//Serial.print("pushedBtnCode >> "); Serial.println(pushedBtnCode); //TEST
 	if (!_mnSelector->isActive() && !_inputer->isActive() && !_chooser->isActive()) {
@@ -80,15 +84,15 @@ void Controller::init() {
 	_wifiManager = NULL;
 	_dataBase = NULL;
 	_menuToActionMap = NULL;
+	_isWifiConnectionOk = false;
 }
 
 void Controller::initWifi() {
-	bool isWifiOk;
 	if (_wifiManager) {
 		if (_wifiManager->connectToWifi()) {
-			isWifiOk = true;			
+			_isWifiConnectionOk = true;			
 		} else {
-			isWifiOk = false;
+			_isWifiConnectionOk = false;
 		}		
 		//_display->showConnectionToWifiMsg(isWifiOk);
 	}
@@ -104,12 +108,14 @@ void Controller::quizeDevices() {
 }
 
 void Controller::sendHttpRequest() {
-	if (_wifiManager) {
+	if (_wifiManager && _isWifiConnectionOk) {
 		_wifiManager->setActive(true);
 		if (!_wifiManager->executePutRequest()) {
 			_wifiManager->closeConnection();
 		}
 		_wifiManager->setActive(false);
+	} else {
+		initWifi();
 	}
 }
 

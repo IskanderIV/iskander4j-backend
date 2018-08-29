@@ -4,6 +4,19 @@
 #include "WifiManager.h"
 #include "EepromManager.h"
 #include "DataBase.h"
+#include <ArduinoJson.h>
+#include <MemoryFree.h>
+
+
+// Global Response Defaults ----------
+String response = "";
+int numOfHeaders = 6; 
+String headers = "";
+int headerIndex = 0;
+String body = "";
+boolean currentLineIsBlank = true;
+boolean isInsideBody = false;
+//------------------------------------
 
 WifiManager::WifiManager(int pFreq): _wifi(Serial3) { //espSerial(ESP_RX, ESP_TX), _wifi(espSerial) {
 	initWifi(pFreq);
@@ -38,9 +51,9 @@ bool WifiManager::connectToWifi() {
 		if (!_wifi.stationConnect(ssid, password)) {
 			delay(1000);
 			repeats++;
-			Serial.println("WifiManager::connectToWifi Connect failed");
+			Serial.println(F("WifiManager::connectToWifi Connect failed"));
 		} else {
-			Serial.println("WifiManager::connectToWifi Connect is rised!");
+			Serial.println(F("WifiManager::connectToWifi Connect is rised!"));
 		}
 		stationIP = _wifi.stationIP();
 	} while (stationIP == NULL_IP && repeats < numOfrepeats);
@@ -86,71 +99,139 @@ void WifiManager::closeConnection() {
 }
 
 bool WifiManager::executePutRequest() {
+	if (_wifiError) {
+		Serial.println(String(F("Can't send HTTP request. Wifi initialization fail!")));
+		return true;
+	}
 	_noTcpConnection = false;
 	_cantSend = false;
 	_noRessponse = false;
 	_cantClose = false;
 	//Serial.println("Before StationIP = ");
 	delay(1000);
-	Serial.println(String("_serverAdress = ") + _serverAdress);
-	Serial.println(String("_serverPort = ") + _serverPort);
+	Serial.println(String(F("_serverAdress = ")) + _serverAdress);
+	Serial.println(String(F("_serverPort = ")) + _serverPort);
+	Serial.println((String)"Free memory >> " + freeMemory());
 	String request = buildRequest();
-	Serial.println(String("REQUEST:\n") + request);
-	ESP8266proClient* con = new ESP8266proClient(_wifi, parseHttpResponse);
-	//Serial.println(String("_wifi.stationIP = ") + _wifi.stationIP());
-	/*
-	if(!con.connectTcp(_serverAdress, _serverPort)) {
-		Serial.println(String("Con.Id = ") + con.getId());
-		if (con.getId() != ESP_INVALID_CONNECTION) {
-			con.close();
-		}
-		_wifi.execute("", eCEM_NoLineBreak);
-		Serial.println((_eepromMngr->fetch(eepr_serverPort)).toInt());
-		Serial.println(F("Can't connect to server!"));
-		_noTcpConnection = true;
-		return false;
-	}
-	//Serial.println(F("Good connect to server!"));
-	*/
-	// if (_wifi.getConnectionId(con) == ESP_INVALID_CONNECTION) {
-		// _wifi.removeConnection(con);
-	// }
-	// Serial.println("AT+CIPSTATUS");
-	// _wifi.execute("AT+CIPSTATUS");
-	if(con->connectTcp(_serverAdress, _serverPort)) {
+	Serial.println(String(F("REQUEST:\n")) + request);
+	ESP8266proClient* con = new ESP8266proClient(_wifi, WifiManager::parseHttpResponse);
+	if(con->connectTcp(_serverAdress, _serverPort)) {		
 		con->send(request);
-		con->waitResponse();
-		con->close();
+		request = "";
+		con->waitResponse();		
+		parseResponse();
+		resetResponse();
+		con->close();		
+	}	
+	delete con;
+	Serial.println((String)"Free memory >> " + freeMemory());
+	return true;
+}
+
+void WifiManager::resetResponse() {
+	response = "";
+	headers = "";
+	body = "";
+}
+
+void WifiManager::parseResponse() {
+	// Serial.println((String)"Response>>" + response);
+	char* emptyLine = (char*)"\r\n\r\n";
+	int emptyLinePos = response.indexOf(emptyLine);
+	headers = response.substring(0, emptyLinePos + 2);
+	// Serial.println((String)"headers>>\n" + headers);
+	if(parseHeaders()) {
+		body = response.substring(emptyLinePos + 4);
+		response = "";
+		headers = "";
+		parseBody();
+		Serial.println((String)"Free memory jsonBuffer>> " + freeMemory());
+	}	
+}
+
+bool WifiManager::parseHeaders() {
+	// char c;
+	// char* appended = new char[length];
+	// int numOfAppended = 0;
+	// for (int i = 0; i < length; i++) {
+		
+	// }
+	headers = "";
+	return true;
+}
+
+void WifiManager::parseBody() {
+	
+	int begPos = body.indexOf('{');
+	int endPos = body.lastIndexOf('}');
+	body = body.substring(begPos, endPos + 1);
+	// Serial.println((String)"body >>\n" + body);	
+	body.trim();
+	int nextElBegPos = 0;
+	while (nextElBegPos != -1) {
+		nextElBegPos = findElementByKey("\"id\"", nextElBegPos);
+		nextElBegPos = findElementByKey("\"ack\"", nextElBegPos);
+		nextElBegPos = findElementByKey("\"adj\"", nextElBegPos);
+		nextElBegPos = findElementByKey("\"ctrlVal\"", nextElBegPos);
+		nextElBegPos = findElementByKey("\"radioErr\"", nextElBegPos);
+		// Serial.println((String)"nextElBegPos>> " + nextElBegPos);
+		
+		if (nextElBegPos != -1) {
+			body = body.substring(nextElBegPos);
+			nextElBegPos = 0;
+		}
+		// Serial.println((String)"body>> " + body);
+	}		
+	body = "";
+	Serial.println((String)"Free memory jsonBuffer>> " + freeMemory());
+	
+/*	StaticJsonBuffer<400> jsonBuffer;
+	
+
+	// char* bodyCh = (char*) body.c_str();
+	JsonObject& _responseRoot = jsonBuffer.parseObject(body);
+	jsonBuffer.clear();
+		// char devices = _responseRoot["devicesState"];
+	long id = (long)(_responseRoot[(String)"devicesState"][0][(String)"id"]);
+	double ctrlVal = (double)(_responseRoot[(String)"devicesState"][0][(String)"ctrlVal"]);
+	Serial.println((String)"ctrlVal >>\n" + ctrlVal);
+	// Test if parsing succeeds.
+	// if (!_responseRoot.success()) {
+		// Serial.println("parseObject() failed");
+	// }
+	// else {
+		
+	// }
+*/	
+}
+
+int WifiManager::findElementByKey(String key, int begPos) {
+	if (begPos == -1) return -1;
+	
+	int keyPos = body.indexOf(key, begPos);
+	
+	if (keyPos == -1) return -1;
+	
+	int colonBegPos = keyPos + strlen(key.c_str());
+	int colonPos = body.indexOf(":", colonBegPos);
+	
+	int endPos1 = body.indexOf(",", colonPos + 1);
+	int endPos2 = body.indexOf("}", colonPos + 1);
+	
+	if (endPos1 == -1 && endPos2 == -1) return -1;
+	
+	int dataBegPos = colonPos + 1;
+	int dataEndPos;
+	if (endPos1 == -1) {
+		dataEndPos = endPos2;
+	} else {
+		dataEndPos = min(endPos1, endPos2);
 	}
 	
-	delete con;
-	/*
-	//Serial.println(request);
-	//Serial.println(F("Request is build!"));
-	if (!con.send(request)) {
-	// if (!_httpConnection->send(request)) {
-		_cantSend = true;
-		Serial.println(F("Can't send!"));
-		return false;		
-	}
-	Serial.println(F("Good send!"));
-	Serial.println(F("Wait response>>>>>"));
-	if (!con.waitResponse()) {
-	// if (!_httpConnection->waitResponse()) {
-		_noRessponse = true;
-		Serial.println(F("No response!"));
-		return false;
-	}
-	Serial.println(F("Try to close connection>>>>>"));
-	if (!con.close()) {
-	// if (!_httpConnection->close()) {
-		_cantClose = true;
-		Serial.println(F("Can't close!"));
-		return false;
-	}
-	Serial.println(F("executePutRequest end!"));
-	*/
-	return true;
+	String element = body.substring(dataBegPos, dataEndPos);
+	element.trim();
+	Serial.println((String)">>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + key + " >> " + element);
+	return dataEndPos;
 }
 
 void WifiManager::setDataBase(DataBase* pDataBase) {
@@ -176,6 +257,7 @@ void WifiManager::initWifi(int pFreq) {
 	_wifi.begin(eODM_None); // Disable all debug messages
 	_findedWANsCount = 0;
 	_wifiError = false;
+	// _responseRoot = NULL;
 }
 
 void WifiManager::initTcpConnection() {
@@ -186,19 +268,22 @@ void WifiManager::initTcpConnection() {
 	// _noRessponse = false;
 	// _cantClose = false;
 }
-
-void parseHttpResponse(ESP8266proConnection* connection,
+/*****************************
+Here parsing of RESPONSE
+******************************/
+void WifiManager::parseHttpResponse(ESP8266proConnection* connection,
                    char* buffer, int length, boolean completed) {
-	//Serial.println(F("Buffer>>>>>"));
-	//Serial.println(strlen(buffer));
-	//Serial.println(buffer);
+	/*
+	Serial.println(F("RESPONSE"));
+	*/
+	response += buffer;
 }
 
 String WifiManager::buildRequest() {
 	// String requestBody = F("{\"devicesState\": [],\"controllerErrors\": {\"gsmError\": \"false\",\"lcdError\" : \"false\",\"radioError\" : \"false\"}}");
 	String requestBody = formRequestJson();
 	String request = String(""); 
-	request += F("PUT /arduino/data HTTP/1.1"); // TODO "/arduino/data" - need to be in memory
+	request += F("PUT /cleverhause/arduino/data HTTP/1.1"); // TODO "/arduino/data" - need to be in memory
 	request += END_OF_STRING;
 	//request += F("Host: localhost:8090");
 	request += F("Host: ");

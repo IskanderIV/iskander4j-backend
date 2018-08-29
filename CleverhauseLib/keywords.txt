@@ -32,6 +32,7 @@ EepromManager				KEYWORD1
 RFManager					KEYWORD1
 DataBase					KEYWORD1
 HashMap						KEYWORD1
+GlobalFlags					KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)

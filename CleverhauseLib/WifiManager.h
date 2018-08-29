@@ -43,8 +43,15 @@ class ESP8266proConnection;
 class EepromManager;
 class DataBase;
 
-extern void parseHttpResponse(ESP8266proConnection* connection,
-                   char* buffer, int length, boolean completed);
+extern String response;
+extern int numOfHeaders;
+extern String headers;
+extern int headerIndex;
+extern String body;
+extern boolean currentLineIsBlank;
+extern boolean isInsideBody;
+// extern void parseHttpResponse(ESP8266proConnection* connection,
+                   // char* buffer, int length, boolean completed);
 
 class WifiManager : public Object
 {
@@ -62,12 +69,15 @@ public:
 	String getFindedWANsDelimiter();
 	void setDataBase(DataBase* _dataBase);
 	void setEepromManager(EepromManager* _eepromMngr);
+	static void parseHttpResponse(ESP8266proConnection* connection,
+                   char* buffer, int length, boolean completed);
 	
 private:
 	//SoftwareSerial espSerial;
 	ESP8266pro _wifi;
 	DataBase* _dataBase;
 	EepromManager* _eepromMngr;
+	// JsonObject* _responseRoot;
 	String _serverAdress;
 	bool _wifiError;
 	bool _noTcpConnection;
@@ -76,13 +86,18 @@ private:
 	bool _cantClose;
 	long _serverPort;
 	int _findedWANsCount;
+	char resCode[];
 	
 	void initWifi(int _freq);
 	void initTcpConnection();
-	// void parseHttpResponse(ESP8266proConnection* connection,
-                   // char* buffer, int length, boolean completed);
 	String buildRequest();
 	String formRequestJson();
+	void resetResponse();
+	void parseResponse();
+	bool parseHeaders();
+	void parseHeader();
+	void parseBody();
+	int findElementByKey(String key, int begPos);
 	String buildRequestDeviceJson(char id);
 	String buildRequestGlobalErrorsJson();
 };

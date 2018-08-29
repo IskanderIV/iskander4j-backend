@@ -8,6 +8,7 @@
 #include "ButtonsManager.h"
 #include "EepromManager.h"
 #include "HashMap.h"
+#include "GlobalFlags.h"
 
 #if defined(ARDUINO) && ARDUINO >= 100
 	#include "Arduino.h"
@@ -89,6 +90,8 @@ private:
 	DataBase* 					_dataBase;
 	
 	HashMap<String, Action, 12/*unsigned int*/> _menuToActionMap;
+	
+	bool _isWifiConnectionOk;
 	
 	void init();
 	void initWifi();
