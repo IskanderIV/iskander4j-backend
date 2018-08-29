@@ -33,6 +33,26 @@ public:
 	void  fetchIds(uint8_t* _idsBuffer);
 	void  saveDevicesIdsToEeprom();
 	
+	// WIFI
+	void  setSSID(String _SSID);
+	String  getSSID();
+	void  setSsidPassword(String _ssidPassword);
+	String  getSsidPassword();
+	
+	// TCP
+	void  setLogin(String _login);
+	String  getLogin();
+	void  setPassword(String _password);
+	String  getPassword();
+	
+	// Site
+	void  setHost(String _host);
+	String  getHost();
+	void  setPort(String _port);
+	String  getPort();
+	void  setTarget(String _target);
+	String  getTarget();
+	
 	int  getDeviceCount();
 	
 	long getUniqBaseID();
@@ -45,27 +65,7 @@ public:
 	void setLcdError(bool pLcdError);
 	
 	void setEepromManager(EepromManager* _eepromMngr);
-	
-private:
-	class DeviceInfo;
-
-	//methods	
-	void initFromEeprom();
-	DeviceInfo* findDeviceInfo(char _id);
-	void addDeviceFirst(DeviceInfo* added);
-	void addDeviceLast(DeviceInfo* added);
-	
-	//fields
-	EepromManager* _eepromMngr;
-	uint8_t _maxDevices;
-	DeviceInfo* _deviceJsonList;
-	DeviceInfo* _lastDeviceJson;
-	int _deviceCount;
-	long _uniqBaseID;
-	bool _gsmError;
-	bool _radioError;
-	bool _lcdError;
-	
+		
 	class DeviceInfo
 	{
 	public:
@@ -97,6 +97,37 @@ private:
 		float _controlValue;
 		bool _radioError;
 	};
+	
+private:
+	class DeviceInfo;
+
+	//methods	
+	void initFromEeprom();
+	DeviceInfo* findDeviceInfo(char _id);
+	void addDeviceFirst(DeviceInfo* added);
+	void addDeviceLast(DeviceInfo* added);
+	
+	//fields
+	EepromManager* _eepromMngr;
+	uint8_t _maxDevices;
+	DeviceInfo* _deviceJsonList;
+	DeviceInfo* _lastDeviceJson;
+	int _deviceCount;
+	long _uniqBaseID;
+	
+	String _SSID;
+	String _ssidPassword;
+	
+	String _login;
+	String _password;
+	
+	String _host;
+	String _port;
+	String _target;
+	
+	bool _gsmError;
+	bool _radioError;
+	bool _lcdError;
 };
 
 #endif

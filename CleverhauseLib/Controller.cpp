@@ -409,20 +409,22 @@ void Controller::setBtnManager(ButtonsManager* pBtnManager) {
 
 void Controller::setEepromManager(EepromManager* pEepromManager) {
 	_eepromManager = pEepromManager;
-	String uniqID_str = String(UNIQ_BASE_ID);
-	_eepromManager->save(eepr_baseId, uniqID_str);
-	uint8_t devIds[8] = {1,2,0,0,0,0,0,0};//TEST
-	_eepromManager->saveDevicesIds(devIds);//TEST
+	
+	String uniqID_str = String(UNIQ_BASE_ID);//STUB
+	_eepromManager->save(eepr_baseId, uniqID_str);//STUB need to get from server when registration
+	
+	uint8_t devIds[8] = {1,2,0,0,0,0,0,0};//STUB
+	_eepromManager->saveDevicesIds(devIds);//STUB
 	//String wifiLogin = String("acer Liquid Z630"); 
-	String wifiLogin = String("RAZVRAT_HOUSE");//TEST
+	String wifiLogin = String("RAZVRAT_HOUSE");//STUB
 	//String wifiPsswd = String("111222333");
-	String wifiPsswd = String("LaserJet");//TEST
-	_eepromManager->save(eepr_wifiLogin, wifiLogin);//TEST
-	_eepromManager->save(eepr_wifiPsswd, wifiPsswd);//TEST
-	String tcpServerIP = String(TCP_SERVER_IP);//TEST
-	String tcpServerPort = String(TCP_SERVER_PORT);//TEST
-	_eepromManager->save(eepr_serverAdress, tcpServerIP);//TEST
-	_eepromManager->save(eepr_serverPort, tcpServerPort);//TEST
+	String wifiPsswd = String("LaserJet");//STUB
+	_eepromManager->save(eepr_wifiLogin, wifiLogin);//STUB
+	_eepromManager->save(eepr_wifiPsswd, wifiPsswd);//STUB
+	String tcpServerIP = String("192.168.1.34");//STUB
+	String tcpServerPort = String("8090");//STUB
+	_eepromManager->save(eepr_serverAdress, tcpServerIP);//STUB
+	_eepromManager->save(eepr_serverPort, tcpServerPort);//STUB
 }
 
 void Controller::setRFManager(RFManager* pRfManager) {

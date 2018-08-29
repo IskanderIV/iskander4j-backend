@@ -40,8 +40,8 @@ void setup() {
   menuSelector = new MenuSelector();
   btnMngr = new ButtonsManager();  
   eepromMngr = new EepromManager();
-  wifiMngr = new WifiManager(9600);
   dataBase = new DataBase();
+  wifiMngr = new WifiManager(9600, dataBase);
   rfMngr = new RFManager();
   inputer = new Inputer();
   chooser = new Chooser();
@@ -125,9 +125,7 @@ void setup() {
 
   dataBase->setEepromManager(eepromMngr);
   Serial.println(F("We set dataBase!"));//TEST
-  
-  wifiMngr->setDataBase(dataBase);
-  wifiMngr->setEepromManager(eepromMngr);  
+ 
   Serial.println(F("We set wifi!"));//TEST
   
   rfMngr->setDataBase(dataBase);

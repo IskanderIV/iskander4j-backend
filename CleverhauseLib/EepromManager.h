@@ -31,6 +31,7 @@ enum EepromPlaceName {
 	eepr_tcpPsswd,
 	eepr_serverAdress,
 	eepr_serverPort
+	// TODO target
 };
 
 struct MemoryDTO {

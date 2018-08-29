@@ -135,6 +135,9 @@ float DataBase::getDeviceControlValue(char id) {
 void DataBase::setDeviceControlValue(char id, float pControl) {
 	DeviceInfo* searched = findDeviceInfo(id);
 	if (searched) {
+		if (searched->getControlVal() != pControl) {
+			// _eepromMngr->save(); // TODO create save control, login, password and so on to eeprom
+		}
 		searched->setControlVal(pControl);
 	}
 }
@@ -171,6 +174,63 @@ void DataBase::saveDevicesIdsToEeprom() {
 	fetchIds(idsBuffer);
 	_eepromMngr->saveDevicesIds(idsBuffer);
 	Serial.println("DataBase::saveDevicesIdsToEeprom() end");//TEST
+}
+
+
+// WIFI
+void  DataBase::setSSID(String pSSID) {
+	_SSID = pSSID;
+}
+
+String  DataBase::getSSID() {
+	return _SSID;
+}
+
+void  DataBase::setSsidPassword(String pSsidPassword) {
+	_ssidPassword = pSsidPassword;
+}
+
+String  DataBase::getSsidPassword() {
+	return _ssidPassword;
+}
+
+// TCP
+void  DataBase::setLogin(String pLogin) {
+	_login = pLogin;
+}
+String  DataBase::getLogin() {
+	return _login;
+}
+void  DataBase::setPassword(String pPassword) {
+	_password = pPassword;
+}
+String  DataBase::getPassword() {
+	return _password;
+}
+
+// Site
+void  DataBase::setHost(String pHost) {
+	_host = pHost;
+}
+
+String  DataBase::getHost() {
+	return _host;
+}
+
+void  DataBase::setPort(String pPort) {
+	_port = pPort;
+}
+
+String  DataBase::getPort() {
+	return _port;
+}
+
+void  DataBase::setTarget(String pTarget) {
+	_target = pTarget;
+}
+
+String  DataBase::getTarget() {
+	return _target;
 }
 
 
@@ -225,12 +285,19 @@ void DataBase::initFromEeprom() {
 	if (_eepromMngr) {
 		_maxDevices = _eepromMngr->getMaxByteOfPlace(eepr_deviceIds);
 		_uniqBaseID = (_eepromMngr->fetch(eepr_baseId)).toInt();
+		_SSID = _eepromMngr->fetch(eepr_wifiLogin);
+		_ssidPassword = _eepromMngr->fetch(eepr_wifiPsswd);
+		_login = _eepromMngr->fetch(eepr_tcpLogin);
+		_password = _eepromMngr->fetch(eepr_tcpPsswd);
+		_host = _eepromMngr->fetch(eepr_serverAdress);
+		_port = _eepromMngr->fetch(eepr_serverPort);
+		_target = F("/cleverhause/arduino/data");
 		uint8_t idsBuffer[_maxDevices];
 		memset(idsBuffer, 0, _maxDevices);
 		_eepromMngr->fetchIds(idsBuffer);
 		for (uint8_t i = 0; i < _maxDevices; i++) {
 			if (idsBuffer[i] != 0) {
-				addDeviceInfo((char)idsBuffer[i]);	
+				addDeviceInfo((char) idsBuffer[i]);	
 			}
 		}
 	}

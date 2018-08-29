@@ -17,8 +17,6 @@
 #endif
 
 #define UNIQ_BASE_ID 1010101L
-#define TCP_SERVER_IP "192.168.1.34"
-#define TCP_SERVER_PORT "8090"
 
 enum Action {
 	act_INPUT_WIFI_SSID,

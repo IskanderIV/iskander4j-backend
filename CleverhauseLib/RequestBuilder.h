@@ -24,19 +24,25 @@
 
 class DataBase;
 
-class RequestBuilder : public Object
+class RequestBuilder
 {
 public:
 	RequestBuilder();
 	~RequestBuilder();
 	
 	// public interfaces
-	bool interface();
+	String buildRequest(String host, String port, String target, String SSID, String password, String boardUID);
 	
 private:
 	DataBase* _dataBase;
-	
+	int _bodyLength;
 	void init();
+	String buildRequest(String host, String port, String target, String SSID, String password, String boardUID);
+	String formRequestHeaders(String host, String port, String target);
+	String formRequestBody(String SSID, String password, String boardUID);
+	String buildRequestDeviceJson(char id);
+	String buildRequestGlobalErrorsJson();
+	String jsonKeyWrapper(String key);
 };
 
 #endif
