@@ -7,7 +7,7 @@
 DeviceDataBase::DeviceDataBase() {
 	_eepromManager = NULL;	
 	_uniqBaseID = -100L;
-	_deviceId = 1;
+	_deviceId = -100;
 	_deviceAck = 0.0;
 	_controlValue = 0.0;
 	_adjustable = false;	

@@ -19,25 +19,42 @@ public:
 	DataBase();
 	~DataBase();
 	
-	bool  isDeviceExist(char _id);
-	void  addDeviceInfo(char _id);
-	void  removeDeviceInfo(char _id);
+	bool isDeviceExist(uint8_t _id);
+	uint8_t generateId();
+	void addDeviceInfo(uint8_t _id);
+	void removeDeviceInfo(char _id);
+	
+	// device info
 	float getDeviceAck(char _id);
-	void  setDeviceAck(char _id, float _ack);
-	bool  getDeviceAdj(char _id);
-	void  setDeviceAdj(char _id, bool _adj);
+	void setDeviceAck(char _id, float _ack);
+	float getDeviceMin(uint8_t _id);
+	void setDeviceMin(uint8_t _id, float _min); //memorized
+	float getDeviceMax(uint8_t _id);
+	void setDeviceMax(uint8_t _id, float _max); //memorized
+	float getDeviceDiscrete(uint8_t _id);
+	void setDeviceDiscrete(uint8_t _id, float _discrete); //memorized
 	float getDeviceControlValue(char _id);
-	void  setDeviceControlValue(char _id, float _control);
-	bool  getDeviceRFErr(char _id);
-	void  setDeviceRFErr(char _id, bool _radioError);
-	void  fetchIds(uint8_t* _idsBuffer);
-	void  saveDevicesIdsToEeprom();
+	void setDeviceControlValue(char _id, float _control); //memorized from response
+	bool getDeviceDigital(uint8_t _id);
+	void setDeviceDigital(uint8_t _id, bool _digital);//memorized
+	bool getDeviceAnalog(uint8_t _id);
+	void setDeviceAnalog(uint8_t _id, bool _analog);//memorized
+	bool getDeviceAdj(uint8_t _id);
+	void setDeviceAdj(uint8_t _id, bool _adj); //memorized
+	bool getDeviceRotatable(uint8_t _id);
+	void setDeviceRotatable(uint8_t _id, bool _rotatable); //memorized
+	bool getDeviceRFErr(char _id);
+	void setDeviceRFErr(char _id, bool _radioError);
+	
+	void fetchIds(uint8_t* _idsBuffer);
+	
+	void saveDevicesIdsToEeprom();
 	
 	// WIFI
-	void  setSSID(String _SSID);
-	String  getSSID();
-	void  setSsidPassword(String _ssidPassword);
-	String  getSsidPassword();
+	void setSSID(String _SSID);
+	String getSSID();
+	void setSsidPassword(String _ssidPassword);
+	String getSsidPassword();
 	
 	// TCP
 	void  setLogin(String _login);
@@ -48,15 +65,29 @@ public:
 	// Site
 	void  setHost(String _host);
 	String  getHost();
+	
 	void  setPort(String _port);
 	String  getPort();
+	
 	void  setTarget(String _target);
 	String  getTarget();
+	
+	// MAX LENGTHS
+	int getMaxLenOfSsid();
+	int getMaxLenOfSsidPassword();
+	int getMaxLenOfLogin();
+	int getMaxLenOfPassword();
+	int getMaxLenOfHost();
+	int getMaxLenOfPort();
+	int getMaxLenOfTarget();
+	int getMaxDevices();
 	
 	int  getDeviceCount();
 	
 	long getUniqBaseID();
 	void setUniqBaseID(long pUniqBaseID);
+	
+	// global errors
 	bool getGsmError();
 	void setGsmError(bool pGsmError);
 	bool getRadioError();
@@ -76,10 +107,22 @@ public:
 		void  setId(char _id);
 		float getAck();
 		void  setAck(float _ack);
-		bool  getAdjustable();
-		void  setAdjustable(bool _adjustable);
+		float getMin();
+		void  setMin(float _min);
+		float getMax();
+		void  setMax(float _max);
+		float getDiscrete();
+		void  setDiscrete(float _discrete);
 		float getControlVal();
 		void  setControlVal(float _controlValue);
+		bool  getDigital();
+		void  setDigital(bool _digital);
+		bool  getAnalog();
+		void  setAnalog(bool _analog);
+		bool  getAdjustable();
+		void  setAdjustable(bool _adjustable);
+		bool  getRotatable();
+		void  setRotatable(bool _rotatable);
 		bool  hasRadioError();
 		void  setRadioError(bool _radioError);
 		
@@ -93,16 +136,24 @@ public:
 		DeviceInfo* _next;
 		char _deviceId;
 		float _deviceAck;
-		bool _adjustable;
+		float _min;
+		float _max;
+		float _discrete;
 		float _controlValue;
+		bool  _digital;
+		bool  _analog;
+		bool _adjustable;		
+		bool  _rotatable;
 		bool _radioError;
 	};
 	
 private:
 	class DeviceInfo;
 
-	//methods	
+	//methods
+	void init();
 	void initFromEeprom();
+	void fillDeviceInfoFromEeprom(uint8_t id);
 	DeviceInfo* findDeviceInfo(char _id);
 	void addDeviceFirst(DeviceInfo* added);
 	void addDeviceLast(DeviceInfo* added);
@@ -128,6 +179,14 @@ private:
 	bool _gsmError;
 	bool _radioError;
 	bool _lcdError;
+	
+	int  _maxLenOfSsid;
+	int  _maxLenOfSsidPassword;
+	int  _maxLenOfLogin;
+	int  _maxLenOfPassword;
+	int  _maxLenOfHost;
+	int  _maxLenOfPort;
+	int  _maxLenOfTarget;
 };
 
 #endif

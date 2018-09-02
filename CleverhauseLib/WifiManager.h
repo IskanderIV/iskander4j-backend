@@ -14,7 +14,7 @@
 #include "Object.h"
 #include "RequestBuilder.h"
 #include "ResponseParser.h"
-//#include <SoftwareSerial.h>
+#include "HttpExchangeType.h"
 #include <ESP8266pro.h>
 #include <ESP8266proClient.h>
 //#define DEBUG
@@ -35,19 +35,19 @@ public:
 	
 	// interface
 
-	bool executePutRequest();
+	bool executeRequest(HttpExchangeType type);
 	void fetchFindedWANs(String*);
 	int getFindedWANsCount();
 	int getMaxFindedWANsCount();
 	String getFindedWANsDelimiter();
 	void setDataBase(DataBase* _dataBase);
-	void setEepromManager(EepromManager* _eepromMngr);
+	bool connectToWifi();
+	void closeConnection();
 	
 private:
 	//SoftwareSerial espSerial;
 	ESP8266pro _wifi;
 	DataBase* _dataBase;
-	EepromManager* _eepromMngr;
 	RequestBuilder* _responseBuilder;
 	ResponseParser* _responseParser;
 	
@@ -70,9 +70,6 @@ private:
 	void init(int _freq);
 	void initWifi(int _freq);
 	void initTcpConnection();
-	
-	bool connectToWifi();
-	void closeConnection();
 };
 
 #endif

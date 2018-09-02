@@ -22,9 +22,10 @@ void RequestBuilder::init(DataBase* dataBasePointer){
 * public interface*
 *******************/
 
-// target /cleverhause/arduino/data
-String RequestBuilder::buildRequest(String host, String port, String target, String SSID, String password, String boardUID) {
-	String requestBody = formRequestBody(SSID, password, boardUID); // should do so for calculation of body length
+String RequestBuilder::buildRequest(HttpExchangeType type, String host, String port, String target, String SSID, String password, String boardUID) {
+	// should do this before headers for calculation of body length
+	String requestBody = formRequestBody(type, SSID, password, boardUID);
+	
 	String request = formRequestHeaders(host, port, target) + requestBody; 
 	
 	return request;
@@ -52,58 +53,115 @@ String RequestBuilder::formRequestHeaders(String host, String port, String targe
 	return headers;
 }
 
-String RequestBuilder::formRequestBody(String SSID, String password, String boardUID) {
-	// String requestBody = F("{\"devicesState\": [],\"controllerErrors\": {\"gsmError\": \"false\",\"lcdError\" : \"false\",\"radioError\" : \"false\"}}"); // STUB
-	String requestJson = String("{");
+String RequestBuilder::formRequestBody(HttpExchangeType type, String login, String password, String boardUID) {
+	
+	String requestJson = String("{"); // begin curly brace
+	// username
+	requestJson += jsonKeyWrapper(String(USER_NAME));
+	requestJson += jsonStringValueWrapper(login);
+	// password
+	requestJson += jsonKeyWrapper(String(PASSWORD));
+	requestJson += jsonStringValueWrapper(password);
+	// boardUID
+	requestJson += jsonKeyWrapper(String(BOARD_UID));
+	requestJson += jsonStringValueWrapper(boardUID);
+	
 	//DEVICE STATE BLOK
-	requestJson += String("") + F("\"") + String(DEVICES_STATES_BLOCK_NAME) + F("\"") + F(":");
-	requestJson += F("[");
-	
-	int deviceCount = _dataBase->getDeviceCount();
-	
-	if (deviceCount) {
-		uint8_t* deviceIds = new uint8_t[deviceCount];
-		_dataBase->fetchIds(deviceIds);
-		for(int i = 0; i < deviceCount - 1; i++) {
-			requestJson += buildRequestDeviceJson((char) deviceIds[i]);
-			requestJson += F(",");
-		}
-		requestJson += buildRequestDeviceJson(deviceIds[deviceCount - 1]);
-		delete[] deviceIds;
-	}	
-	requestJson += F("]");
+	buildDevicesBlockJson(type);
 	requestJson += F(",");
+	
 	// GLOBAL ERRORS BLOCK
-	requestJson += String(F("")) + F("\"") + String(GLOBAL_ERRORS_BLOCK_NAME) + F("\"") + F(":");
+	requestJson += jsonKeyWrapper(String(GLOBAL_ERRORS_BLOCK_NAME));
 	requestJson += buildRequestGlobalErrorsJson();
-	requestJson += F("}");
+	
+	requestJson += F("}"); // end curly brace
 	
 	_bodyLength = requestJson.length();
 	
 	return requestJson;
 }
 
-String RequestBuilder::buildRequestDeviceJson(char id) {
+String RequestBuilder::buildDevicesBlockJson(HttpExchangeType type) {
+	requestJson += jsonKeyWrapper(String(DEVICES_STATES_BLOCK_NAME));
+	requestJson += F("["); // end devices array brace
+	// the better thing is to form list of data info objects and pass here
+	int deviceCount = _dataBase->getDeviceCount();
+	
+	if (deviceCount) {
+		uint8_t* deviceIds = new uint8_t[deviceCount];
+		_dataBase->fetchIds(deviceIds);
+		for(int i = 0; i < deviceCount; i++) {
+			switch (type) {
+				case DATA: 
+					requestJson += buildDeviceDataJson((char) deviceIds[i]); break;
+				case REG:
+					requestJson += buildDeviceRegistratonJson((char) deviceIds[i]); break;
+			}
+			
+			if (i < deviceCount - 1) {
+				requestJson += F(",");
+			}			
+		}
+		delete[] deviceIds;
+	}	
+	requestJson += F("]"); // end devices array brace
+}
+
+String RequestBuilder::buildDeviceDataJson(char id) {
 	float ack = _dataBase->getDeviceAck(id);
 	bool adjustable = _dataBase->getDeviceAdj(id);
 	float controlValue = _dataBase->getDeviceControlValue(id);
 	bool radioError = _dataBase->getDeviceRFErr(id);
 	
 	String deviceJsonString = String("{");
-	deviceJsonString += String("") + F("\"") + String(DEVICE_ID_KEY_NAME) + F("\"") + F(":");
+	deviceJsonString += jsonKeyWrapper(String(DEVICE_ID_KEY_NAME));
 	deviceJsonString += (uint8_t) id;
 	deviceJsonString += F(",");
-	deviceJsonString += String("") + F("\"") + String(DEVICE_ACK_KEY_NAME) + F("\"") + F(":");
+	deviceJsonString += jsonKeyWrapper(String(DEVICE_ACK_KEY_NAME));
 	deviceJsonString += ack; //TODO format
 	deviceJsonString += F(",");
-	deviceJsonString += String(F("")) + F("\"") + String(DEVICE_ADJUSTABLE_KEY_NAME) + F("\"") + F(":");
-	deviceJsonString += adjustable ? F("true") : F("false");
+	deviceJsonString += jsonKeyWrapper(String(DEVICE_ADJUSTABLE_KEY));
+	deviceJsonString += jsonBoolValueWrapper(adjustable);
 	deviceJsonString += F(",");
-	deviceJsonString += String("") + F("\"") + String(DEVICE_CONTROL_VALUE_KEY_NAME) + F("\"") + F(":");
+	deviceJsonString += jsonKeyWrapper(String(DEVICE_CONTROL_VALUE_KEY_NAME));
 	deviceJsonString += controlValue; // TODO format
 	deviceJsonString += F(",");
-	deviceJsonString += String("") + F("\"") + String(DEVICE_RADIO_ERROR_KEY_NAME) + F("\"") + F(":");
-	deviceJsonString += radioError ? F("true") : F("false");
+	deviceJsonString += jsonKeyWrapper(String(DEVICE_RADIO_ERROR_KEY_NAME));
+	deviceJsonString += jsonBoolValueWrapper(radioError);
+	deviceJsonString += F("}");
+	
+	return deviceJsonString;
+}
+
+String RequestBuilder::buildDeviceRegistratonJson(char id) {	
+	float min = 0.0; //STUB
+	float max = 1.0; //STUB
+	float discrete = 1.0; //STUB
+	bool adjustable = _dataBase->getDeviceAdj(id);
+	bool rotate = false; //STUB
+	bool signaling = false; //STUB
+	
+	String deviceJsonString = String("{");
+	deviceJsonString += jsonKeyWrapper(String(DEVICE_ID_KEY_NAME));
+	deviceJsonString += (uint8_t) id;
+	deviceJsonString += F(",");
+	deviceJsonString += jsonKeyWrapper(String(DEVICE_REG_MIN_KEY));
+	deviceJsonString += min; //TODO format
+	deviceJsonString += F(",");
+	deviceJsonString += jsonKeyWrapper(String(DEVICE_REG_MAX_KEY));
+	deviceJsonString += max; //TODO format
+	deviceJsonString += F(",");
+	deviceJsonString += jsonKeyWrapper(String(DEVICE_REG_DISCRETE_KEY));
+	deviceJsonString += discrete; //TODO format
+	deviceJsonString += F(",");
+	deviceJsonString += jsonKeyWrapper(String(DEVICE_ADJUSTABLE_KEY));
+	deviceJsonString += jsonBoolValueWrapper(adjustable);
+	deviceJsonString += F(",");
+	deviceJsonString += jsonKeyWrapper(String(DEVICE_REG_ROTATE_KEY));
+	deviceJsonString += jsonBoolValueWrapper(rotate);
+	deviceJsonString += F(",");
+	deviceJsonString += jsonKeyWrapper(String(DEVICE_REG_SSIGNLING_KEY));
+	deviceJsonString += jsonBoolValueWrapper(signaling);
 	deviceJsonString += F("}");
 	
 	return deviceJsonString;
@@ -116,14 +174,13 @@ String RequestBuilder::buildRequestGlobalErrorsJson() {
 	
 	String globalErrorsJsonString = String(F("{"));
 	globalErrorsJsonString += jsonKeyWrapper(String(GSM_ERROR_KEY_NAME));
-	// globalErrorsJsonString += String(F("")) + F("\"") + String(GSM_ERROR_KEY_NAME) + F("\"") + F(":");
-	globalErrorsJsonString += gsmError ? F("true") : F("false");
+	globalErrorsJsonString += jsonBoolValueWrapper(gsmError);
 	globalErrorsJsonString += F(",");
-	globalErrorsJsonString += String(F("")) + F("\"") + String(RADIO_ERROR_KEY_NAME) + F("\"") + F(":");
-	globalErrorsJsonString += globalRadioError ? F("true") : F("false");
+	globalErrorsJsonString += jsonKeyWrapper(String(RADIO_ERROR_KEY_NAME));
+	globalErrorsJsonString += jsonBoolValueWrapper(globalRadioError);
 	globalErrorsJsonString += F(",");
-	globalErrorsJsonString += String(F("")) + F("\"") + String(LCD_ERROR_KEY_NAME) + F("\"") + F(":");
-	globalErrorsJsonString += lcdError ? F("true") : F("false");	
+	globalErrorsJsonString += jsonKeyWrapper(String(LCD_ERROR_KEY_NAME));
+	globalErrorsJsonString += jsonBoolValueWrapper(lcdError);	
 	globalErrorsJsonString += F("}");
 	
 	return globalErrorsJsonString;
@@ -131,4 +188,12 @@ String RequestBuilder::buildRequestGlobalErrorsJson() {
 
 String RequestBuilder::jsonKeyWrapper(String key) {
 	return String(F("\"")) + key + F("\"") + F(":");
+}
+
+String RequestBuilder::jsonBoolValueWrapper(bool val) {
+	return val ? F("true") : F("false");
+}
+
+String RequestBuilder::jsonStringValueWrapper(String val) {
+	return String(F("\"")) + val + F("\"");
 }

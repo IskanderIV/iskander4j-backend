@@ -9,6 +9,7 @@
 #include "EepromManager.h"
 #include "HashMap.h"
 #include "GlobalFlags.h"
+#include "HttpExchangeType.h"
 
 #if defined(ARDUINO) && ARDUINO >= 100
 	#include "Arduino.h"
@@ -16,19 +17,20 @@
 	#include "WProgram.h"
 #endif
 
-#define UNIQ_BASE_ID 1010101L
-
 enum Action {
 	act_INPUT_WIFI_SSID,
 	act_INPUT_WIFI_PSWD,
 	act_INPUT_TCP_LOGIN,
 	act_INPUT_TCP_PSWD,
 	act_INPUT_SERVER_IP,
-	act_INPUT_SERVER_PORT,	
+	act_INPUT_SERVER_PORT,
+	act_INPUT_SERVER_TARGET,
 	act_RESET_WIFI,
 	act_RESET_GSM,
 	act_SEARCH_DEVICES,
-	act_SELECT_WIFI
+	act_SELECT_WIFI,
+	act_REGISTER_BOARD,
+	act_INPUT_BOARD_UID
 };
 
 //#define DEBUG
@@ -94,7 +96,7 @@ private:
 	void init();
 	void initWifi();
 	void quizeDevices();
-	void sendHttpRequest();
+	void sendDataToServer();
 	void goWithMenuSelector(ButtonPin _pushedBtnCode);
 	void goWithInputer(ButtonPin _pushedBtnCode);
 	void goWithChooser(ButtonPin _pushedBtnCode);

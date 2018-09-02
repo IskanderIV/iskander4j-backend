@@ -22,6 +22,10 @@ WifiManager::~WifiManager(){
 }
 
 
+/*********************
+* private methods*
+*********************/
+
 void WifiManager::init(int pFreq, DataBase* pDataBase) {
 	_dataBase = pDataBase;
 	initWifi(pFreq);
@@ -48,35 +52,24 @@ void WifiManager::initTcpConnection() {
 	_login = _dataBase->getLogin();
 	_password = _dataBase->getPassword();
 	_boardUID = String(F("")) + _dataBase->getUniqBaseID();
-	
-	// _noConnection = false;
-	// _cantSend = false;
-	// _noRessponse = false;
-	// _cantClose = false;
 }
 
 /****************** 
 * public interface*
 *******************/
 
-bool WifiManager::executePutRequest() {
+bool WifiManager::executeRequest(HttpExchangeType type) {
 	if (_wifiError) {
-		Serial.println(String(F("Can't send HTTP request. Wifi initialization fail!")));
+		Serial.println(String(F("Can't send Put Data HTTP request. Wifi initialization fail!")));
 		return false;
 	}
-	_noTcpConnection = false;
-	_cantSend = false;
-	_noRessponse = false;
-	_cantClose = false;
 	//Serial.println("Before StationIP = ");
 	delay(1000);
-	Serial.println(String(F("_host = ")) + _host);
-	Serial.println(String(F("_port = ")) + _port);
 	Serial.println((String)"Free memory >> " + freeMemory());
 	
-	String request = _responseBuilder->buildRequest(_host, _port, _target, _login, _password, _boardUID);
-	
+	String request = _responseBuilder->buildRequest(type, _host, _port, _target, _login, _password, _boardUID);
 	// Serial.println(String(F("REQUEST:\n")) + request);
+	
 	ESP8266proClient* con = new ESP8266proClient(_wifi, parseHttpResponse);
 	
 	if(con->connectTcp(_host, _port)) {		
@@ -88,7 +81,7 @@ bool WifiManager::executePutRequest() {
 		con->close();
 	}	
 	delete con;
-	Serial.println((String)"Free memory >> " + freeMemory());
+	
 	return true;
 }
 
@@ -122,27 +115,12 @@ String WifiManager::getFindedWANsDelimiter() {
 	// _dataBase = pDataBase;
 // }
 
-// void WifiManager::setEepromManager(EepromManager* pEepromMngr) {
-	// _eepromMngr = pEepromMngr;	
-	// _serverAdress = _eepromMngr->fetch(eepr_serverAdress);
-	// _serverPort = (_eepromMngr->fetch(eepr_serverPort)).toInt();
-	// Serial.println((_eepromMngr->fetch(eepr_serverPort)).toInt());
-// }
-
-/*********************
-* private methods*
-*********************/
-
 bool WifiManager::connectToWifi() {	
 	// if (!espSerial.isListening()) {
 		// espSerial.listen();
 	// }
 	_wifiError = false;
 	int repeats = 0;
-	// String ssid = _eepromMngr->fetch(eepr_wifiLogin);
-	// String password = _eepromMngr->fetch(eepr_wifiPsswd);
-	// String ssid = "acer Liquid Z630";
-	// String password = "111222333";
 	String stationIP;
 	uint8_t numOfrepeats = 2;//3
 	do

@@ -40,7 +40,7 @@ void setup() {
   menuSelector = new MenuSelector();
   btnMngr = new ButtonsManager();  
   eepromMngr = new EepromManager();
-  dataBase = new DataBase();
+  dataBase = new DataBase(eepromMngr);
   wifiMngr = new WifiManager(9600, dataBase);
   rfMngr = new RFManager();
   inputer = new Inputer();
@@ -65,23 +65,32 @@ void setup() {
   btnMngr->createButton(btn_select, false);
   Serial.println(F("We have buttons!")); //TEST
   
-  String dsMenuName = F("Device Search");
+  String deviceSearchMenuName = F("Device Search");
+  String regBoardMenuName = F("Register Board");
   String sttMenuName = F("Settings");
-  String wifiCredsMenuName = F("Wifi");
-  String tcpCredsMenuName = F("TCP");
+  String wifiCredsMenuName = F("WIFI");
   String wifiSearchMenuName = F("Wifi Search");
   String wifiSsidMenuName = F("Wifi SSID");
   String wifiPsswdMenuName = F("Wifi Psswd");
   String wifiResetMenuName = F("Wifi Reset");
-  String tcpLoginMenuName = F("TCP Login");
-  String tcpPsswdMenuName = F("TCP Psswd");
-  String serverMenuName = F("Server");
-  String serverIpMenuName = F("Server Name or IP");
-  String serverPortMenuName = F("Server Port");
+  String siteMenuName = F("SITE");
+  String tcpLoginMenuName = F("Login");
+  String tcpPsswdMenuName = F("Password");
+  String serverMenuName = F("SERVER");
+  String hostMenuName = F("Host");
+  String portMenuName = F("Port");
+  String targetMenuName = F("Target");
+  String boardMenuName = F("BOARD");
+  String boardUIDMenuName = F("Board UID");
   
-  menuBldr->addToMain(dsMenuName, mn_Action);
-  menuToActionMap[dsMenuName] = act_SEARCH_DEVICES;
+  menuBldr->addToMain(deviceSearchMenuName, mn_Action);
+  menuToActionMap[deviceSearchMenuName] = act_SEARCH_DEVICES;
+  
+  menuBldr->addToMain(regBoardMenuName, mn_Action);
+  menuToActionMap[regBoardMenuName] = act_REGISTER_BOARD;
+  
   menuBldr->addToMain(sttMenuName, mn_Us);
+  
   menuBldr->addTo(sttMenuName, wifiCredsMenuName, mn_Us);
   menuBldr->addTo(wifiCredsMenuName, wifiSearchMenuName, mn_Action);
   menuToActionMap[wifiSearchMenuName] = act_SELECT_WIFI;
@@ -91,17 +100,25 @@ void setup() {
   menuToActionMap[wifiPsswdMenuName] = act_INPUT_WIFI_PSWD;
   menuBldr->addTo(wifiCredsMenuName, wifiResetMenuName, mn_Action);
   menuToActionMap[wifiResetMenuName] = act_RESET_WIFI;
-  menuBldr->addTo(sttMenuName, tcpCredsMenuName, mn_Us);
-  menuBldr->addTo(tcpCredsMenuName, tcpLoginMenuName, mn_Action);
+  
+  menuBldr->addTo(sttMenuName, siteMenuName, mn_Us);
+  menuBldr->addTo(siteMenuName, tcpLoginMenuName, mn_Action);
   menuToActionMap[tcpLoginMenuName] = act_INPUT_TCP_LOGIN;
-  menuBldr->addTo(tcpCredsMenuName, tcpPsswdMenuName, mn_Action);
-  menuToActionMap[tcpPsswdMenuName] = act_INPUT_TCP_PSWD;  
+  menuBldr->addTo(siteMenuName, tcpPsswdMenuName, mn_Action);
+  menuToActionMap[tcpPsswdMenuName] = act_INPUT_TCP_PSWD; 
+  
   menuBldr->addTo(sttMenuName, serverMenuName, mn_Us);
-  menuBldr->addTo(serverMenuName, serverIpMenuName, mn_Action);
-  menuToActionMap[serverIpMenuName] = act_INPUT_SERVER_IP;
-  menuBldr->addTo(serverMenuName, serverPortMenuName, mn_Action);
-  menuToActionMap[serverPortMenuName] = act_INPUT_SERVER_PORT;
-
+  menuBldr->addTo(serverMenuName, hostMenuName, mn_Action);
+  menuToActionMap[hostMenuName] = act_INPUT_SERVER_IP;
+  menuBldr->addTo(serverMenuName, portMenuName, mn_Action);
+  menuToActionMap[portMenuName] = act_INPUT_SERVER_PORT;
+  menuBldr->addTo(serverMenuName, targetMenuName, mn_Action);
+  menuToActionMap[targetMenuName] = act_INPUT_SERVER_TARGET;
+  
+  menuBldr->addTo(sttMenuName, boardMenuName, mn_Us);
+  menuBldr->addTo(boardMenuName, boardUIDMenuName, mn_Action);
+  menuToActionMap[boardUIDMenuName] = act_INPUT_BOARD_UID;
+  
   menuSelector->setMenu(menuBldr->getMenu());
   menuSelector->setController(controller);
   Serial.println(F("We set menuSelector!"));//TEST
@@ -115,15 +132,13 @@ void setup() {
   controller->setDisplay(lcd);
   controller->setInputer(inputer);
   controller->setChooser(chooser);
-  controller->setBtnManager(btnMngr);
-  controller->setEepromManager(eepromMngr);  
+  controller->setBtnManager(btnMngr);  
   controller->setWifiManager(wifiMngr);
   controller->setDataBase(dataBase);
   controller->setRFManager(rfMngr);
   controller->setMenuToActionMap(menuToActionMap);
   Serial.println(F("We set controller!"));//TEST
 
-  dataBase->setEepromManager(eepromMngr);
   Serial.println(F("We set dataBase!"));//TEST
  
   Serial.println(F("We set wifi!"));//TEST

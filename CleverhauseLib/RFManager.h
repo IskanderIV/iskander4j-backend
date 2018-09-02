@@ -25,9 +25,14 @@ class DataBase;
 struct DataInfo {
 	long  _uniqID;
 	uint8_t  _deviceID;
-	float _deviceAck;
+	float _deviceAck; //INPUT
+	float _min; //INPUT
+	float _max; //INPUT
+	float _discrete; //INPUT
 	float _deviceControl;
-	bool  _adjustable;
+	bool  _digital;//INPUT
+	bool  _analog;//INPUT
+	bool  _adjustable;//INPUT
 	bool  _rotatable;
 	bool  _radioError; //INPUT
 };
@@ -44,16 +49,15 @@ public:
 	bool searchDevices();
 	void processDeveices();
 	void setDataBase(DataBase* _dataBase);
-	void setEepromManager(EepromManager* _eepromMngr);
 	
 private:
 	union DataInfoUnion {  
 		DataInfo dataInfo;  
 		uint8_t byteBuffer[sizeof(DataInfo)];  
 	} dataInfoUnion;
+	
 	RH_ASK* _driver;
 	RHReliableDatagram* _radioMngr;
-	EepromManager* _eepromMngr;
 	DataBase* _dataBase;
 	bool _initError;
 	bool* blink; //TEST
