@@ -22,6 +22,12 @@ void EepromManager::init() {
 	String wifiPsswd = String("LaserJet");
 	saveString(eepr_wifiLogin, wifiLogin);
 	saveString(eepr_wifiPsswd, wifiPsswd);
+
+	String username = String("iskander");
+	String password = String("123");
+	saveString(eepr_tcpLogin, username);
+	saveString(eepr_tcpPsswd, password);
+	
 	String tcpServerIP = F("192.168.1.34");
 	String tcpServerPort = F("8090");
 	String tcpServertarget = F("/cleverhause/boards/board/data");
@@ -299,7 +305,7 @@ int EepromManager::getMaxByteOfPlace(EepromPlaceName pName) {
 		case eepr_wifiPsswd: 	maxNumOfBytes = WIFI_PSSWD_MAX_LEN; 	break;
 		case eepr_wifiLogin: 	maxNumOfBytes = WIFI_SSID_MAX_LEN; 		break;
 		case eepr_deviceIds: 	maxNumOfBytes = MAX_DEVICES; 			break;
-		case eepr_baseId: 		maxNumOfBytes = BASE_ID_NUM_BYTES; 		break;
+		case eepr_baseId: 		maxNumOfBytes = BOARD_UID_SYMBOLS; 		break;
 	}
 	return maxNumOfBytes;
 }

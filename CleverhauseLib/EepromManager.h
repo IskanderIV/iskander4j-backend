@@ -6,6 +6,7 @@
 
 #define MEMORY_BEGIN_POSITION 1
 #define BASE_ID_NUM_BYTES 4 //long
+#define BOARD_UID_SYMBOLS 10 //String
 #define MAX_DEVICES 8
 #define WIFI_SSID_MAX_LEN 80
 #define WIFI_PSSWD_MAX_LEN 30
@@ -41,7 +42,7 @@ enum EepromPlaceName {
 	eepr_tcpLogin,
 	eepr_tcpPsswd,
 	eepr_serverAdress,
-	eepr_serverPort
+	eepr_serverPort,
 	eepr_target
 };
 

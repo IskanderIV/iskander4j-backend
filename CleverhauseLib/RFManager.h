@@ -48,7 +48,7 @@ public:
 	// interface impl for controllers events
 	bool searchDevices();
 	void processDeveices();
-	void setDataBase(DataBase* _dataBase);
+	bool hasInitError();
 	
 private:
 	union DataInfoUnion {  

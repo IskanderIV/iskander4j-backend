@@ -57,13 +57,13 @@ String RequestBuilder::formRequestBody(HttpExchangeType type, String login, Stri
 	
 	String requestJson = String("{"); // begin curly brace
 	// username
-	requestJson += jsonKeyWrapper(String(USER_NAME));
+	requestJson += jsonKeyWrapper(String(USER_NAME_KEY));
 	requestJson += jsonStringValueWrapper(login);
 	// password
-	requestJson += jsonKeyWrapper(String(PASSWORD));
+	requestJson += jsonKeyWrapper(String(PASSWORD_KEY));
 	requestJson += jsonStringValueWrapper(password);
 	// boardUID
-	requestJson += jsonKeyWrapper(String(BOARD_UID));
+	requestJson += jsonKeyWrapper(String(BOARD_UID_KEY));
 	requestJson += jsonStringValueWrapper(boardUID);
 	
 	//DEVICE STATE BLOK
@@ -71,7 +71,7 @@ String RequestBuilder::formRequestBody(HttpExchangeType type, String login, Stri
 	requestJson += F(",");
 	
 	// GLOBAL ERRORS BLOCK
-	requestJson += jsonKeyWrapper(String(GLOBAL_ERRORS_BLOCK_NAME));
+	requestJson += jsonKeyWrapper(String(GLOBAL_ERRORS_BLOCK_KEY));
 	requestJson += buildRequestGlobalErrorsJson();
 	
 	requestJson += F("}"); // end curly brace
@@ -82,7 +82,7 @@ String RequestBuilder::formRequestBody(HttpExchangeType type, String login, Stri
 }
 
 String RequestBuilder::buildDevicesBlockJson(HttpExchangeType type) {
-	requestJson += jsonKeyWrapper(String(DEVICES_STATES_BLOCK_NAME));
+	requestJson += jsonKeyWrapper(String(DEVICES_STATES_BLOCK_KEY));
 	requestJson += F("["); // end devices array brace
 	// the better thing is to form list of data info objects and pass here
 	int deviceCount = _dataBase->getDeviceCount();
@@ -114,19 +114,19 @@ String RequestBuilder::buildDeviceDataJson(char id) {
 	bool radioError = _dataBase->getDeviceRFErr(id);
 	
 	String deviceJsonString = String("{");
-	deviceJsonString += jsonKeyWrapper(String(DEVICE_ID_KEY_NAME));
+	deviceJsonString += jsonKeyWrapper(String(DEVICE_ID_KEY));
 	deviceJsonString += (uint8_t) id;
 	deviceJsonString += F(",");
-	deviceJsonString += jsonKeyWrapper(String(DEVICE_ACK_KEY_NAME));
+	deviceJsonString += jsonKeyWrapper(String(DEVICE_ACK_KEY));
 	deviceJsonString += ack; //TODO format
 	deviceJsonString += F(",");
 	deviceJsonString += jsonKeyWrapper(String(DEVICE_ADJUSTABLE_KEY));
 	deviceJsonString += jsonBoolValueWrapper(adjustable);
 	deviceJsonString += F(",");
-	deviceJsonString += jsonKeyWrapper(String(DEVICE_CONTROL_VALUE_KEY_NAME));
+	deviceJsonString += jsonKeyWrapper(String(DEVICE_CONTROL_VALUE_KEY));
 	deviceJsonString += controlValue; // TODO format
 	deviceJsonString += F(",");
-	deviceJsonString += jsonKeyWrapper(String(DEVICE_RADIO_ERROR_KEY_NAME));
+	deviceJsonString += jsonKeyWrapper(String(DEVICE_RADIO_ERROR_KEY));
 	deviceJsonString += jsonBoolValueWrapper(radioError);
 	deviceJsonString += F("}");
 	
@@ -160,7 +160,7 @@ String RequestBuilder::buildDeviceRegistratonJson(char id) {
 	deviceJsonString += jsonKeyWrapper(String(DEVICE_REG_ROTATE_KEY));
 	deviceJsonString += jsonBoolValueWrapper(rotate);
 	deviceJsonString += F(",");
-	deviceJsonString += jsonKeyWrapper(String(DEVICE_REG_SSIGNLING_KEY));
+	deviceJsonString += jsonKeyWrapper(String(DEVICE_REG_SIGNALING_KEY));
 	deviceJsonString += jsonBoolValueWrapper(signaling);
 	deviceJsonString += F("}");
 	
@@ -173,13 +173,13 @@ String RequestBuilder::buildRequestGlobalErrorsJson() {
 	bool lcdError = _dataBase->getLcdError();
 	
 	String globalErrorsJsonString = String(F("{"));
-	globalErrorsJsonString += jsonKeyWrapper(String(GSM_ERROR_KEY_NAME));
+	globalErrorsJsonString += jsonKeyWrapper(String(GSM_ERROR_KEY));
 	globalErrorsJsonString += jsonBoolValueWrapper(gsmError);
 	globalErrorsJsonString += F(",");
-	globalErrorsJsonString += jsonKeyWrapper(String(RADIO_ERROR_KEY_NAME));
+	globalErrorsJsonString += jsonKeyWrapper(String(RADIO_ERROR_KEY));
 	globalErrorsJsonString += jsonBoolValueWrapper(globalRadioError);
 	globalErrorsJsonString += F(",");
-	globalErrorsJsonString += jsonKeyWrapper(String(LCD_ERROR_KEY_NAME));
+	globalErrorsJsonString += jsonKeyWrapper(String(LCD_ERROR_KEY));
 	globalErrorsJsonString += jsonBoolValueWrapper(lcdError);	
 	globalErrorsJsonString += F("}");
 	

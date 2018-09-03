@@ -29,6 +29,9 @@ void ResponseParser::resetResponse() {
 	headers = "";
 	body = "";
 	_goodParsing = false;
+	for(int i = 0; i < _dataBase->getDeviceCount(); i++) {
+		delete _deviceInfoArray[i];
+	}
 	delete[] _deviceInfoArray;
 }
 
@@ -97,6 +100,7 @@ bool ResponseParser::limitBodyToJson() {
 }
 
 bool ResponseParser::findAndSaveData() {
+	//TODO analize username, password and boardUid
 	int nextElBegPos = 0;
 	int id = 0;
 	while (nextElBegPos != -1) {

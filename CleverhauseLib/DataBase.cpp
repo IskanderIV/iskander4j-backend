@@ -42,6 +42,7 @@ void DataBase::initFromEeprom() {
 		_maxLenOfHost = _eepromMngr->getMaxByteOfPlace(eepr_serverAdress);
 		_maxLenOfPort = _eepromMngr->getMaxByteOfPlace(eepr_serverPort);
 		_maxLenOfTarget = _eepromMngr->getMaxByteOfPlace(eepr_target);
+		_maxLenOfBoardUidSymbols = _eepromMngr->getMaxByteOfPlace(eepr_baseId);
 		
 		// init boardUID
 		_uniqBaseID = _eepromMngr->fetchBoardUID();
@@ -468,6 +469,10 @@ int DataBase::getMaxDevices() {
 	return _maxDevices;
 }
 
+int DataBase::getMaxLenOfBoardUidSymbols() {
+	return _maxLenOfBoardUidSymbols;
+}
+// END MAX LENGTHS
 
 long DataBase::getUniqBaseID() {
 	return _uniqBaseID;

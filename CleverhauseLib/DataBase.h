@@ -81,6 +81,7 @@ public:
 	int getMaxLenOfPort();
 	int getMaxLenOfTarget();
 	int getMaxDevices();
+	int getMaxLenOfBoardUidSymbols();
 	
 	int  getDeviceCount();
 	
@@ -159,8 +160,7 @@ private:
 	void addDeviceLast(DeviceInfo* added);
 	
 	//fields
-	EepromManager* _eepromMngr;
-	uint8_t _maxDevices;
+	EepromManager* _eepromMngr;	
 	DeviceInfo* _deviceJsonList;
 	DeviceInfo* _lastDeviceJson;
 	int _deviceCount;
@@ -187,6 +187,8 @@ private:
 	int  _maxLenOfHost;
 	int  _maxLenOfPort;
 	int  _maxLenOfTarget;
+	uint8_t _maxDevices;
+	int  _maxLenOfBoardUidSymbols;
 };
 
 #endif

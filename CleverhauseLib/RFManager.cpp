@@ -124,6 +124,10 @@ void RFManager::processDeveices(){
 	Serial.println("RFManager::processDeveices() End");
 }
 
+bool RFManager::hasInitError() {
+	return _initError;
+}
+
 /*****************
 * private methods*
 ******************/

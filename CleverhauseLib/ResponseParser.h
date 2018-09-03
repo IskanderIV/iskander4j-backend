@@ -4,28 +4,10 @@
 #ifndef _ResponseParser_H_
 #define _ResponseParser_H_
 
-#define DEVICES_STATES_BLOCK_KEY 		"devices"
-
-#define USER_NAME		 				"username"
-#define PASSWORD		 				"password"
-#define BOARD_UID		 				"boardUID"
-
-#define DEVICE_ID_KEY	 				"id"
-#define DEVICE_ACK_KEY		 			"ack"
-#define DEVICE_ADJUSTABLE_KEY	 		"adj"
-#define DEVICE_CONTROL_VALUE_KEY	 	"ctrlVal"
-#define DEVICE_RADIO_ERROR_KEY		 	"radioErr"
-
-#define GLOBAL_ERRORS_BLOCK_KEY	 	"errors"
-#define REGISTRATION_MESSAGE_KEY	"message"
-
-#define GSM_ERROR_KEY 				"gsm"
-#define RADIO_ERROR_KEY 			"radio"
-#define LCD_ERROR_KEY 				"lcd"
-
 #include "DataBase.h"
 #include "GlobalResponse.h"
 #include "HttpExchangeType.h"
+#include "HttpJsonKeys.h"
 
 class DataBase;
 class DataBase::DeviceInfo;

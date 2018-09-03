@@ -104,7 +104,7 @@ void Controller::initWifi() {
 }
 
 void Controller::quizeDevices() {
-	if (_rfManager) {
+	if (_rfManager && !_rfManager->hasInitError()) {
 		_rfManager->setActive(true);
 		_rfManager->processDeveices();
 		_rfManager->setActive(false);
@@ -283,7 +283,7 @@ void Controller::executeAction() {
 		case act_INPUT_SERVER_IP:
 		case act_INPUT_SERVER_PORT:
 		case act_INPUT_SERVER_TARGET:
-		case act_INPUT_BOARD_UID: { //TODO 1111111111111111111111
+		case act_INPUT_BOARD_UID: {
 			int maxInputerTextLen = selectMaxInputerTextLen(pAction);
 			activateInputer(maxInputerTextLen); 
 			break;
@@ -359,6 +359,7 @@ int Controller::selectMaxInputerTextLen(Action pAction) {
 		case act_INPUT_SERVER_IP: 		return _dataBase->getMaxLenOfHost();
 		case act_INPUT_SERVER_PORT: 	return _dataBase->getMaxLenOfPort();		
 		case act_INPUT_SERVER_TARGET: 	return _dataBase->getMaxLenOfTarget();
+		case act_INPUT_BOARD_UID: 		return _dataBase->getMaxLenOfTarget();
     }
 }
 

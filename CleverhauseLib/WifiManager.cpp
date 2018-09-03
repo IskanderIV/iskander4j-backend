@@ -7,10 +7,6 @@
 #include <MemoryFree.h>
 
 
-// Global Response Defaults ----------
-
-//------------------------------------
-
 WifiManager::WifiManager(int pFreq, DataBase* pDataBase): _wifi(Serial3) { //espSerial(ESP_RX, ESP_TX), _wifi(espSerial) {
 	init(pFreq, pDataBase);
 	Serial.println("WifiManager()!"); //TEST
@@ -77,7 +73,6 @@ bool WifiManager::executeRequest(HttpExchangeType type) {
 		request = "";
 		con->waitResponse();
 		_responseParser->parseResponse();
-		_responseParser->resetResponse();
 		con->close();
 	}	
 	delete con;
@@ -111,10 +106,6 @@ String WifiManager::getFindedWANsDelimiter() {
 	return String(FINDED_WAN_DELIMITER);
 }
 
-// void WifiManager::setDataBase(DataBase* pDataBase) {
-	// _dataBase = pDataBase;
-// }
-
 bool WifiManager::connectToWifi() {	
 	// if (!espSerial.isListening()) {
 		// espSerial.listen();
@@ -122,7 +113,7 @@ bool WifiManager::connectToWifi() {
 	_wifiError = false;
 	int repeats = 0;
 	String stationIP;
-	uint8_t numOfrepeats = 2;//3
+	uint8_t numOfrepeats = 2;
 	do
 	{
 		if (!_wifi.stationConnect(_SSID, _ssidPassword)) {
@@ -139,8 +130,7 @@ bool WifiManager::connectToWifi() {
 		_wifiError = true;
 		return false;
 	} else {
-		Serial.print("ESP IP: ");
-		Serial.println(stationIP);
+		Serial.println(String(F("ESP IP: ")) + stationIP);
 		return true;
 	}
 }

@@ -6,32 +6,9 @@
 
 #define END_OF_STRING "\r\n"
 
-#define DEVICES_STATES_BLOCK_NAME 		"devices"
-
-#define USER_NAME		 				"username"
-#define PASSWORD		 				"password"
-#define BOARD_UID		 				"boardUID"
-
-#define DEVICE_ID_KEY_NAME 				"id"
-#define DEVICE_ACK_KEY_NAME 			"ack"
-#define DEVICE_ADJUSTABLE_KEY	 		"adj"
-#define DEVICE_CONTROL_VALUE_KEY_NAME 	"ctrlVal"
-#define DEVICE_RADIO_ERROR_KEY_NAME 	"radioErr"
-
-#define DEVICE_REG_MIN_KEY 				"min"
-#define DEVICE_REG_MAX_KEY 				"max"
-#define DEVICE_REG_DISCRETE_KEY 		"discrete"
-#define DEVICE_REG_ROTATE_KEY 			"rotate"
-#define DEVICE_REG_SSIGNLING_KEY		"signaling"
-
-#define GLOBAL_ERRORS_BLOCK_NAME 		"errors"
-
-#define GSM_ERROR_KEY_NAME 				"gsm"
-#define RADIO_ERROR_KEY_NAME 			"radio"
-#define LCD_ERROR_KEY_NAME 				"lcd"
-
 #include "DataBase.h"
 #include "HttpExchangeType.h"
+#include "HttpJsonKeys.h"
 
 // enum HttpExchangeType {
 	// DATA,
@@ -47,8 +24,7 @@ public:
 	~RequestBuilder();
 	
 	// public interfaces
-	String buildDataRequest(String host, String port, String target, String SSID, String password, String boardUID);
-	String buildRegistrationRequest(String host, String port, String target, String SSID, String password, String boardUID);
+	String buildRequest(HttpExchangeType type, String host, String port, String target, String SSID, String password, String boardUID);
 	
 private:
 	DataBase* _dataBase;
