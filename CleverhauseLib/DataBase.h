@@ -16,25 +16,25 @@ class EepromManager;
 class DataBase
 {
 public:
-	DataBase();
+	DataBase(EepromManager* pEepromMngr);
 	~DataBase();
 	
 	bool isDeviceExist(uint8_t _id);
 	uint8_t generateId();
 	void addDeviceInfo(uint8_t _id);
-	void removeDeviceInfo(char _id);
+	void removeDeviceInfo(uint8_t _id);
 	
 	// device info
-	float getDeviceAck(char _id);
-	void setDeviceAck(char _id, float _ack);
+	float getDeviceAck(uint8_t _id);
+	void setDeviceAck(uint8_t _id, float _ack);
 	float getDeviceMin(uint8_t _id);
 	void setDeviceMin(uint8_t _id, float _min); //memorized
 	float getDeviceMax(uint8_t _id);
 	void setDeviceMax(uint8_t _id, float _max); //memorized
 	float getDeviceDiscrete(uint8_t _id);
 	void setDeviceDiscrete(uint8_t _id, float _discrete); //memorized
-	float getDeviceControlValue(char _id);
-	void setDeviceControlValue(char _id, float _control); //memorized from response
+	float getDeviceControlValue(uint8_t _id);
+	void setDeviceControlValue(uint8_t _id, float _control); //memorized from response
 	bool getDeviceDigital(uint8_t _id);
 	void setDeviceDigital(uint8_t _id, bool _digital);//memorized
 	bool getDeviceAnalog(uint8_t _id);
@@ -43,8 +43,8 @@ public:
 	void setDeviceAdj(uint8_t _id, bool _adj); //memorized
 	bool getDeviceRotatable(uint8_t _id);
 	void setDeviceRotatable(uint8_t _id, bool _rotatable); //memorized
-	bool getDeviceRFErr(char _id);
-	void setDeviceRFErr(char _id, bool _radioError);
+	bool getDeviceRFErr(uint8_t _id);
+	void setDeviceRFErr(uint8_t _id, bool _radioError);
 	
 	void fetchIds(uint8_t* _idsBuffer);
 	
@@ -101,11 +101,12 @@ public:
 	class DeviceInfo
 	{
 	public:
-		DeviceInfo(char _id);
+		DeviceInfo(uint8_t _id);
+		DeviceInfo();
 		~DeviceInfo();
 		
-		char  getId();
-		void  setId(char _id);
+		uint8_t  getId();
+		void  setId(uint8_t _id);
 		float getAck();
 		void  setAck(float _ack);
 		float getMin();
@@ -135,7 +136,7 @@ public:
 	private:
 		DeviceInfo* _prev;
 		DeviceInfo* _next;
-		char _deviceId;
+		uint8_t _deviceId;
 		float _deviceAck;
 		float _min;
 		float _max;
@@ -149,13 +150,12 @@ public:
 	};
 	
 private:
-	class DeviceInfo;
 
 	//methods
-	void init();
+	void init(EepromManager* pEepromMngr);
 	void initFromEeprom();
 	void fillDeviceInfoFromEeprom(uint8_t id);
-	DeviceInfo* findDeviceInfo(char _id);
+	DeviceInfo* findDeviceInfo(uint8_t _id);
 	void addDeviceFirst(DeviceInfo* added);
 	void addDeviceLast(DeviceInfo* added);
 	

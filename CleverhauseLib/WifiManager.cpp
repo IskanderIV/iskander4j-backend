@@ -66,13 +66,13 @@ bool WifiManager::executeRequest(HttpExchangeType type) {
 	String request = _responseBuilder->buildRequest(type, _host, _port, _target, _login, _password, _boardUID);
 	// Serial.println(String(F("REQUEST:\n")) + request);
 	
-	ESP8266proClient* con = new ESP8266proClient(_wifi, parseHttpResponse);
+	ESP8266proClient* con = new ESP8266proClient(_wifi, WifiManager::parseHttpResponse);
 	
-	if(con->connectTcp(_host, _port)) {		
+	if(con->connectTcp(_host, _port.toInt())) {		
 		con->send(request);
 		request = "";
 		con->waitResponse();
-		_responseParser->parseResponse();
+		_responseParser->parseResponse(type);
 		con->close();
 	}	
 	delete con;
@@ -138,4 +138,15 @@ bool WifiManager::connectToWifi() {
 void WifiManager::closeConnection() {
 	delete _responseBuilder;
 	delete _responseParser;
+}
+
+/*****************************
+Here parsing of RESPONSE
+******************************/
+
+void WifiManager::parseHttpResponse(ESP8266proConnection* connection, char* buffer, int length, boolean completed) {
+	/*
+	Serial.println(F("RESPONSE"));
+	*/
+	response += buffer;
 }

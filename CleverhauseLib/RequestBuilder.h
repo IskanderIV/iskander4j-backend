@@ -20,7 +20,7 @@ class DataBase;
 class RequestBuilder
 {
 public:
-	RequestBuilder();
+	RequestBuilder(DataBase* pDataBasePointer);
 	~RequestBuilder();
 	
 	// public interfaces
@@ -29,13 +29,12 @@ public:
 private:
 	DataBase* _dataBase;
 	int _bodyLength;
-	void init();
-	String buildRequest(HttpExchangeType type, String host, String port, String target, String SSID, String password, String boardUID);
+	void init(DataBase* pDataBasePointer);
 	String formRequestHeaders(String host, String port, String target);
 	String formRequestBody(HttpExchangeType type, String SSID, String password, String boardUID);
 	String buildDevicesBlockJson(HttpExchangeType type);
-	String buildDeviceDataJson(char id);
-	String buildDeviceRegistratonJson(char id);
+	String buildDeviceDataJson(uint8_t id);
+	String buildDeviceRegistratonJson(uint8_t id);
 	String buildRequestGlobalErrorsJson();
 	String jsonKeyWrapper(String key);
 	String jsonBoolValueWrapper(bool val);

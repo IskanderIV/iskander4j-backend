@@ -65,7 +65,7 @@ void DataBase::initFromEeprom() {
 		for (uint8_t i = 0; i < _maxDevices; i++) {
 			if (idsBuffer[i] != 0) {
 				uint8_t id = idsBuffer[i];
-				addDeviceInfo((char) id);
+				addDeviceInfo(id);
 				fillDeviceInfoFromEeprom(id);
 			}
 		}
@@ -107,7 +107,7 @@ uint8_t  DataBase::generateId() {
 	return getDeviceCount();
 }
 	
-void DataBase::addDeviceInfo(uint8_t _id) {	
+void DataBase::addDeviceInfo(uint8_t id) {	
 	if (_deviceCount >= _maxDevices) return false;
 	DeviceInfo* added = new DeviceInfo(id);
 	// Serial.println(String("DataBase::addDeviceInfo") + (uint8_t)id);//TEST
@@ -122,7 +122,7 @@ void DataBase::addDeviceInfo(uint8_t _id) {
 	}
 }
 
-void DataBase::removeDeviceInfo(char id) {
+void DataBase::removeDeviceInfo(uint8_t id) {
 	DeviceInfo* removed = findDeviceInfo(id);
 	if (removed) {
 		DeviceInfo* prev = removed->getPrev();
@@ -145,7 +145,7 @@ void DataBase::removeDeviceInfo(char id) {
 }
 
 bool DataBase::isDeviceExist(uint8_t id) {
-	if (findDeviceInfo((char) id)) {
+	if (findDeviceInfo(id)) {
 		return true;
 	} else {
 		return false;
@@ -154,7 +154,7 @@ bool DataBase::isDeviceExist(uint8_t id) {
 
 /*********FLOATS************/
 
-float DataBase::getDeviceAck(char id) {
+float DataBase::getDeviceAck(uint8_t id) {
 	DeviceInfo* searched = findDeviceInfo(id);
 	if (searched) {
 		return searched->getAck();
@@ -163,14 +163,14 @@ float DataBase::getDeviceAck(char id) {
 	}
 }
 
-void DataBase::setDeviceAck(char id, float pAck) {
+void DataBase::setDeviceAck(uint8_t id, float pAck) {
 	DeviceInfo* searched = findDeviceInfo(id);
 	if (searched) {
 		searched->setAck(pAck);
 	}
 }
 
-float DataBase::getDeviceMin(uint8_t _id){
+float DataBase::getDeviceMin(uint8_t id){
 	DeviceInfo* searched = findDeviceInfo(id);
 	if (searched) {
 		return searched->getMin();
@@ -179,7 +179,7 @@ float DataBase::getDeviceMin(uint8_t _id){
 	}
 }
 // use it only with structure requests
-void  DataBase::setDeviceMin(uint8_t _id, float _min){
+void  DataBase::setDeviceMin(uint8_t id, float _min){
 	DeviceInfo* searched = findDeviceInfo(id);
 	if (searched) {
 		if (searched->getMin() != _min) {
@@ -189,7 +189,7 @@ void  DataBase::setDeviceMin(uint8_t _id, float _min){
 	}
 }
 
-float DataBase::getDeviceMax(uint8_t _id){
+float DataBase::getDeviceMax(uint8_t id){
 	DeviceInfo* searched = findDeviceInfo(id);
 	if (searched) {
 		return searched->getMax();
@@ -198,7 +198,7 @@ float DataBase::getDeviceMax(uint8_t _id){
 	}
 }
 // use it only with structure requests
-void  DataBase::setDeviceMax(uint8_t _id, float _max){
+void  DataBase::setDeviceMax(uint8_t id, float _max){
 	DeviceInfo* searched = findDeviceInfo(id);
 	if (searched) {
 		if (searched->getMax() != _max) {
@@ -208,7 +208,7 @@ void  DataBase::setDeviceMax(uint8_t _id, float _max){
 	}
 }
 
-float DataBase::getDeviceDiscrete(uint8_t _id){
+float DataBase::getDeviceDiscrete(uint8_t id){
 	DeviceInfo* searched = findDeviceInfo(id);
 	if (searched) {
 		return searched->getDiscrete();
@@ -217,7 +217,7 @@ float DataBase::getDeviceDiscrete(uint8_t _id){
 	}
 }
 // use it only with structure requests
-void  DataBase::setDeviceDiscrete(uint8_t _id, float _discrete){
+void  DataBase::setDeviceDiscrete(uint8_t id, float _discrete){
 	DeviceInfo* searched = findDeviceInfo(id);
 	if (searched) {
 		if (searched->getDiscrete() != _discrete) {
@@ -227,7 +227,7 @@ void  DataBase::setDeviceDiscrete(uint8_t _id, float _discrete){
 	}
 }
 
-float DataBase::getDeviceControlValue(char id) {
+float DataBase::getDeviceControlValue(uint8_t id) {
 	DeviceInfo* searched = findDeviceInfo(id);
 	if (searched) {
 		return searched->getControlVal();
@@ -236,7 +236,7 @@ float DataBase::getDeviceControlValue(char id) {
 	}
 }
 
-void DataBase::setDeviceControlValue(char id, float pControl) {
+void DataBase::setDeviceControlValue(uint8_t id, float pControl) {
 	DeviceInfo* searched = findDeviceInfo(id);
 	if (searched) {
 		if (searched->getControlVal() != pControl) {
@@ -248,7 +248,7 @@ void DataBase::setDeviceControlValue(char id, float pControl) {
 
 /*********BOOLS************/
 
-bool  DataBase::getDeviceDigital(uint8_t _id){
+bool  DataBase::getDeviceDigital(uint8_t id){
 	DeviceInfo* searched = findDeviceInfo(id);
 	if (searched) {
 		return searched->getDigital();
@@ -257,7 +257,7 @@ bool  DataBase::getDeviceDigital(uint8_t _id){
 	}
 }
 // use it only with structure requests
-void  DataBase::setDeviceDigital(uint8_t _id, bool _digital){
+void  DataBase::setDeviceDigital(uint8_t id, bool _digital){
 	DeviceInfo* searched = findDeviceInfo(id);
 	if (searched) {
 		if (searched->getDigital() != _digital) {
@@ -267,7 +267,7 @@ void  DataBase::setDeviceDigital(uint8_t _id, bool _digital){
 	}
 }
 
-bool  DataBase::getDeviceAnalog(uint8_t _id){
+bool  DataBase::getDeviceAnalog(uint8_t id){
 	DeviceInfo* searched = findDeviceInfo(id);
 	if (searched) {
 		return searched->getAnalog();
@@ -276,7 +276,7 @@ bool  DataBase::getDeviceAnalog(uint8_t _id){
 	}
 }
 // use it only with structure requests
-void  DataBase::setDeviceAnalog(uint8_t _id, bool _analog){
+void  DataBase::setDeviceAnalog(uint8_t id, bool _analog){
 	DeviceInfo* searched = findDeviceInfo(id);
 	if (searched) {
 		if (searched->getAnalog() != _analog) {
@@ -286,7 +286,7 @@ void  DataBase::setDeviceAnalog(uint8_t _id, bool _analog){
 	}
 }
 
-bool DataBase::getDeviceAdj(char id) {
+bool DataBase::getDeviceAdj(uint8_t id) {
 	DeviceInfo* searched = findDeviceInfo(id);
 	if (searched) {
 		return searched->getAdjustable();
@@ -295,7 +295,7 @@ bool DataBase::getDeviceAdj(char id) {
 	}
 }
 
-void DataBase::setDeviceAdj(char id, bool pAdj) {
+void DataBase::setDeviceAdj(uint8_t id, bool pAdj) {
 	DeviceInfo* searched = findDeviceInfo(id);
 	if (searched) {
 		if (searched->getAdjustable() != pAdj) {
@@ -305,7 +305,7 @@ void DataBase::setDeviceAdj(char id, bool pAdj) {
 	}
 }
 
-bool  DataBase::getDeviceRotatable(uint8_t _id){
+bool  DataBase::getDeviceRotatable(uint8_t id){
 	DeviceInfo* searched = findDeviceInfo(id);
 	if (searched) {
 		return searched->getRotatable();
@@ -314,7 +314,7 @@ bool  DataBase::getDeviceRotatable(uint8_t _id){
 	}
 }
 // use it only with structure requests
-void  DataBase::setDeviceRotatable(uint8_t _id, bool _rotatable){
+void  DataBase::setDeviceRotatable(uint8_t id, bool _rotatable){
 	DeviceInfo* searched = findDeviceInfo(id);
 	if (searched) {
 		if (searched->getRotatable() != _rotatable) {
@@ -324,7 +324,7 @@ void  DataBase::setDeviceRotatable(uint8_t _id, bool _rotatable){
 	}
 }
 
-bool DataBase::getDeviceRFErr(char id) {
+bool DataBase::getDeviceRFErr(uint8_t id) {
 	DeviceInfo* searched = findDeviceInfo(id);
 	if (searched) {
 		return searched->hasRadioError();
@@ -333,7 +333,7 @@ bool DataBase::getDeviceRFErr(char id) {
 	}
 }
 
-void DataBase::setDeviceRFErr(char id, bool pRadioError) {
+void DataBase::setDeviceRFErr(uint8_t id, bool pRadioError) {
 	DeviceInfo* searched = findDeviceInfo(id);
 	if (searched) {
 		searched->setRadioError(pRadioError);
@@ -361,7 +361,7 @@ void DataBase::saveDevicesIdsToEeprom() {
 
 // WIFI
 void DataBase::setSSID(String pSSID) {
-	if (strsmp(getSSID().c_str(), pSSID.c_str()) != 0) {
+	if (strcmp(getSSID().c_str(), pSSID.c_str()) != 0) {
 		_eepromMngr->saveString(eepr_wifiLogin, pSSID);
 	}
 	_SSID = pSSID;
@@ -372,7 +372,7 @@ String DataBase::getSSID() {
 }
 
 void DataBase::setSsidPassword(String pSsidPassword) {
-	if (strsmp(getSsidPassword().c_str(), pSsidPassword.c_str()) != 0) {
+	if (strcmp(getSsidPassword().c_str(), pSsidPassword.c_str()) != 0) {
 		_eepromMngr->saveString(eepr_wifiPsswd, pSsidPassword);
 	}
 	_ssidPassword = pSsidPassword;
@@ -384,7 +384,7 @@ String DataBase::getSsidPassword() {
 
 // TCP
 void DataBase::setLogin(String pLogin) {
-	if (strsmp(getLogin().c_str(), pLogin.c_str()) != 0) {
+	if (strcmp(getLogin().c_str(), pLogin.c_str()) != 0) {
 		_eepromMngr->saveString(eepr_tcpLogin, pLogin);
 	}
 	_login = pLogin;
@@ -393,7 +393,7 @@ String DataBase::getLogin() {
 	return _login;
 }
 void DataBase::setPassword(String pPassword) {
-	if (strsmp(getPassword().c_str(), pPassword.c_str()) != 0) {
+	if (strcmp(getPassword().c_str(), pPassword.c_str()) != 0) {
 		_eepromMngr->saveString(eepr_tcpPsswd, pPassword);
 	}
 	_password = pPassword;
@@ -404,7 +404,7 @@ String DataBase::getPassword() {
 
 // Site
 void DataBase::setHost(String pHost) {
-	if (strsmp(getHost().c_str(), pHost.c_str()) != 0) {
+	if (strcmp(getHost().c_str(), pHost.c_str()) != 0) {
 		_eepromMngr->saveString(eepr_serverAdress, pHost);
 	}
 	_host = pHost;
@@ -415,7 +415,7 @@ String DataBase::getHost() {
 }
 
 void DataBase::setPort(String pPort) {
-	if (strsmp(getPort().c_str(), pPort.c_str()) != 0) {
+	if (strcmp(getPort().c_str(), pPort.c_str()) != 0) {
 		_eepromMngr->saveString(eepr_serverPort, pPort);
 	}
 	_port = pPort;
@@ -426,7 +426,7 @@ String DataBase::getPort() {
 }
 
 void DataBase::setTarget(String pTarget) {
-	if (strsmp(getTarget().c_str(), pTarget.c_str()) != 0) {
+	if (strcmp(getTarget().c_str(), pTarget.c_str()) != 0) {
 		_eepromMngr->saveString(eepr_target, pTarget);
 	}
 	_target = pTarget;
@@ -523,7 +523,7 @@ int DataBase::getDeviceCount() {
 
 
 
-DataBase::DeviceInfo* DataBase::findDeviceInfo(char id) {
+DataBase::DeviceInfo* DataBase::findDeviceInfo(uint8_t id) {
 	if (!_deviceJsonList) return nullptr;
 	DeviceInfo* temp = _deviceJsonList;
 	while (temp) {
@@ -558,7 +558,23 @@ void DataBase::addDeviceLast(DeviceInfo* added) {
 *	inner DeviceInfo class
 */
 
-DataBase::DeviceInfo::DeviceInfo(char id) {
+DataBase::DeviceInfo::DeviceInfo() {
+	_deviceId = 0;
+	_deviceAck = 0.0;
+	_min = 0.0;
+	_max = 1.0;
+	_discrete = 1.0;
+	_controlValue = 0.0;
+	_digital = false;	
+	_analog = false;	
+	_adjustable = false;	
+	_rotatable = false;
+	_radioError = false;
+	_next = nullptr;
+	_prev = nullptr;
+}
+
+DataBase::DeviceInfo::DeviceInfo(uint8_t id) {
 	_deviceId = id;
 	_deviceAck = 0.0;
 	_min = 0.0;
@@ -593,11 +609,11 @@ void DataBase::DeviceInfo::setNext(DeviceInfo* next) {
 	_next = next;
 }
 
-char DataBase::DeviceInfo::getId() {
+uint8_t DataBase::DeviceInfo::getId() {
 	return _deviceId;	
 }
 
-void DataBase::DeviceInfo::setId(char pDeviceId) {
+void DataBase::DeviceInfo::setId(uint8_t pDeviceId) {
 	_deviceId = pDeviceId;
 }
 

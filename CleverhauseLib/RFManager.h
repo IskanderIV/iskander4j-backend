@@ -37,12 +37,12 @@ struct DataInfo {
 	bool  _radioError; //INPUT
 };
 
-extern uint8_t buf[RH_ASK_MAX_MESSAGE_LEN];
+extern uint8_t buf[RH_ASK_MAX_MESSAGE_LEN]; // TODO control this in cpp
 
 class RFManager : public Object
 {
 public:
-	RFManager();
+	RFManager(DataBase* pDataBase);
 	~RFManager();
 	
 	// interface impl for controllers events
@@ -63,13 +63,14 @@ private:
 	bool* blink; //TEST
 	
 	//methods
-	void init();
+	void init(DataBase* pDataBase);
 	long getUniqID();
-	bool isDeviceKnown(uint8_t _from, uint8_t* _knownDeviceIds, uint8_t _knownDeviceIdsCount);
-	void prepareDataForKnowingTransmit(uint8_t _deviceNumber);
-	void prepareDataForWorkingTransmit(uint8_t _deviceNumber);
-	void saveDeviceData(uint8_t _deviceNumber);	
-	void addDeviceToDataBase(uint8_t _deviceNumber);
+	bool isDeviceKnown(uint8_t _from);
+	void prepareDataForKnowingTransmit(uint8_t pDeviceId);
+	void prepareDataForWorkingTransmit(uint8_t pDeviceId);
+	void saveDeviceData(uint8_t pDeviceId);	
+	void addDeviceToDataBase(uint8_t pDeviceId);
+	void registerNewDevice(uint8_t pDeviceId);
 };
 
 #endif

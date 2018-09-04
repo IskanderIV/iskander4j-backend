@@ -96,13 +96,13 @@ private:
 	void init();
 	void initWifi();
 	void quizeDevices();
-	void sendDataToServer();
+	void sendToServer(HttpExchangeType type);
 	void goWithMenuSelector(ButtonPin _pushedBtnCode);
 	void goWithInputer(ButtonPin _pushedBtnCode);
 	void goWithChooser(ButtonPin _pushedBtnCode);
-	void saveInputTextToEeprom(String& _activeMenuName, String& _inputText);
-	void runInputer(int _maxInputerTextLen);
-	void runChooser(String* array, int length);
+	void saveInputText(Action pAction, String& pSavedText);
+	void activateInputer(int _maxInputerTextLen);
+	void activateChooser(String* pWifiNames, int pCount);
 	void doBeforeSingleAction();
 	void doAfterSingleAction();
 	int selectMaxInputerTextLen(Action _action);

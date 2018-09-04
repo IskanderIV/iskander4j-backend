@@ -49,15 +49,15 @@ void EepromManager::init() {
 	bool deviceAdjustableBools[max_devices] = {true,true,false,false,false,false,false,false};
 	bool deviceRotatableBools[max_devices] = {false,false,false,false,false,false,false,false};
 	
-	for (int i = 0; i < max_devices; i++) {
-		saveFloat(eepr_deviceCtrls, deviceCtrls[i]);
-		saveFloat(eepr_deviceMins, deviceMins[i]);	
-		saveFloat(eepr_deviceMaxs, deviceMaxs[i]);	
-		saveFloat(eepr_deviceDiscretes, deviceDiscretes[i]);	
-		saveBool(eepr_deviceDigitalBools, deviceDigitalBools[i]);	
-		saveBool(eepr_deviceAnalogBools, deviceAnalogBools[i]);	
-		saveBool(eepr_deviceAdjustableBools, deviceAdjustableBools[i]);	
-		saveBool(eepr_deviceRotatableBools, deviceRotatableBools[i]);
+	for (uint8_t i = 0; i < max_devices; i++) {
+		saveFloat(eepr_deviceCtrls, i, deviceCtrls[i]);
+		saveFloat(eepr_deviceMins, i, deviceMins[i]);	
+		saveFloat(eepr_deviceMaxs, i, deviceMaxs[i]);	
+		saveFloat(eepr_deviceDiscretes, i, deviceDiscretes[i]);	
+		saveBool(eepr_deviceDigitalBools, i, deviceDigitalBools[i]);	
+		saveBool(eepr_deviceAnalogBools, i, deviceAnalogBools[i]);	
+		saveBool(eepr_deviceAdjustableBools, i, deviceAdjustableBools[i]);	
+		saveBool(eepr_deviceRotatableBools, i, deviceRotatableBools[i]);
 	}	
 }
 
@@ -103,11 +103,6 @@ bool EepromManager::saveString(EepromPlaceName pName, String& pData) {
 		}
 		case eepr_wifiLogin: {
 			strncat(memoryDtoUnion.memoryDTO._wifiLogin, pData.c_str(), WIFI_SSID_MAX_LEN); 
-			result = true;
-			break;
-		}
-		case eepr_baseId: {
-			strncat(memoryDtoUnion.memoryDTO._uniqID, pData.c_str(), BASE_ID_NUM_BYTES); 
 			result = true;
 			break;
 		}
@@ -159,22 +154,22 @@ bool EepromManager::saveBool(EepromPlaceName pName, uint8_t id, bool pFlag) {
 	EEPROM.get(MEMORY_BEGIN_POSITION, memoryDtoUnion.byteBuffer);
 	switch (pName) {
 		case eepr_deviceDigitalBools: {
-			memoryDtoUnion.memoryDTO._deviceDigitalBools[id] = pData; 
+			memoryDtoUnion.memoryDTO._deviceDigitalBools[id] = pFlag; 
 			result = true;
 			break;
 		}		
 		case eepr_deviceAnalogBools: {
-			memoryDtoUnion.memoryDTO._deviceAnalogBools[id] = pData; 
+			memoryDtoUnion.memoryDTO._deviceAnalogBools[id] = pFlag; 
 			result = true; 
 			break;
 		}
 		case eepr_deviceAdjustableBools: {
-			memoryDtoUnion.memoryDTO._deviceAdjustableBools[id] = pData;
+			memoryDtoUnion.memoryDTO._deviceAdjustableBools[id] = pFlag;
 			result = true;
 			break;
 		}
 		case eepr_deviceRotatableBools: {
-			memoryDtoUnion.memoryDTO._deviceRotatableBools[id] = pData;
+			memoryDtoUnion.memoryDTO._deviceRotatableBools[id] = pFlag;
 			result = true;
 			break;
 		}
@@ -183,12 +178,12 @@ bool EepromManager::saveBool(EepromPlaceName pName, uint8_t id, bool pFlag) {
 	return result;
 }
 
-void EepromManager::saveId(uint8_t id) {
+// void EepromManager::saveId(uint8_t id) {
 	// Serial.print("EepromManager::save raw data string>> ");
-	EEPROM.get(MEMORY_BEGIN_POSITION, memoryDtoUnion.byteBuffer);
-	memoryDtoUnion.memoryDTO._deviceIds[id] = id;
-	EEPROM.put(MEMORY_BEGIN_POSITION, memoryDtoUnion.byteBuffer);
-}
+	// EEPROM.get(MEMORY_BEGIN_POSITION, memoryDtoUnion.byteBuffer);
+	// memoryDtoUnion.memoryDTO._deviceIds[id] = id;
+	// EEPROM.put(MEMORY_BEGIN_POSITION, memoryDtoUnion.byteBuffer);
+// }
 
 bool EepromManager::removeId(EepromPlaceName pName, uint8_t id) {
 	bool result = false;

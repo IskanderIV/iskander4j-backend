@@ -3,9 +3,9 @@
 
 #include "RequestBuilder.h"
 
-RequestBuilder::RequestBuilder(DataBase* dataBasePointer)
+RequestBuilder::RequestBuilder(DataBase* pDataBasePointer)
 {
-	init(dataBasePointer);
+	init(pDataBasePointer);
 	Serial.println("RequestBuilder()!");//TEST
 }
 
@@ -13,9 +13,9 @@ RequestBuilder::~RequestBuilder(){
 	
 }
 
-void RequestBuilder::init(DataBase* dataBasePointer){
+void RequestBuilder::init(DataBase* pDataBasePointer){
 	_bodyLength = 0;
-	_dataBase = dataBasePointer;
+	_dataBase = pDataBasePointer;
 }
 
 /****************** 
@@ -37,14 +37,14 @@ String RequestBuilder::buildRequest(HttpExchangeType type, String host, String p
 
 String RequestBuilder::formRequestHeaders(String host, String port, String target) {
 	String headers = String(F("")); 
-	headers += F("PUT ") + target + F(" HTTP/1.1"); // TODO target - should be in memory
+	headers += (String)F("PUT ") + target + F(" HTTP/1.1");
 	headers += END_OF_STRING;
 	headers += F("Host: ");
 	headers += host + F(":");
 	headers += port;
 	headers += END_OF_STRING;	
 	headers += F("Content-Length: ");
-	headers += _bodyLength.length(); // TODO from arguments or class fields
+	headers += _bodyLength;
 	headers += END_OF_STRING;
 	headers += F("Content-Type: application/json");
 	headers += END_OF_STRING;
@@ -82,32 +82,35 @@ String RequestBuilder::formRequestBody(HttpExchangeType type, String login, Stri
 }
 
 String RequestBuilder::buildDevicesBlockJson(HttpExchangeType type) {
-	requestJson += jsonKeyWrapper(String(DEVICES_STATES_BLOCK_KEY));
-	requestJson += F("["); // end devices array brace
+	String devicesJson = "";
+	devicesJson += jsonKeyWrapper(String(DEVICES_STATES_BLOCK_KEY));
+	devicesJson += F("["); // begin of devices array brace
 	// the better thing is to form list of data info objects and pass here
 	int deviceCount = _dataBase->getDeviceCount();
 	
 	if (deviceCount) {
 		uint8_t* deviceIds = new uint8_t[deviceCount];
 		_dataBase->fetchIds(deviceIds);
-		for(int i = 0; i < deviceCount; i++) {
+		for(uint8_t i = 0; i < deviceCount; i++) {
 			switch (type) {
 				case DATA: 
-					requestJson += buildDeviceDataJson((char) deviceIds[i]); break;
+					devicesJson += buildDeviceDataJson(deviceIds[i]); break;
 				case REG:
-					requestJson += buildDeviceRegistratonJson((char) deviceIds[i]); break;
+					devicesJson += buildDeviceRegistratonJson(deviceIds[i]); break;
 			}
 			
 			if (i < deviceCount - 1) {
-				requestJson += F(",");
+				devicesJson += F(",");
 			}			
 		}
 		delete[] deviceIds;
 	}	
-	requestJson += F("]"); // end devices array brace
+	devicesJson += F("]"); // end of devices array brace
+	
+	return devicesJson;
 }
 
-String RequestBuilder::buildDeviceDataJson(char id) {
+String RequestBuilder::buildDeviceDataJson(uint8_t id) {
 	float ack = _dataBase->getDeviceAck(id);
 	bool adjustable = _dataBase->getDeviceAdj(id);
 	float controlValue = _dataBase->getDeviceControlValue(id);
@@ -115,7 +118,7 @@ String RequestBuilder::buildDeviceDataJson(char id) {
 	
 	String deviceJsonString = String("{");
 	deviceJsonString += jsonKeyWrapper(String(DEVICE_ID_KEY));
-	deviceJsonString += (uint8_t) id;
+	deviceJsonString += id;
 	deviceJsonString += F(",");
 	deviceJsonString += jsonKeyWrapper(String(DEVICE_ACK_KEY));
 	deviceJsonString += ack; //TODO format
@@ -133,7 +136,7 @@ String RequestBuilder::buildDeviceDataJson(char id) {
 	return deviceJsonString;
 }
 
-String RequestBuilder::buildDeviceRegistratonJson(char id) {	
+String RequestBuilder::buildDeviceRegistratonJson(uint8_t id) {	
 	float min = 0.0; //STUB
 	float max = 1.0; //STUB
 	float discrete = 1.0; //STUB
@@ -142,8 +145,8 @@ String RequestBuilder::buildDeviceRegistratonJson(char id) {
 	bool signaling = false; //STUB
 	
 	String deviceJsonString = String("{");
-	deviceJsonString += jsonKeyWrapper(String(DEVICE_ID_KEY_NAME));
-	deviceJsonString += (uint8_t) id;
+	deviceJsonString += jsonKeyWrapper(String(DEVICE_ID_KEY));
+	deviceJsonString += id;
 	deviceJsonString += F(",");
 	deviceJsonString += jsonKeyWrapper(String(DEVICE_REG_MIN_KEY));
 	deviceJsonString += min; //TODO format

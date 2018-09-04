@@ -30,11 +30,12 @@ class DataBase;
 class WifiManager : public Object
 {
 public:
-	WifiManager(int _freq);
+	WifiManager(int _freq, DataBase* pDataBase);
 	~WifiManager();
 	
-	// interface
-
+	static void parseHttpResponse(ESP8266proConnection* connection, char* buffer, int length, boolean completed);
+	
+	// public interface
 	bool executeRequest(HttpExchangeType type);
 	void fetchFindedWANs(String*);
 	int getFindedWANsCount();
@@ -51,11 +52,16 @@ private:
 	RequestBuilder* _responseBuilder;
 	ResponseParser* _responseParser;
 	
+	String _SSID;
+	String _ssidPassword;
+	
 	String _host;
 	String _port;
-	String _target:
-	String _SSID;
+	String _target;
+
+	String _login;
 	String _password;
+	
 	String _boardUID;
 	
 	String _serverAdress;
@@ -67,7 +73,7 @@ private:
 	long _serverPort;
 	int _findedWANsCount;
 	
-	void init(int _freq);
+	void init(int _freq, DataBase* pDataBase);
 	void initWifi(int _freq);
 	void initTcpConnection();
 };

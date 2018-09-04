@@ -4,20 +4,19 @@
 #ifndef _DeviceData_H_
 #define _DeviceData_H_
 
+#if defined(ARDUINO) && ARDUINO >= 100
+	#include "Arduino.h"
+#else
+	#include "WProgram.h"
+#endif
+
 //#define DEBUG
 
 class DeviceData
 {
 public:
-	DeviceData(String& _payload);
+	DeviceData();
 	~DeviceData();
-	
-	String getPayload();
-	void setPayload(String& _payload);
-	
-	
-private:
-	uint8_t _id;
 };
 
 #endif

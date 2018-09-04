@@ -2,11 +2,12 @@
 // (c) Ivanov Aleksandr, 2018
 
 #include "ResponseParser.h"
+#include <MemoryFree.h>
 
 
-ResponseParser::ResponseParser(DataBase* dataBasePointer)
+ResponseParser::ResponseParser(DataBase* pDataBasePointer)
 {
-	init(dataBasePointer);
+	init(pDataBasePointer);
 	Serial.println("ResponseParser()!"); //TEST
 }
 
@@ -14,9 +15,9 @@ ResponseParser::~ResponseParser(){
 	resetResponse();
 }
 
-void ResponseParser::init(DataBase* dataBasePointer){
-	_dataBase = dataBasePointer;
-	_deviceInfoArray = new DataBase::DeviceInfo[_dataBase->getDeviceCount()];
+void ResponseParser::init(DataBase* pDataBasePointer){
+	_dataBase = pDataBasePointer;
+	_deviceInfoArray = new DeviceInfo*[_dataBase->getDeviceCount()];
 	_goodParsing = false;
 }
 
@@ -47,7 +48,7 @@ bool ResponseParser::parseResponse(HttpExchangeType type) {
 		response = "";
 		headers = "";
 		bool result = parseBody(type);
-		if (result == true && type == ) {
+		if (result == true && type == DATA) {
 			_goodParsing = true;
 			saveData();
 			Serial.println(F("<<<<<<<<<<<<Good saving of new data>>>>>>>>>>>>"));
@@ -57,6 +58,14 @@ bool ResponseParser::parseResponse(HttpExchangeType type) {
 	} else {
 		return false;
 	}
+}
+
+void ResponseParser::saveData() {
+	if (_goodParsing) {
+		for (uint8_t id=0; id < _dataBase->getDeviceCount(); id++) {
+			_dataBase->setDeviceControlValue(id, _deviceInfoArray[id]->getControlVal());
+		}	
+	}	
 }
 
 /********************
@@ -81,7 +90,7 @@ bool ResponseParser::parseBody(HttpExchangeType type) {
 		parsingResult = false;
 	}
 	body = "";
-	Serial.println((String(F("Free memory after parseBody>> ")) + freeMemory());
+	Serial.println(String(F("Free memory after parseBody>> ")) + freeMemory());
 	
 	return parsingResult;
 }
@@ -124,21 +133,24 @@ bool ResponseParser::findAndSaveData() {
 	return true;
 }
 
-int ResponseParser::findAndRememberDeviceValueByKey(int id, String key, int begPos) {
+int ResponseParser::findAndRememberDeviceValueByKey(uint8_t id, String key, int begPos) {
 	if (begPos == -1) return -1;
+	
 	String value = "";
-	if (!findAndFetchValueByKey(key, value)) {
-		return -1;
-	}	
+	int dataEndPos = findAndFetchValueByKey(key, begPos, value);
+	
+	if (dataEndPos == -1) return -1;
+	
 	matchAndRememberDeviceElement(id, key, value);
 	// Serial.println((String)">>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + key + " >> " + value);
 	
 	return dataEndPos;
 }
 
-bool ResponseParser::findAndFetchValueByKey(String key, String& value) {
-	int keyPos = body.indexOf(key, begPos);	
-	if (keyPos == -1) return false;
+int ResponseParser::findAndFetchValueByKey(String key, int begPos, String& value) {
+	int endBracePos = body.indexOf("}", begPos);
+	int keyPos = body.indexOf(key, begPos);	//ERROR
+	if (keyPos == -1 || endBracePos < keyPos) return -1;
 	
 	int colonBegPos = keyPos + strlen(key.c_str());
 	int colonPos = body.indexOf(":", colonBegPos);
@@ -146,7 +158,7 @@ bool ResponseParser::findAndFetchValueByKey(String key, String& value) {
 	int endPos1 = body.indexOf(",", colonPos + 1);
 	int endPos2 = body.indexOf("}", colonPos + 1);
 	
-	if (endPos1 == -1 && endPos2 == -1) return false;
+	if (endPos1 == -1 && endPos2 == -1) return -1;
 	
 	int dataBegPos = colonPos + 1;
 	int dataEndPos;
@@ -160,45 +172,38 @@ bool ResponseParser::findAndFetchValueByKey(String key, String& value) {
 	value = body.substring(dataBegPos, dataEndPos);
 	value.trim();
 	
-	if (strcmp(value, "") == 0)) {
-		return false;
+	if (strcmp(value.c_str(), "") == 0) {
+		return -1;
 	}
 	
-	return true;
+	return dataEndPos;
 }
 
-void ResponseParser::matchAndRememberDeviceElement(int id, String key, String value) {
-	if (strcmp(key, String(DEVICE_ID_KEY)) == 0) {
-		_deviceInfoArray[id] = new DataBase::DeviceInfo((char) id);		
-	} else if (strcmp(key, String(DEVICE_ACK_KEY)) == 0) {
-		float val = atof(value); // TODO string is not validated
+void ResponseParser::matchAndRememberDeviceElement(uint8_t id, String key, String value) {
+	const char* key_char = key.c_str();
+	if (strcmp(key_char, String(DEVICE_ID_KEY).c_str()) == 0) {
+		_deviceInfoArray[id] = new DeviceInfo(id);		
+	} else if (strcmp(key_char, String(DEVICE_ACK_KEY).c_str()) == 0) {
+		float val = atof(value.c_str()); // TODO string is not validated
 		_deviceInfoArray[id]->setAck(val);
-	} else if (strcmp(key, String(DEVICE_ADJUSTABLE_KEY)) == 0) {
-		bool val = strcmp(value, "true") == 0 ? true : false;
+	} else if (strcmp(key_char, String(DEVICE_ADJUSTABLE_KEY).c_str()) == 0) {
+		bool val = strcmp(value.c_str(), "true") == 0 ? true : false;
 		_deviceInfoArray[id]->setAdjustable(val);
-	} else if (strcmp(key, String(DEVICE_CONTROL_VALUE_KEY)) == 0) {
-		float val = atof(value);
+	} else if (strcmp(key_char, String(DEVICE_CONTROL_VALUE_KEY).c_str()) == 0) {
+		float val = atof(value.c_str());
 		_deviceInfoArray[id]->setControlVal(val);
-	} else if (strcmp(key, String(DEVICE_RADIO_ERROR_KEY)) == 0) {		
-		bool val = strcmp(value, "true") == 0 ? true : false;
+	} else if (strcmp(key_char, String(DEVICE_RADIO_ERROR_KEY).c_str()) == 0) {		
+		bool val = strcmp(value.c_str(), "true") == 0 ? true : false;
 		_deviceInfoArray[id]->setRadioError(val);		
 	}
 }
 
-void ResponseParser::saveData() {
-	if (_goodParsing) {
-		for (uint8_t i=0; i < _dataBase->getDeviceCount(); i++) {
-			_dataBase->setDeviceControlValue((char) i, _deviceInfoArray[id]->getControlVal());
-		}	
-	}	
-}
-
 bool ResponseParser::findAndAnalizeRegMessage() {
 	String value = "";
-	if (!findAndFetchValueByKey(wrapElement(String(REGISTRATION_MESSAGE_KEY)), value)) {
+	if (!findAndFetchValueByKey(wrapElement(String(REGISTRATION_MESSAGE_KEY)), 0, value)) {
 		return false;
 	}
-	if (strcmp(value, "OK") == 0) {
+	if (strcmp(value.c_str(), "OK") == 0) {
 		return true;
 	} else {
 		return false;

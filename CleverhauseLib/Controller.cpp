@@ -126,6 +126,7 @@ void Controller::sendToServer(HttpExchangeType type) {
 			repeats++;
 			initWifi();
 		}
+	}
 	while (!_isWifiConnectionOk && repeats < numOfrepeats);
 }
 
@@ -435,7 +436,7 @@ void Controller::setDataBase(DataBase* pDataBase) {
 }
 
 void Controller::setWifiManager(WifiManager* pWifiManager) {
-	Serial.println("Controller::setWifiManager initWifi()");
+	Serial.println(F("Controller::setWifiManager initWifi()"));
 	_wifiManager = pWifiManager;
 	initWifi();
 }

@@ -11,14 +11,3 @@ String body = "";
 boolean currentLineIsBlank = true;
 boolean isInsideBody = false;
 
-/*****************************
-Here parsing of RESPONSE
-******************************/
-
-void WifiManager::parseHttpResponse(ESP8266proConnection* connection,
-                   char* buffer, int length, boolean completed) {
-	/*
-	Serial.println(F("RESPONSE"));
-	*/
-	response += buffer;
-}

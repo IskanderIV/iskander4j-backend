@@ -42,7 +42,7 @@ void setup() {
   eepromMngr = new EepromManager();
   dataBase = new DataBase(eepromMngr);
   wifiMngr = new WifiManager(9600, dataBase);
-  rfMngr = new RFManager();
+  rfMngr = new RFManager(dataBase);
   inputer = new Inputer();
   chooser = new Chooser();
   lcd = new TwoStringLcdDisplay();
@@ -138,13 +138,8 @@ void setup() {
   controller->setRFManager(rfMngr);
   controller->setMenuToActionMap(menuToActionMap);
   Serial.println(F("We set controller!"));//TEST
-
-  Serial.println(F("We set dataBase!"));//TEST
- 
+  Serial.println(F("We set dataBase!"));//TEST 
   Serial.println(F("We set wifi!"));//TEST
-  
-  rfMngr->setDataBase(dataBase);
-  rfMngr->setEepromManager(eepromMngr);
   Serial.println(F("We set rf!"));//TEST
 }
 

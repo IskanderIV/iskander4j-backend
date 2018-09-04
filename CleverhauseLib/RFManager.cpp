@@ -119,7 +119,7 @@ void RFManager::processDeveices(){
 		Serial.print("Device #");
 		Serial.print(deviceId);
 		Serial.println(" is maybe SWITCHED OFF");
-		_dataBase->setDeviceRFErr((char) deviceId, true);
+		_dataBase->setDeviceRFErr(deviceId, true);
 	} 	// end for
 	Serial.println("RFManager::processDeveices() End");
 }
@@ -135,7 +135,7 @@ bool RFManager::hasInitError() {
 bool RFManager::isDeviceKnown(uint8_t from_id) {
 	bool existedDevice = _dataBase->isDeviceExist(from_id);
 	if (existedDevice && dataInfoUnion.dataInfo._uniqID == getUniqID()) {
-		Serial.println(F("BAZA: such device with id=") + from_id + F(" is exist"));//TEST
+		Serial.println(String(F("BAZA: such device with id=")) + from_id + F(" is exist"));//TEST
 		return true;
 	}
 	return false;
@@ -154,7 +154,7 @@ void RFManager::prepareDataForKnowingTransmit(uint8_t pDeviceId) {
 void RFManager::prepareDataForWorkingTransmit(uint8_t pDeviceId) {
 	dataInfoUnion.dataInfo._uniqID = getUniqID();
 	dataInfoUnion.dataInfo._deviceID = pDeviceId;
-	dataInfoUnion.dataInfo._deviceControl = _dataBase->getDeviceControlValue((char) pDeviceId);
+	dataInfoUnion.dataInfo._deviceControl = _dataBase->getDeviceControlValue(pDeviceId);
 	
 	// dataInfoUnion.dataInfo._deviceControl = blink[pDeviceId] ? 1.0 : 0.0; //STUB
 	Serial.println(String(F("Control value = ")) + dataInfoUnion.dataInfo._deviceControl);	
@@ -163,8 +163,8 @@ void RFManager::prepareDataForWorkingTransmit(uint8_t pDeviceId) {
 }
 
 void RFManager::saveDeviceData(uint8_t pDeviceId) {
-	_dataBase->setDeviceAck((char) pDeviceId, dataInfoUnion.dataInfo._deviceAck);
-	_dataBase->setDeviceRFErr((char) pDeviceId, dataInfoUnion.dataInfo._radioError);
+	_dataBase->setDeviceAck(pDeviceId, dataInfoUnion.dataInfo._deviceAck);
+	_dataBase->setDeviceRFErr(pDeviceId, dataInfoUnion.dataInfo._radioError);
 }
 
 void RFManager::registerNewDevice(uint8_t pDeviceId) {

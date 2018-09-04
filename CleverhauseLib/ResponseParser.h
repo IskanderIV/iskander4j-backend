@@ -10,12 +10,13 @@
 #include "HttpJsonKeys.h"
 
 class DataBase;
-class DataBase::DeviceInfo;
+// class DataBase::DeviceInfo;
+typedef DataBase::DeviceInfo DeviceInfo;
 
 class ResponseParser
 {
 public:
-	ResponseParser();
+	ResponseParser(DataBase* pDataBasePointer);
 	~ResponseParser();
 	
 	// public interfaces
@@ -25,20 +26,20 @@ public:
 	
 private:
 	DataBase* _dataBase;
-	DataBase::DeviceInfo* _deviceInfoArray;
+	DeviceInfo** _deviceInfoArray;
 	
 	bool _goodParsing;
 	
-	void init();	
+	void init(DataBase* pDataBasePointer);	
 	
 	bool parseHeaders();
 	bool parseHeader();
 	bool parseBody(HttpExchangeType type);
 	bool limitBodyToJson();
 	bool findAndSaveData();
-	int findAndRememberDeviceValueByKey(int id, String key, int begPos);
-	bool findAndFetchValueByKey(String key, String& value);
-	void matchAndRememberDeviceElement(int id, String key, String value);
+	int findAndRememberDeviceValueByKey(uint8_t id, String key, int begPos);
+	int findAndFetchValueByKey(String key, int begPos, String& value);
+	void matchAndRememberDeviceElement(uint8_t id, String key, String value);
 	bool findAndAnalizeRegMessage();
 	String wrapElement(String key);
 };
