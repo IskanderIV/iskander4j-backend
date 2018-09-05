@@ -9,11 +9,7 @@
 #define LED_BLINK_RARE_FREG  1.0
 #define LED_BLINK_OFTEN_FREG 0.1
 
-#if defined(ARDUINO) && ARDUINO >= 100
-	#include "Arduino.h"
-#else
-	#include "WProgram.h"
-#endif
+#include "DeviceDataBase.h"
 
 //#define DEBUG
 
@@ -27,13 +23,14 @@ enum LedState {
 class Signalisator
 {
 private:
-	uint8_t  _pin;
+	uint8_t _pin;
 	LedState _prevState;
 	unsigned long _previousMillis;
 	int _ledState;
+	DeviceDataBase* _dataBase;
 	
 public:
-	Signalisator(uint8_t _pin = LED_PIN_DEF, DeviceDataBase* pDataBase);
+	Signalisator(DeviceDataBase* pDataBase = nullptr);
 	~Signalisator();
 	
 	void process(LedState currState);	
@@ -41,7 +38,7 @@ public:
 private:
 	//methods
 	void  init();
-	void  blink(LedState _freq);
+	void  blink(float interval);
 	void  switchOn();
 	void  switchOff();
 };

@@ -3,9 +3,7 @@
 
 #include "Signalisator.h"
 
-Signalisator::Signalisator(uint8_t pPin, DeviceDataBase* pDataBase): 
-											_pin(pPin),
-											_dataBase(pDataBase) {
+Signalisator::Signalisator(DeviceDataBase* pDataBase): _dataBase(pDataBase) {
 	init();
 }
 
@@ -13,10 +11,11 @@ Signalisator::~Signalisator() {
 }
 
 void Signalisator::init() {
+	_pin = LED_PIN_DEF;
 	pinMode(_pin, OUTPUT);
 	_prevState = ls_OFF;
-	unsigned long _previousMillis = 0;	
-	int _ledState = LOW;
+	_previousMillis = 0;
+	_ledState = LOW;
 }
 
 /*****************
@@ -25,7 +24,7 @@ void Signalisator::init() {
 
 
 void Signalisator::process(LedState currState) {	
-	switch(neededState) {
+	switch(currState) {
 		case ls_BURN: {
 			switchOn(); break;
 		} 
@@ -49,8 +48,8 @@ void Signalisator::blink(float interval) {
 	unsigned long currentMillis = millis();
 	
 	
-    if (currentMillis - previousMillis >= interval) {
-        previousMillis = currentMillis;
+    if (currentMillis - _previousMillis >= interval) {
+        _previousMillis = currentMillis;
 		if (_ledState == LOW) {
 			_ledState = HIGH;
 		} else {

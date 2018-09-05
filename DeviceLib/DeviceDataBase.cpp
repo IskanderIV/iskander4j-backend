@@ -12,7 +12,7 @@ DeviceDataBase::~DeviceDataBase() {
 
 void DeviceDataBase::init() {
 	_eepromMngr = new DeviceEepromManager();
-	_ack = 0.0;
+	_deviceAck = 0.0;
 	_radioError = false;
 	
 	if (_eepromMngr) {
@@ -22,34 +22,34 @@ void DeviceDataBase::init() {
 
 void DeviceDataBase::initFromEeprom() {
 	// boardUID
-	_boardUID = _eepromMngr->fetchBoardUID(eepr_deviceMin);
+	_boardUID = _eepromMngr->fetchBoardUID();
 	
 	// id
-	_deviceId = _eepromMngr->fetchDeviceFloat(eepr_deviceMin);
+	_deviceId = _eepromMngr->fetchFloat(eepr_deviceMin);
 	
 	// min
-	_min = _eepromMngr->fetchDeviceFloat(eepr_deviceMin);
+	_min = _eepromMngr->fetchFloat(eepr_deviceMin);
 
 	// max
-	_max = _eepromMngr->fetchDeviceFloat(eepr_deviceMax);
+	_max = _eepromMngr->fetchFloat(eepr_deviceMax);
 
 	// discrete
-	_discrete = _eepromMngr->fetchDeviceFloat(eepr_deviceDiscrete);
+	_discrete = _eepromMngr->fetchFloat(eepr_deviceDiscrete);
 
 	// deviceCtrl
-	_controlValue = _eepromMngr->fetchDeviceFloat(eepr_deviceCtrl);
+	_controlValue = _eepromMngr->fetchFloat(eepr_deviceCtrl);
 
 	// deviceDigital
-	_digital = _eepromMngr->fetchDeviceBool(eepr_deviceDigitalBool);
+	_digital = _eepromMngr->fetchBool(eepr_deviceDigitalBool);
 
 	// deviceAnalog
-	_analog = _eepromMngr->fetchDeviceBool(eepr_deviceAnalogBool);
+	_analog = _eepromMngr->fetchBool(eepr_deviceAnalogBool);
 
 	// deviceAdjustable
-	_adjustable = _eepromMngr->fetchDeviceBool(eepr_deviceAdjustableBool);
+	_adjustable = _eepromMngr->fetchBool(eepr_deviceAdjustableBool);
 
 	// deviceRotatable
-	_rotatable = _eepromMngr->fetchDeviceBool(eepr_deviceRotatableBool);
+	_rotatable = _eepromMngr->fetchBool(eepr_deviceRotatableBool);
 
 }
 
@@ -126,7 +126,7 @@ float DeviceDataBase::getDeviceControlValue() {
 
 void DeviceDataBase::setDeviceControlValue(float pControlValue) {
 	if (getDeviceControlValue() != pControlValue) {
-		_eepromMngr->saveFloat(eepr_deviceCtrl, _pControlValue);
+		_eepromMngr->saveFloat(eepr_deviceCtrl, pControlValue);
 	}
 	_controlValue = pControlValue;
 }
@@ -158,7 +158,7 @@ bool DeviceDataBase::getDeviceAdj() {
 }
 
 void DeviceDataBase::setDeviceAdj(bool pAdj) {
-	if (isDeviceAdj() != pAdj) {
+	if (getDeviceAdj() != pAdj) {
 		_eepromMngr->saveBool(eepr_deviceAdjustableBool, pAdj);
 	}
 	_adjustable = pAdj;
@@ -169,7 +169,7 @@ bool DeviceDataBase::getDeviceRotatable() {
 }
 
 void DeviceDataBase::setDeviceRotatable(bool pRotatable) {
-	if (isDeviceAdj() != pRotatable) {
+	if (getDeviceRotatable() != pRotatable) {
 		_eepromMngr->saveBool(eepr_deviceRotatableBool, pRotatable);
 	}
 	_rotatable = pRotatable;

@@ -9,11 +9,7 @@
 #define READ_VALUE_MIN 0
 #define VOLTAGE_MAX 5
 
-#if defined(ARDUINO) && ARDUINO >= 100
-	#include "Arduino.h"
-#else
-	#include "WProgram.h"
-#endif
+#include "DeviceDataBase.h"
 
 class DeviceSensor
 {
@@ -22,7 +18,7 @@ private:
 	uint8_t _pin;
 	
 public:
-	DeviceSensor(uint8_t _pin = SENSOR_PIN_DEF, DeviceDataBase* pDataBase);
+	DeviceSensor(DeviceDataBase* pDataBase = nullptr);
 	~DeviceSensor();
 	
 	float measure();

@@ -2,11 +2,6 @@
 // (c) Ivanov Aleksandr, 2018
 
 #include "DeviceController.h"
-#include "DeviceRFManager.h"
-#include "DeviceDataBase.h"
-#include "ActuatorInterface.h"
-#include "DeviceSensor.h"
-#include "Signalisator.h"
 
 DeviceController::DeviceController(DeviceButtonsManager* pBtnManager) : _btnManager(pBtnManager) {	
 	init();
@@ -19,10 +14,10 @@ DeviceController::~DeviceController(){
 
 void DeviceController::init() {
 	_dataBase = new DeviceDataBase();
-	_rfManager = new DeviceRFManager(dataBase);
-	_actuator = new DeviceDigitalActuator(dataBase);
-	_sensor = new DeviceSensor(dataBase);
-	_signalisator = new Signalisator(dataBase);
+	_rfManager = new DeviceRFManager(_dataBase);
+	_actuator = new DeviceDigitalActuator(_dataBase);
+	_sensor = new DeviceSensor(_dataBase);
+	_signalisator = new Signalisator(_dataBase);
 	
 	_workState = false;
 	_searchState = false;
@@ -48,20 +43,6 @@ void DeviceController::processLoop() {
 	// }	
 }
 
-void DeviceController::doWork() {
-	_rfManager->sendInfo();
-	_actuator->process();
-	_signalisator->process(ls_BLINK_RARE);
-}
-
-void DeviceController::doIdentify() {
-	if(_rfManager->identifyDevice()) {
-		_signalisator->process(ls_BLINK_OFTEN);
-		delay(500);
-		_signalisator->process(ls_OFF);
-	}
-}
-
 /******************
 * private methods *
 *******************/
@@ -84,5 +65,19 @@ void DeviceController::processButtons() {
 				break;
 			}
 		}
+	}
+}
+
+void DeviceController::doWork() {
+	_rfManager->sendInfo();
+	_actuator->process();
+	_signalisator->process(ls_BLINK_RARE);
+}
+
+void DeviceController::doIdentify() {
+	if(_rfManager->identifyDevice()) {
+		_signalisator->process(ls_BLINK_OFTEN);
+		delay(500);
+		_signalisator->process(ls_OFF);
 	}
 }

@@ -10,6 +10,7 @@
 // #define DUTY_CYCLE_MIN 0 // use it only with analog device
 
 #include "ActuatorInterface.h"
+#include "DeviceDataBase.h"
 
 //#define DEBUG
 
@@ -23,7 +24,7 @@ private:
 	// bool     _isPWM; // ??? use it only with analog device
 	
 public:
-	DeviceDigitalActuator(uint8_t _pin = ACTUATOR_PIN_DEF, DeviceDataBase* pDataBase);
+	DeviceDigitalActuator(DeviceDataBase* pDataBase = nullptr);
 	~DeviceDigitalActuator();
 	
 	virtual void process();

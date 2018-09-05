@@ -19,13 +19,13 @@ enum EepromPlaceName {
 	eepr_baseId,
 	eepr_deviceId,
 	eepr_deviceCtrl,
-	eepr_deviceMins,
-	eepr_deviceMaxs,
+	eepr_deviceMin,
+	eepr_deviceMax,
 	eepr_deviceDiscrete,
-	eepr_deviceDigital,
-	eepr_deviceAnalog,
-	eepr_deviceAdjustable,
-	eepr_deviceRotatable
+	eepr_deviceDigitalBool,
+	eepr_deviceAnalogBool,
+	eepr_deviceAdjustableBool,
+	eepr_deviceRotatableBool
 };
 
 struct MemoryDTO {
@@ -55,6 +55,7 @@ public:
 	float fetchFloat(EepromPlaceName pName);
 	bool fetchBool(EepromPlaceName pName);
 	long fetchBoardUID();
+	uint8_t fetchDeviceId();
 	
 private:
 	union MemoryDtoUnion {  

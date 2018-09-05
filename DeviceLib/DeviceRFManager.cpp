@@ -4,10 +4,9 @@
 #include "DeviceRFManager.h"
 #include "DeviceDataBase.h"
 
-
 DeviceRFManager::DeviceRFManager(DeviceDataBase* pDataBase): 
 						_driver(RADIO_FREG, RADIO_RX_PIN, RADIO_TX_PIN), 
-						_radioMngr(_driver, INIT_ADRESS),
+						_radioMngr(_driver, 1),
 						_dataBase(pDataBase) {
 	init();
 	Serial.println("DeviceRFManager()!");//TEST
@@ -17,13 +16,11 @@ DeviceRFManager::~DeviceRFManager() {
 }
 
 void DeviceRFManager::init() {
-	if (_radioMngr) {
-		_initError = !_radioMngr.init();
-		if (!_initError) {
-			uint8_t savedDeviceId = _dataBase->getDeviceId();
-			_radioMngr.setThisAddress(savedDeviceId);
-			_radioMngr.setHeaderFrom(savedDeviceId);		
-		}
+	_initError = !_radioMngr.init();
+	if (!_initError) {
+		uint8_t savedDeviceId = _dataBase->getDeviceId();
+		_radioMngr.setThisAddress(savedDeviceId);
+		_radioMngr.setHeaderFrom(savedDeviceId);		
 	} else {
 		Serial.println(F("Init RF error. Can't set Adresses and Headers from eeprom"));
 	}	
@@ -79,7 +76,7 @@ bool DeviceRFManager::identifyDevice() {
 
 
 long DeviceRFManager::getBoardUID() {
-	return _dataBase->getUniqBaseID();
+	return _dataBase->getBoardUID();
 }
 
 // TODO control
@@ -108,12 +105,12 @@ bool DeviceRFManager::isDataMessageForMe(uint8_t from) {
 	return false;
 }
 
-void RFManager::updateControlFromBoard() {
+void DeviceRFManager::updateControlFromBoard() {
 	_dataBase->setDeviceControlValue(dataInfoUnion.dataInfo._deviceControl);
 	Serial.println(String(F("Control value = ")) + _dataBase->getDeviceControlValue());
 }
 
-void RFManager::fixWrongRFConnection() {
+void DeviceRFManager::fixWrongRFConnection() {
 	// here could be realised counter of failed connections
 	Serial.println(F("Send Failed. RF connection is failed "));
 }

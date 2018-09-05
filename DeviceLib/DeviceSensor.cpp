@@ -3,9 +3,7 @@
 
 #include "DeviceSensor.h"
 
-DeviceSensor::DeviceSensor(uint8_t pPin, DeviceDataBase* pDataBase): 
-											_pin(pPin),
-											_dataBase(pDataBase) {
+DeviceSensor::DeviceSensor(DeviceDataBase* pDataBase): _dataBase(pDataBase) {
 	init();
 }
 
@@ -13,6 +11,7 @@ DeviceSensor::~DeviceSensor() {
 }
 
 void DeviceSensor::init() {
+	_pin = SENSOR_PIN_DEF;
 	pinMode(_pin, INPUT);
 }
 

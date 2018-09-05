@@ -3,9 +3,7 @@
 
 #include "DeviceDigitalActuator.h"
 
-DeviceDigitalActuator::DeviceDigitalActuator(uint8_t pPin, DeviceDataBase* pDataBase): 
-													_pin(pPin) 
-													_dataBase(pDataBase) {
+DeviceDigitalActuator::DeviceDigitalActuator(DeviceDataBase* pDataBase): _dataBase(pDataBase) {
 	init();
 }
 
@@ -13,6 +11,7 @@ DeviceDigitalActuator::~DeviceDigitalActuator() {
 }
 
 void DeviceDigitalActuator::init() {
+	_pin = ACTUATOR_PIN_DEF;
 	pinMode(_pin, OUTPUT);
 	_prevState = getSavedControlState();
 	if (_prevState == 1) {

@@ -5,13 +5,12 @@
 #define _DeviceController_H_
 
 #include "DeviceButtonsManager.h"
-#include "DeviceEepromManager.h"
-
-#if defined(ARDUINO) && ARDUINO >= 100
-	#include "Arduino.h"
-#else
-	#include "WProgram.h"
-#endif
+#include "DeviceRFManager.h"
+#include "DeviceDataBase.h"
+#include "ActuatorInterface.h"
+#include "DeviceDigitalActuator.h"
+#include "DeviceSensor.h"
+#include "Signalisator.h"
 
 //#define DEBUG
 class DeviceButtonsManager;
@@ -37,7 +36,7 @@ private:
 	bool _searchState;
 	
 public:
-	DeviceController();
+	DeviceController(DeviceButtonsManager* pBtnManager);
 	~DeviceController();
 	
 	void processLoop();
@@ -55,10 +54,7 @@ private:
 	void init();
 	void doWork();
 	void doIdentify();
-	//void saveInputTextToEeprom(String& _activeMenuName, String& _inputText);
-	//EepromPlaceName mapActionToEepromPlace(Action);
 	void processButtons();
-	//void searhDevices();
 };
 
 #endif

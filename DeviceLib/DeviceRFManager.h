@@ -56,16 +56,14 @@ public:
 	// interface impl for controllers events
 	bool identifyDevice();
 	void sendInfo();
-	
-	uint8_t getDeviceID();
-	void setNewAdressAndHeadersInfo(uint8_t deviceNumber);
 
 private:
 	//methods
 	void init();
 	long getBoardUID();
-	bool isDataMessageForMe(uint8_t from);
 	void updateStructureData();
+	bool isDataMessageForMe(uint8_t from);
+	void updateControlFromBoard();	
 	void fixWrongRFConnection();
 	void saveBoardData();
 	void prepareDataForTransmit();

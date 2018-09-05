@@ -4,12 +4,6 @@
 #ifndef _DeviceDataBase_H_
 #define _DeviceDataBase_H_
 
-#if defined(ARDUINO) && ARDUINO >= 100
-	#include "Arduino.h"
-#else
-	#include "WProgram.h"
-#endif
-
 #include "DeviceEepromManager.h"
 
 class DeviceEepromManager;
@@ -33,7 +27,7 @@ private:
 	bool 	_radioError;
 	
 public:
-	DeviceDataBase(DeviceEepromManager* _eepromMngr);
+	DeviceDataBase();
 	~DeviceDataBase();
 
 	long getBoardUID(); //memorized
@@ -68,7 +62,7 @@ public:
 	
 private:
 	//methods
-	void init(DeviceEepromManager* pEepromMngr);
+	void init();
 	void initFromEeprom();
 };
 
