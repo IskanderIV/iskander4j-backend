@@ -19,7 +19,6 @@
 //#define DEBUG
 class RH_ASK;
 class RHReliableDatagram;
-class EepromManager;
 class DataBase;
 
 struct DataInfo {
@@ -37,7 +36,7 @@ struct DataInfo {
 	bool  _radioError; //INPUT
 };
 
-extern uint8_t buf[RH_ASK_MAX_MESSAGE_LEN]; // TODO control this in cpp
+extern uint8_t buf[RH_ASK_MAX_MESSAGE_LEN]; // TODO try to experiment with that
 
 class RFManager : public Object
 {

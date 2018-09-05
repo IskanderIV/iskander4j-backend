@@ -5,14 +5,7 @@
 #define _DeviceEepromManager_H_
 
 #define MEMORY_BEGIN_POSITION 1
-#define BASE_ID_NUM_BYTES 4 //long
 #define DEVICE_ID_LEN 1 //BYTE
-#define WIFI_SSID_MAX_LEN 80
-#define WIFI_PSSWD_MAX_LEN 30
-#define TCP_LOGIN_MAX_LEN 50
-#define TCP_PSSWD_MAX_LEN 30
-#define SERVER_ADRESS_MAX_LEN 30
-#define SERVER_PORT_NUM_BYTES 4 //long
 
 #if defined(ARDUINO) && ARDUINO >= 100
 	#include "Arduino.h"
@@ -24,12 +17,28 @@
 
 enum EepromPlaceName {
 	eepr_baseId,
-	eepr_deviceId
+	eepr_deviceId,
+	eepr_deviceCtrl,
+	eepr_deviceMins,
+	eepr_deviceMaxs,
+	eepr_deviceDiscrete,
+	eepr_deviceDigital,
+	eepr_deviceAnalog,
+	eepr_deviceAdjustable,
+	eepr_deviceRotatable
 };
 
 struct MemoryDTO {
-		long _uniqID;
-		uint8_t _deviceId;		
+	long _uniqID;
+	uint8_t _deviceId;
+	float _deviceCtrl;
+	float _deviceMin;
+	float _deviceMax;
+	float _deviceDiscrete;
+	bool _deviceDigitalBool;
+	bool _deviceAnalogBool;
+	bool _deviceAdjustableBool;
+	bool _deviceRotatableBool;		
 };
 
 class DeviceEepromManager
@@ -38,9 +47,22 @@ public:
 	DeviceEepromManager();
 	~DeviceEepromManager();
 	
-	// interface impl for controllers events
-	void save(EepromPlaceName _name, long _value);
-	long fetch(EepromPlaceName _name);
+	// interface
+	void saveBoardUID(long pData);
+	bool saveFloat(EepromPlaceName pName, float pData);
+	bool saveBool(EepromPlaceName pName, bool pFlag);
+	void saveDeviceId(uint8_t id);
+	float fetchFloat(EepromPlaceName pName);
+	bool fetchBool(EepromPlaceName pName);
+	long fetchBoardUID();
+	
+private:
+	union MemoryDtoUnion {  
+		MemoryDTO memoryDTO;  
+		uint8_t byteBuffer[sizeof(MemoryDTO)];  
+	} memoryDtoUnion;
+	
+	void init();
 };
 
 #endif

@@ -15,7 +15,6 @@
 //MINI2
 //#define RADIO_FREG 4000
 #define RADIO_FREG 2000
-#define INIT_ADRESS 1
 
 //#define DEBUG
 
@@ -24,16 +23,19 @@ class RHReliableDatagram;
 class DeviceDataBase;
 
 struct DataInfo {
-	long  _uniqID; //INPUT/OUTPUT
-	uint8_t  _deviceID; //INPUT/OUTPUT
+	long  _boardUID; //INPUT in STRUCT/OUTPUT
+	uint8_t  _deviceId; //INPUT in STRUCT/OUTPUT
 	float _deviceAck; //OUTPUT
-	float _deviceControl; //INPUT
+	float _min; //OUTPUT
+	float _max; //OUTPUT
+	float _discrete; //OUTPUT
+	float _deviceControl; //INPUT in DATA
+	bool  _digital;//OUTPUT
+	bool  _analog;//OUTPUT
 	bool  _adjustable; //OUTPUT
 	bool  _rotatable; //OUTPUT
 	bool  _radioError; //OUTPUT
 };
-
-
 
 class DeviceRFManager
 {
@@ -48,25 +50,25 @@ private:
 	bool _initError;
 	
 public:
-	DeviceRFManager();
+	DeviceRFManager(DeviceDataBase* _dataBase);
 	~DeviceRFManager();
 	
 	// interface impl for controllers events
 	bool identifyDevice();
 	void sendInfo();
-	void setDataBase(DeviceDataBase* _dataBase);
-	long getUniqID();
+	
 	uint8_t getDeviceID();
 	void setNewAdressAndHeadersInfo(uint8_t deviceNumber);
 
 private:
 	//methods
-	void init();	
-	void setUniqID(long pUniqID);	
-	void setDeviceID(uint8_t pDeviceID);
-	bool isRightUniqIdAndFrom(uint8_t from, long _uniqID);
-	void prepareDataForKnowingTransmit();
-	void prepareDataForWorkingTransmit();
+	void init();
+	long getBoardUID();
+	bool isDataMessageForMe(uint8_t from);
+	void updateStructureData();
+	void fixWrongRFConnection();
+	void saveBoardData();
+	void prepareDataForTransmit();
 };
 
 #endif

@@ -73,30 +73,31 @@ void DataBase::initFromEeprom() {
 }
 
 void DataBase::fillDeviceInfoFromEeprom(uint8_t id) {
+	DeviceInfo* currDevice = findDeviceInfo(id);
 	// min
 	float min = _eepromMngr->fetchDeviceFloat(eepr_deviceMins, id);
-	setDeviceMin(id, min);
+	currDevice->setMin(min);
 	// max
 	float max = _eepromMngr->fetchDeviceFloat(eepr_deviceMaxs, id);
-	setDeviceMax(id, max);
+	currDevice->setMax(max);
 	// discrete
 	float discrete = _eepromMngr->fetchDeviceFloat(eepr_deviceDiscretes, id);
-	setDeviceDiscrete(id, discrete);
+	currDevice->setDiscrete(discrete);
 	// deviceCtrl
 	float deviceCtrl = _eepromMngr->fetchDeviceFloat(eepr_deviceCtrls, id);
-	setDeviceControlValue(id, deviceCtrl);
+	currDevice->setControlVal(deviceCtrl);
 	// deviceDigital
 	float deviceDigital = _eepromMngr->fetchDeviceBool(eepr_deviceDigitalBools, id);
-	setDeviceDigital(id, deviceDigital);
+	currDevice->setDigital(deviceDigital);
 	// deviceAnalog
 	float deviceAnalog = _eepromMngr->fetchDeviceBool(eepr_deviceAnalogBools, id);
-	setDeviceAnalog(id, deviceAnalog);
+	currDevice->setAnalog(deviceAnalog);
 	// deviceAdjustable
 	float deviceAdjustable = _eepromMngr->fetchDeviceBool(eepr_deviceAdjustableBools, id);
-	setDeviceAdj(id, deviceAdjustable);
+	currDevice->setAdjustable(deviceAdjustable);
 	// deviceRotatable
 	float deviceRotatable = _eepromMngr->fetchDeviceBool(eepr_deviceRotatableBools, id);
-	setDeviceRotatable(id, deviceRotatable);
+	currDevice->setRotatable(deviceRotatable);
 }
 
 /******************

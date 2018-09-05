@@ -1,31 +1,34 @@
-// DeviceSensor
+// DeviceSensor.cpp
 // (c) Ivanov Aleksandr, 2018
 
 #include "DeviceSensor.h"
 
-DeviceSensor::DeviceSensor(uint8_t pPin): _pin(pPin) {
+DeviceSensor::DeviceSensor(uint8_t pPin, DeviceDataBase* pDataBase): 
+											_pin(pPin),
+											_dataBase(pDataBase) {
 	init();
 }
 
 DeviceSensor::~DeviceSensor() {
 }
 
-/*
-*	Public interface
-*/
-
-float DeviceSensor::measure() {
-	_value = analogRead(_pin);
-	float result = ((VOLTAGE_MAX * _value) / READ_VALUE_MAX);
-	Serial.print("Sensor analog read = "); Serial.println(result); 
-	return result;
-}
-
-/*
-*	Private interface
-*/
-
 void DeviceSensor::init() {
 	pinMode(_pin, INPUT);
 }
 
+/*****************
+* public methods *
+******************/
+
+
+float DeviceSensor::measure() {
+	float voltageValue = analogRead(_pin);
+	float numberValue = ((VOLTAGE_MAX * voltageValue) / READ_VALUE_MAX);
+	
+	_dataBase->setDeviceAck(numberValue);
+	Serial.print(String(F("Sensor analog read = ")) + _dataBase->getDeviceAck());
+}
+
+/******************
+* private methods *
+*******************/

@@ -15,8 +15,7 @@
 class ActuatorInterface
 {
 public:
-	virtual void  riseUp() = 0;
-	virtual void  fallDawn() = 0;
+	virtual void  process() = 0;
 	
 protected:
 	ActuatorInterface() {};

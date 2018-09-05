@@ -5,6 +5,7 @@
 #include <EEPROM.h>
 
 EepromManager::EepromManager() {
+	init();
 	Serial.println("EepromManager()!");//TEST
 }
 
@@ -13,7 +14,7 @@ EepromManager::~EepromManager() {
 
 void EepromManager::init() {
 	
-	saveBoardUID(BOARD_UID);// need rewrite by value from server when registration occur
+	//saveBoardUID(BOARD_UID);// need rewrite by value from server when registration occur
 	
 	//STUB	
 	//String wifiLogin = String("acer Liquid Z630"); 
@@ -199,34 +200,32 @@ bool EepromManager::removeId(EepromPlaceName pName, uint8_t id) {
 }
 
 void EepromManager::saveDevicesIds(uint8_t* pIdsBuffer) {
-	MemoryDTO dto;
-	EEPROM.get(MEMORY_BEGIN_POSITION, dto);
+	EEPROM.get(MEMORY_BEGIN_POSITION, memoryDtoUnion.byteBuffer);
 	for (uint8_t i = 0; i < MAX_DEVICES; i++) {
 		Serial.print(String(F("EepromManager::saveDevicesIds id")) + i + " = ");//TEST 
 		Serial.println(pIdsBuffer[i]);//TEST
-		dto._deviceIds[i] = pIdsBuffer[i];
+		memoryDtoUnion.memoryDTO._deviceIds[i] = pIdsBuffer[i];
 	}
-	EEPROM.put(MEMORY_BEGIN_POSITION, dto);
+	EEPROM.put(MEMORY_BEGIN_POSITION, memoryDtoUnion.byteBuffer);
 }
 
 String EepromManager::fetchString(EepromPlaceName pName) {
 	String element = "";
-	MemoryDTO dto;
-	EEPROM.get(MEMORY_BEGIN_POSITION, dto);
+	EEPROM.get(MEMORY_BEGIN_POSITION, memoryDtoUnion.byteBuffer);
 	switch (pName) {
-		case eepr_serverPort: 	element += dto._serverPort; 	break;
-		case eepr_serverAdress:	element += dto._serverAdress; 	break;
-		case eepr_tcpPsswd: 	element += dto._tcpPsswd; 		break;
-		case eepr_tcpLogin: 	element += dto._tcpLogin; 		break;
-		case eepr_wifiPsswd: 	element += dto._wifiPsswd; 		break;
-		case eepr_wifiLogin: 	element += dto._wifiLogin; 		break;
-		case eepr_baseId: 		element += dto._uniqID; 		break;
+		case eepr_target: 		element += memoryDtoUnion.memoryDTO._serverTarget; 	break;
+		case eepr_serverPort: 	element += memoryDtoUnion.memoryDTO._serverPort; 	break;
+		case eepr_serverAdress:	element += memoryDtoUnion.memoryDTO._serverAdress; 	break;
+		case eepr_tcpPsswd: 	element += memoryDtoUnion.memoryDTO._tcpPsswd; 		break;
+		case eepr_tcpLogin: 	element += memoryDtoUnion.memoryDTO._tcpLogin; 		break;
+		case eepr_wifiPsswd: 	element += memoryDtoUnion.memoryDTO._wifiPsswd; 	break;
+		case eepr_wifiLogin: 	element += memoryDtoUnion.memoryDTO._wifiLogin; 	break;
 	}
 	return element;	
 }
 
 float EepromManager::fetchDeviceFloat(EepromPlaceName pName, uint8_t id) {
-	float result = -1.0;
+	float result = 0.0;
 	// Serial.print("EepromManager::save raw data string>> ");
 	EEPROM.get(MEMORY_BEGIN_POSITION, memoryDtoUnion.byteBuffer);
 	switch (pName) {
@@ -282,10 +281,9 @@ bool EepromManager::fetchDeviceBool(EepromPlaceName pName, uint8_t id) {
 }
 
 void EepromManager::fetchIds(uint8_t* pIdsBuffer) {
-	MemoryDTO dto;
-	EEPROM.get(MEMORY_BEGIN_POSITION, dto);
+	EEPROM.get(MEMORY_BEGIN_POSITION, memoryDtoUnion.byteBuffer);
 	for (uint8_t i = 0; i < MAX_DEVICES; i++) {
-		pIdsBuffer[i] = dto._deviceIds[i];
+		pIdsBuffer[i] = memoryDtoUnion.memoryDTO._deviceIds[i];
 	}
 }
 

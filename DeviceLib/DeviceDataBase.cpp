@@ -3,15 +3,15 @@
 
 #include "DeviceDataBase.h"
 
-DeviceDataBase::DeviceDataBase(DeviceEepromManager* _eepromManager) {
-	init(pEepromMngr);
+DeviceDataBase::DeviceDataBase() {
+	init();
 }
 
 DeviceDataBase::~DeviceDataBase() {
 }
 
-void DeviceDataBase::init(EepromManager* pEepromMngr) {
-	_eepromMngr = pEepromMngr;
+void DeviceDataBase::init() {
+	_eepromMngr = new DeviceEepromManager();
 	_ack = 0.0;
 	_radioError = false;
 	
@@ -63,7 +63,7 @@ long DeviceDataBase::getBoardUID() {
 
 void DeviceDataBase::setBoardUID(long pBoardUID) {
 	if (getBoardUID() != pBoardUID) {
-		_eepromMngr->saveBoardUID(pBoardUID); //TODO уточнить имя метода
+		_eepromMngr->saveBoardUID(pBoardUID);
 	}
 	_boardUID = pBoardUID;
 }
@@ -72,9 +72,9 @@ uint8_t DeviceDataBase::getDeviceId() {
 	return _deviceId;
 }
 
-void DeviceDataBase::setDeviceID(uint8_t pDeviceId) {
+void DeviceDataBase::setDeviceId(uint8_t pDeviceId) {
 	if (getDeviceId() != pDeviceId) {
-		_eepromMngr->saveDeviceId(pDeviceId); //TODO уточнить имя метода
+		_eepromMngr->saveDeviceId(pDeviceId);
 	}
 	_deviceId = pDeviceId;
 }
@@ -93,7 +93,7 @@ float DeviceDataBase::getDeviceMin() {
 
 void DeviceDataBase::setDeviceMin(float pMin) {
 	if (getDeviceMin() != pMin) {
-		_eepromMngr->saveFloat(eepr_deviceMin, pMin); //TODO уточнить имя метода и параметр eeprom
+		_eepromMngr->saveFloat(eepr_deviceMin, pMin);
 	}
 	_min = pMin;
 }
@@ -104,7 +104,7 @@ float DeviceDataBase::getDeviceMax() {
 
 void DeviceDataBase::setDeviceMax(float pMax) {
 	if (getDeviceMax() != pMax) {
-		_eepromMngr->saveFloat(eepr_deviceMax, pMax); //TODO уточнить имя метода и параметр eeprom
+		_eepromMngr->saveFloat(eepr_deviceMax, pMax);
 	}
 	_max = pMax;
 }
@@ -115,7 +115,7 @@ float DeviceDataBase::getDeviceDiscrete() {
 
 void DeviceDataBase::setDeviceDiscrete(float pDiscrete) {
 	if (getDeviceMax() != pDiscrete) {
-		_eepromMngr->saveFloat(eepr_deviceDiscrete, pDiscrete); //TODO уточнить имя метода и параметр eeprom
+		_eepromMngr->saveFloat(eepr_deviceDiscrete, pDiscrete);
 	}
 	_discrete = pDiscrete;
 }
@@ -126,7 +126,7 @@ float DeviceDataBase::getDeviceControlValue() {
 
 void DeviceDataBase::setDeviceControlValue(float pControlValue) {
 	if (getDeviceControlValue() != pControlValue) {
-		_eepromMngr->saveFloat(eepr_deviceCtrl, _pControlValue); //TODO уточнить имя метода и параметр eeprom
+		_eepromMngr->saveFloat(eepr_deviceCtrl, _pControlValue);
 	}
 	_controlValue = pControlValue;
 }
@@ -137,7 +137,7 @@ bool DeviceDataBase::getDeviceDigital() {
 
 void DeviceDataBase::setDeviceDigital(bool pDigital) {
 	if (getDeviceDigital() != pDigital) {
-		_eepromMngr->saveBool(eepr_deviceDigitalBool, pDigital);//TODO уточнить имя метода и параметр eeprom
+		_eepromMngr->saveBool(eepr_deviceDigitalBool, pDigital);
 	}
 	_digital = pDigital;
 }
@@ -148,7 +148,7 @@ bool DeviceDataBase::getDeviceAnalog() {
 
 void DeviceDataBase::setDeviceAnalog(bool pAnalog) {
 	if (getDeviceAnalog() != pAnalog) {
-		_eepromMngr->saveBool(eepr_deviceAnalogBool, pAnalog);//TODO уточнить имя метода и параметр eeprom
+		_eepromMngr->saveBool(eepr_deviceAnalogBool, pAnalog);
 	}
 	_analog = pAnalog;
 }
@@ -159,7 +159,7 @@ bool DeviceDataBase::getDeviceAdj() {
 
 void DeviceDataBase::setDeviceAdj(bool pAdj) {
 	if (isDeviceAdj() != pAdj) {
-		_eepromMngr->saveBool(eepr_deviceAdjustableBool, pAdj);//TODO уточнить имя метода и параметр eeprom
+		_eepromMngr->saveBool(eepr_deviceAdjustableBool, pAdj);
 	}
 	_adjustable = pAdj;
 }
@@ -170,7 +170,7 @@ bool DeviceDataBase::getDeviceRotatable() {
 
 void DeviceDataBase::setDeviceRotatable(bool pRotatable) {
 	if (isDeviceAdj() != pRotatable) {
-		_eepromMngr->saveBool(eepr_deviceRotatableBool, pRotatable);//TODO уточнить имя метода и параметр eeprom
+		_eepromMngr->saveBool(eepr_deviceRotatableBool, pRotatable);
 	}
 	_rotatable = pRotatable;
 }

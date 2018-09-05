@@ -104,7 +104,7 @@ void RFManager::processDeveices(){
 			uint8_t from;			
 			if (_radioMngr->recvfromAckTimeout(dataInfoUnion.byteBuffer, &len, 2000, &from)) {
 				Serial.print(F("Get data from Device 0x")); Serial.println(from);
-				if (isDeviceKnown(from)) {
+				if (isDeviceKnown(dataInfoUnion.dataInfo._deviceID)) {
 					saveDeviceData(deviceId);
 					Serial.print("Device #");
 					Serial.print(deviceId);

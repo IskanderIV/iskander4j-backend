@@ -1,4 +1,4 @@
-// DeviceSensor
+// DeviceSensor.h
 // (c) Ivanov Aleksandr, 2018
 
 #ifndef _DeviceSensor_H_
@@ -18,11 +18,11 @@
 class DeviceSensor
 {
 private:
+	DeviceDataBase* _dataBase;
 	uint8_t _pin;
-	int  	_value;
 	
 public:
-	DeviceSensor(uint8_t _pin = SENSOR_PIN_DEF);
+	DeviceSensor(uint8_t _pin = SENSOR_PIN_DEF, DeviceDataBase* pDataBase);
 	~DeviceSensor();
 	
 	float measure();
