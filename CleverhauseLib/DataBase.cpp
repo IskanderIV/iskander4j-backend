@@ -160,7 +160,7 @@ float DataBase::getDeviceAck(uint8_t id) {
 	if (searched) {
 		return searched->getAck();
 	} else {
-		return -100.0;
+		return 0.0;
 	}
 }
 
@@ -176,7 +176,7 @@ float DataBase::getDeviceMin(uint8_t id){
 	if (searched) {
 		return searched->getMin();
 	} else {
-		return -100.0;
+		return 0.0;
 	}
 }
 // use it only with structure requests
@@ -195,7 +195,7 @@ float DataBase::getDeviceMax(uint8_t id){
 	if (searched) {
 		return searched->getMax();
 	} else {
-		return -100.0;
+		return 0.0;
 	}
 }
 // use it only with structure requests
@@ -214,7 +214,7 @@ float DataBase::getDeviceDiscrete(uint8_t id){
 	if (searched) {
 		return searched->getDiscrete();
 	} else {
-		return -100.0;
+		return 0.0;
 	}
 }
 // use it only with structure requests
@@ -242,6 +242,7 @@ void DataBase::setDeviceControlValue(uint8_t id, float pControl) {
 	if (searched) {
 		if (searched->getControlVal() != pControl) {
 			_eepromMngr->saveFloat(eepr_deviceCtrls, id, pControl);
+			Serial.println("Remember new control in eeprom>>>>>>>");
 		}
 		searched->setControlVal(pControl);
 	}

@@ -22,10 +22,13 @@ void DeviceSensor::init() {
 
 float DeviceSensor::measure() {
 	float voltageValue = analogRead(_pin);
+	Serial.println(String(F("voltageValue = ")) + voltageValue); // TEST
+	
 	float numberValue = ((VOLTAGE_MAX * voltageValue) / READ_VALUE_MAX);
+	Serial.println(String(F("numberValue = ")) + numberValue); // TEST
 	
 	_dataBase->setDeviceAck(numberValue);
-	Serial.print(String(F("Sensor analog read = ")) + _dataBase->getDeviceAck());
+	Serial.println(String(F("Sensor analog read = ")) + _dataBase->getDeviceAck());
 }
 
 /******************

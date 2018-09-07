@@ -13,33 +13,57 @@ DeviceEepromManager::~DeviceEepromManager() {
 }
 
 void DeviceEepromManager::init() {
-	
+	initMemoryDto();
 	//saveBoardUID(0);// need rewrite by value from server when registration occur
 	
-	//STUB
+	//STUB EEPROM DATA
 	uint8_t deviceId = 1; // 1 because we should have some "from" number for registration connection
-	
-	saveDeviceId(deviceId);
 	
 	float deviceCtrl = 0.0;
 	float deviceMin = 0.0;
 	float deviceMax = 1.0;
 	float deviceDiscrete = 1.0;
 	
-	saveFloat(eepr_deviceCtrl, deviceCtrl);
-	saveFloat(eepr_deviceMin, deviceMin);	
-	saveFloat(eepr_deviceMax, deviceMax);	
-	saveFloat(eepr_deviceDiscrete, deviceDiscrete);
+	// saveFloat(eepr_deviceCtrl, deviceCtrl);
+	// saveFloat(eepr_deviceMin, deviceMin);	
+	// saveFloat(eepr_deviceMax, deviceMax);	
+	// saveFloat(eepr_deviceDiscrete, deviceDiscrete);
 	
-	bool deviceDigitalBool = true;
-	bool deviceAnalogBool = false;
-	bool deviceAdjustableBool = true;
-	bool deviceRotatableBool = false;	
+	uint8_t deviceDigitalBool = 1;
+	uint8_t deviceAnalogBool = 0;
+	uint8_t deviceAdjustableBool = 1;
+	uint8_t deviceRotatableBool = 0;	
 
-	saveBool(eepr_deviceDigitalBool, deviceDigitalBool);	
-	saveBool(eepr_deviceAnalogBool, deviceAnalogBool);	
-	saveBool(eepr_deviceAdjustableBool, deviceAdjustableBool);	
-	saveBool(eepr_deviceRotatableBool, deviceRotatableBool);	
+	// saveBool(eepr_deviceDigitalBool, deviceDigitalBool);	
+	// saveBool(eepr_deviceAnalogBool, deviceAnalogBool);	
+	// saveBool(eepr_deviceAdjustableBool, deviceAdjustableBool);	
+	// saveBool(eepr_deviceRotatableBool, deviceRotatableBool);
+
+	memoryDtoUnion.memoryDTO._deviceId = deviceId;
+	memoryDtoUnion.memoryDTO._deviceCtrl = deviceCtrl;
+	memoryDtoUnion.memoryDTO._deviceMin = deviceMin;
+	memoryDtoUnion.memoryDTO._deviceMax = deviceMax;	
+	memoryDtoUnion.memoryDTO._deviceDiscrete = deviceDiscrete;
+	memoryDtoUnion.memoryDTO._deviceDigitalBool = deviceDigitalBool;
+	memoryDtoUnion.memoryDTO._deviceAnalogBool = deviceAnalogBool;
+	memoryDtoUnion.memoryDTO._deviceAdjustableBool = deviceAdjustableBool;
+	memoryDtoUnion.memoryDTO._deviceRotatableBool = deviceRotatableBool;
+	
+	EEPROM.put(MEMORY_BEGIN_POSITION, memoryDtoUnion.byteBuffer);
+}
+
+void DeviceEepromManager::initMemoryDto() {
+	memoryDtoUnion.memoryDTO._uniqID = BOARD_UID;
+	memoryDtoUnion.memoryDTO._deviceId = 0;
+	memoryDtoUnion.memoryDTO._deviceCtrl = 0.0;
+	memoryDtoUnion.memoryDTO._deviceMin = 0.0;
+	memoryDtoUnion.memoryDTO._deviceMax = 0.0;	
+	memoryDtoUnion.memoryDTO._deviceDiscrete = 0.0;
+	memoryDtoUnion.memoryDTO._deviceDigitalBool = 0;
+	memoryDtoUnion.memoryDTO._deviceAnalogBool = 0;
+	memoryDtoUnion.memoryDTO._deviceAdjustableBool = 0;
+	memoryDtoUnion.memoryDTO._deviceRotatableBool = 0;
+	// Serial.println("Cycle i = " + String(i));
 }
 
 /******************
@@ -86,26 +110,27 @@ bool DeviceEepromManager::saveFloat(EepromPlaceName pName, float pData) {
 
 bool DeviceEepromManager::saveBool(EepromPlaceName pName, bool pFlag) {
 	bool result = false;
+	uint8_t flag = btoi(pFlag);
 	// Serial.print("EepromManager::save raw data string>> ");
 	EEPROM.get(MEMORY_BEGIN_POSITION, memoryDtoUnion.byteBuffer);
 	switch (pName) {
 		case eepr_deviceDigitalBool: {
-			memoryDtoUnion.memoryDTO._deviceDigitalBool = pFlag; 
+			memoryDtoUnion.memoryDTO._deviceDigitalBool = flag; 
 			result = true;
 			break;
 		}		
 		case eepr_deviceAnalogBool: {
-			memoryDtoUnion.memoryDTO._deviceAnalogBool = pFlag; 
+			memoryDtoUnion.memoryDTO._deviceAnalogBool = flag; 
 			result = true; 
 			break;
 		}
 		case eepr_deviceAdjustableBool: {
-			memoryDtoUnion.memoryDTO._deviceAdjustableBool = pFlag;
+			memoryDtoUnion.memoryDTO._deviceAdjustableBool = flag;
 			result = true;
 			break;
 		}
 		case eepr_deviceRotatableBool: {
-			memoryDtoUnion.memoryDTO._deviceRotatableBool = pFlag;
+			memoryDtoUnion.memoryDTO._deviceRotatableBool = flag;
 			result = true;
 			break;
 		}

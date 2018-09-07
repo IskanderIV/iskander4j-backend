@@ -30,12 +30,14 @@ struct DataInfo {
 	float _max; //OUTPUT
 	float _discrete; //OUTPUT
 	float _deviceControl; //INPUT in DATA
-	bool  _digital;//OUTPUT
-	bool  _analog;//OUTPUT
-	bool  _adjustable; //OUTPUT
-	bool  _rotatable; //OUTPUT
-	bool  _radioError; //OUTPUT
+	uint8_t  _digital;//OUTPUT
+	uint8_t  _analog;//OUTPUT
+	uint8_t  _adjustable; //OUTPUT
+	uint8_t  _rotatable; //OUTPUT
+	uint8_t  _radioError; //OUTPUT
 };
+
+extern uint8_t rfBuf[RH_ASK_MAX_MESSAGE_LEN];
 
 class DeviceRFManager
 {
@@ -63,10 +65,18 @@ private:
 	long getBoardUID();
 	void updateStructureData();
 	bool isDataMessageForMe(uint8_t from);
-	void updateControlFromBoard();	
+	void updateControlFromBoard(float newControlData);	
 	void fixWrongRFConnection();
 	void saveBoardData();
 	void prepareDataForTransmit();
+	
+	bool itob(int in) {
+		return in == 0 ? false : true;
+	};
+	
+	uint8_t btoi(bool in) {
+		return in == true ? 1 : 0;
+	};
 };
 
 #endif

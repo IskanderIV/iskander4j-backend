@@ -69,6 +69,7 @@ void DeviceController::processButtons() {
 }
 
 void DeviceController::doWork() {
+	_sensor->measure();
 	_rfManager->sendInfo();
 	_actuator->process();
 	_signalisator->process(ls_BLINK_RARE);

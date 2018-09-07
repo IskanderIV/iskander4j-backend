@@ -25,7 +25,7 @@ void DeviceDataBase::initFromEeprom() {
 	_boardUID = _eepromMngr->fetchBoardUID();
 	
 	// id
-	_deviceId = _eepromMngr->fetchFloat(eepr_deviceMin);
+	_deviceId = _eepromMngr->fetchDeviceId();
 	
 	// min
 	_min = _eepromMngr->fetchFloat(eepr_deviceMin);
@@ -127,6 +127,7 @@ float DeviceDataBase::getDeviceControlValue() {
 void DeviceDataBase::setDeviceControlValue(float pControlValue) {
 	if (getDeviceControlValue() != pControlValue) {
 		_eepromMngr->saveFloat(eepr_deviceCtrl, pControlValue);
+		Serial.println(String(F("New control value saved : ")) + pControlValue);//TEST
 	}
 	_controlValue = pControlValue;
 }

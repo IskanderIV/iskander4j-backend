@@ -29,11 +29,11 @@ struct DataInfo {
 	float _max; //INPUT
 	float _discrete; //INPUT
 	float _deviceControl;
-	bool  _digital;//INPUT
-	bool  _analog;//INPUT
-	bool  _adjustable;//INPUT
-	bool  _rotatable;
-	bool  _radioError; //INPUT
+	uint8_t  _digital;//INPUT
+	uint8_t  _analog;//INPUT
+	uint8_t  _adjustable;//INPUT
+	uint8_t  _rotatable;
+	uint8_t  _radioError; //INPUT
 };
 
 extern uint8_t buf[RH_ASK_MAX_MESSAGE_LEN]; // TODO try to experiment with that
@@ -70,6 +70,14 @@ private:
 	void saveDeviceData(uint8_t pDeviceId);	
 	void addDeviceToDataBase(uint8_t pDeviceId);
 	void registerNewDevice(uint8_t pDeviceId);
+	
+	bool itob(int in) {
+		return in == 0 ? false : true;
+	};
+	
+	uint8_t btoi(bool in) {
+		return in == true ? 1 : 0;
+	};
 };
 
 #endif

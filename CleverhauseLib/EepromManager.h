@@ -14,7 +14,7 @@
 #define TCP_PSSWD_MAX_LEN 30
 #define SERVER_ADRESS_MAX_LEN 30
 #define SERVER_PORT_NUM_BYTES 6 //long
-#define SERVER_TARGET_NUM_BYTES 100 //long
+#define SERVER_TARGET_NUM_BYTES 40 //long
 
 #if defined(ARDUINO) && ARDUINO >= 100
 	#include "Arduino.h"
@@ -53,17 +53,17 @@ struct MemoryDTO {
 		float _deviceMins[MAX_DEVICES];
 		float _deviceMaxs[MAX_DEVICES];
 		float _deviceDiscretes[MAX_DEVICES];
-		bool _deviceDigitalBools[MAX_DEVICES];
-		bool _deviceAnalogBools[MAX_DEVICES];
-		bool _deviceAdjustableBools[MAX_DEVICES];
-		bool _deviceRotatableBools[MAX_DEVICES];
+		uint8_t _deviceDigitalBools[MAX_DEVICES];
+		uint8_t _deviceAnalogBools[MAX_DEVICES];
+		uint8_t _deviceAdjustableBools[MAX_DEVICES];
+		uint8_t _deviceRotatableBools[MAX_DEVICES];
 		char _wifiLogin[WIFI_SSID_MAX_LEN];
 		char _wifiPsswd[WIFI_PSSWD_MAX_LEN];
 		char _tcpLogin[TCP_LOGIN_MAX_LEN];
 		char _tcpPsswd[TCP_PSSWD_MAX_LEN];		
 		char _serverAdress[SERVER_ADRESS_MAX_LEN];	
 		char _serverPort[SERVER_PORT_NUM_BYTES];
-		char _serverTarget[SERVER_PORT_NUM_BYTES];
+		char _serverTarget[SERVER_TARGET_NUM_BYTES];
 };
 
 class EepromManager
@@ -95,7 +95,23 @@ private:
 	} memoryDtoUnion;
 	
 	void init();
+	void initMemoryDto();
 	void copy(char* a, int a_len, String& b);
+	
+	bool itob(int in) {
+		return in == 0 ? false : true;
+	};
+	
+	uint8_t btoi(bool in) {
+		return in == true ? 1 : 0;
+	};
+	
+	void initStringPlace(EepromPlaceName place, char* inch) {
+		for (uint8_t i = 0; i < getMaxByteOfPlace(place); i++) {
+			inch[i] = '\0';
+			// Serial.println("String cycle i = " + String(i));
+		}
+	}
 };
 
 #endif

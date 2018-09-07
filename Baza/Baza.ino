@@ -47,6 +47,8 @@ void setup() {
   chooser = new Chooser();
   lcd = new TwoStringLcdDisplay();
   controller = new Controller();
+
+  pinMode(16, INPUT); // TEST  
   
   pinMode(PWR_BTNS_PIN, OUTPUT);
   digitalWrite(PWR_BTNS_PIN, HIGH);
@@ -147,6 +149,13 @@ void loop() {
 //  lcd->printHeader("HELLO");
 //  lcd->printInfo("INFO");
   controller->processLoop();
+  int control = digitalRead(16);
+  if (control == HIGH) { ; // TEST
+  Serial.println(String(F("New control is ")) + control);
+    dataBase->setDeviceControlValue(1, 1.0);
+  } else {
+    dataBase->setDeviceControlValue(1, 0.0);
+  }
   //Serial.println("We are in loop!");
   delay(100);
 }

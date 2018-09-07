@@ -6,6 +6,7 @@
 
 #define MEMORY_BEGIN_POSITION 1
 #define DEVICE_ID_LEN 1 //BYTE
+#define BOARD_UID 1010101L
 
 #if defined(ARDUINO) && ARDUINO >= 100
 	#include "Arduino.h"
@@ -35,10 +36,10 @@ struct MemoryDTO {
 	float _deviceMin;
 	float _deviceMax;
 	float _deviceDiscrete;
-	bool _deviceDigitalBool;
-	bool _deviceAnalogBool;
-	bool _deviceAdjustableBool;
-	bool _deviceRotatableBool;		
+	uint8_t _deviceDigitalBool;
+	uint8_t _deviceAnalogBool;
+	uint8_t _deviceAdjustableBool;
+	uint8_t _deviceRotatableBool;		
 };
 
 class DeviceEepromManager
@@ -64,6 +65,15 @@ private:
 	} memoryDtoUnion;
 	
 	void init();
+	void initMemoryDto();
+	
+	bool itob(int in) {
+		return in == 0 ? false : true;
+	};
+	
+	uint8_t btoi(bool in) {
+		return in == true ? 1 : 0;
+	};
 };
 
 #endif

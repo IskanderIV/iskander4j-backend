@@ -13,53 +13,85 @@ EepromManager::~EepromManager() {
 }
 
 void EepromManager::init() {
-	
+	initMemoryDto();
 	//saveBoardUID(BOARD_UID);// need rewrite by value from server when registration occur
 	
-	//STUB	
+	//STUB EEPROM DATA
 	//String wifiLogin = String("acer Liquid Z630"); 
-	String wifiLogin = String("RAZVRAT_HOUSE");
+	char wifiLogin[] = "RAZVRAT_HOUSE";
 	//String wifiPsswd = String("111222333");
-	String wifiPsswd = String("LaserJet");
-	saveString(eepr_wifiLogin, wifiLogin);
-	saveString(eepr_wifiPsswd, wifiPsswd);
+	char wifiPsswd[] = "LaserJet";
+	// saveString(eepr_wifiLogin, wifiLogin);
+	// saveString(eepr_wifiPsswd, wifiPsswd);
 
-	String username = String("iskander");
-	String password = String("123");
-	saveString(eepr_tcpLogin, username);
-	saveString(eepr_tcpPsswd, password);
+	char username[] = "iskander";
+	char password[] = "123";
+	// saveString(eepr_tcpLogin, username);
+	// saveString(eepr_tcpPsswd, password);
 	
-	String tcpServerIP = F("192.168.1.34");
-	String tcpServerPort = F("8090");
-	String tcpServertarget = F("/cleverhause/boards/board/data");
-	saveString(eepr_serverAdress, tcpServerIP);
-	saveString(eepr_serverPort, tcpServerPort);
-	saveString(eepr_target, tcpServertarget);
+	char host[] = "192.168.1.34";
+	char port[] = "8090";
+	char target[] = "/cleverhause/boards/board/data";
+	// saveString(eepr_serverAdress, tcpServerIP);
+	// saveString(eepr_serverPort, tcpServerPort);
+	// saveString(eepr_target, tcpServertarget);
+	strncpy(memoryDtoUnion.memoryDTO._wifiLogin, wifiLogin, WIFI_SSID_MAX_LEN);
+	strncpy(memoryDtoUnion.memoryDTO._wifiPsswd, wifiPsswd, WIFI_PSSWD_MAX_LEN);
+	strncpy(memoryDtoUnion.memoryDTO._tcpLogin, username, TCP_LOGIN_MAX_LEN);
+	strncpy(memoryDtoUnion.memoryDTO._tcpPsswd, password, TCP_PSSWD_MAX_LEN);
+	strncpy(memoryDtoUnion.memoryDTO._serverAdress, host, SERVER_ADRESS_MAX_LEN);
+	strncpy(memoryDtoUnion.memoryDTO._serverPort, port, SERVER_PORT_NUM_BYTES);
+	strncpy(memoryDtoUnion.memoryDTO._serverTarget, target, SERVER_TARGET_NUM_BYTES);
 	
-	// STUB DEVICE DATA replace with new DeviceInfo when unique class will be created
-	const int max_devices = (int) MAX_DEVICES;
+	const int max_devices = (int) MAX_DEVICES;	
+	// saveDevicesIds(deviceIds);
 	uint8_t deviceIds[max_devices] = {1,2,0,0,0,0,0,0};
-	saveDevicesIds(deviceIds);
-	
-	float deviceCtrls[max_devices] = {1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+	float deviceCtrls[max_devices] = {1.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0};
 	float deviceMins[max_devices] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
 	float deviceMaxs[max_devices] = {1.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0};
 	float deviceDiscretes[max_devices] = {1.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0};
-	bool deviceDigitalBools[max_devices] = {true,true,false,false,false,false,false,false};
-	bool deviceAnalogBools[max_devices] = {false,false,false,false,false,false,false,false};
-	bool deviceAdjustableBools[max_devices] = {true,true,false,false,false,false,false,false};
-	bool deviceRotatableBools[max_devices] = {false,false,false,false,false,false,false,false};
+	uint8_t deviceDigitalBools[max_devices] = {1,1,0,0,0,0,0,0};
+	uint8_t deviceAnalogBools[max_devices] = {0,0,0,0,0,0,0,0};
+	uint8_t deviceAdjustableBools[max_devices] = {1,1,0,0,0,0,0,0};
+	uint8_t deviceRotatableBools[max_devices] = {0,0,0,0,0,0,0,0};
 	
 	for (uint8_t i = 0; i < max_devices; i++) {
-		saveFloat(eepr_deviceCtrls, i, deviceCtrls[i]);
-		saveFloat(eepr_deviceMins, i, deviceMins[i]);	
-		saveFloat(eepr_deviceMaxs, i, deviceMaxs[i]);	
-		saveFloat(eepr_deviceDiscretes, i, deviceDiscretes[i]);	
-		saveBool(eepr_deviceDigitalBools, i, deviceDigitalBools[i]);	
-		saveBool(eepr_deviceAnalogBools, i, deviceAnalogBools[i]);	
-		saveBool(eepr_deviceAdjustableBools, i, deviceAdjustableBools[i]);	
-		saveBool(eepr_deviceRotatableBools, i, deviceRotatableBools[i]);
-	}	
+		memoryDtoUnion.memoryDTO._deviceIds[i] = deviceIds[i];
+		memoryDtoUnion.memoryDTO._deviceCtrls[i] = deviceCtrls[i];
+		memoryDtoUnion.memoryDTO._deviceMins[i] = deviceMins[i];
+		memoryDtoUnion.memoryDTO._deviceMaxs[i] = deviceMaxs[i];	
+		memoryDtoUnion.memoryDTO._deviceDiscretes[i] = deviceDiscretes[i];
+		memoryDtoUnion.memoryDTO._deviceDigitalBools[i] = deviceDigitalBools[i];
+		memoryDtoUnion.memoryDTO._deviceAnalogBools[i] = deviceAnalogBools[i];
+		memoryDtoUnion.memoryDTO._deviceAdjustableBools[i] = deviceAdjustableBools[i];
+		memoryDtoUnion.memoryDTO._deviceRotatableBools[i] = deviceRotatableBools[i];
+	}
+	EEPROM.put(MEMORY_BEGIN_POSITION, memoryDtoUnion.byteBuffer);
+}
+
+void EepromManager::initMemoryDto() {
+	const int max_devices = (int) MAX_DEVICES;
+	memoryDtoUnion.memoryDTO._uniqID = BOARD_UID;
+	for (uint8_t i = 0; i < max_devices; i++) {
+		memoryDtoUnion.memoryDTO._deviceIds[i] = 0;
+		memoryDtoUnion.memoryDTO._deviceCtrls[i] = 0.0;
+		memoryDtoUnion.memoryDTO._deviceMins[i] = 0.0;
+		memoryDtoUnion.memoryDTO._deviceMaxs[i] = 0.0;	
+		memoryDtoUnion.memoryDTO._deviceDiscretes[i] = 0.0;
+		memoryDtoUnion.memoryDTO._deviceDigitalBools[i] = 0;
+		memoryDtoUnion.memoryDTO._deviceAnalogBools[i] = 0;
+		memoryDtoUnion.memoryDTO._deviceAdjustableBools[i] = 0;
+		memoryDtoUnion.memoryDTO._deviceRotatableBools[i] = 0;
+		// Serial.println("Cycle i = " + String(i));
+	}
+	
+	initStringPlace(eepr_wifiLogin, memoryDtoUnion.memoryDTO._wifiLogin);
+	initStringPlace(eepr_wifiPsswd, memoryDtoUnion.memoryDTO._wifiPsswd);
+	initStringPlace(eepr_tcpLogin, memoryDtoUnion.memoryDTO._tcpLogin);
+	initStringPlace(eepr_tcpPsswd, memoryDtoUnion.memoryDTO._tcpPsswd);
+	initStringPlace(eepr_serverAdress, memoryDtoUnion.memoryDTO._serverAdress);
+	initStringPlace(eepr_serverPort, memoryDtoUnion.memoryDTO._serverPort);
+	initStringPlace(eepr_target, memoryDtoUnion.memoryDTO._serverTarget);
 }
 
 /******************
@@ -73,37 +105,37 @@ bool EepromManager::saveString(EepromPlaceName pName, String& pData) {
 	EEPROM.get(MEMORY_BEGIN_POSITION, memoryDtoUnion.byteBuffer);
 	switch (pName) {
 		case eepr_target: 	{
-			strncat(memoryDtoUnion.memoryDTO._serverTarget, pData.c_str(), SERVER_TARGET_NUM_BYTES); 
+			strncpy(memoryDtoUnion.memoryDTO._serverTarget, pData.c_str(), SERVER_TARGET_NUM_BYTES); 
 			result = true;
 			break;
 		}
 		case eepr_serverPort: 	{
-			strncat(memoryDtoUnion.memoryDTO._serverPort, pData.c_str(), SERVER_PORT_NUM_BYTES); 
+			strncpy(memoryDtoUnion.memoryDTO._serverPort, pData.c_str(), SERVER_PORT_NUM_BYTES); 
 			result = true;
 			break;
 		}
 		case eepr_serverAdress:	{
-			strncat(memoryDtoUnion.memoryDTO._serverAdress, pData.c_str(), SERVER_ADRESS_MAX_LEN); 
+			strncpy(memoryDtoUnion.memoryDTO._serverAdress, pData.c_str(), SERVER_ADRESS_MAX_LEN); 
 			result = true;
 			break;
 		}
 		case eepr_tcpPsswd: {
-			strncat(memoryDtoUnion.memoryDTO._tcpPsswd, pData.c_str(), TCP_PSSWD_MAX_LEN); 
+			strncpy(memoryDtoUnion.memoryDTO._tcpPsswd, pData.c_str(), TCP_PSSWD_MAX_LEN); 
 			result = true;
 			break;
 		}
 		case eepr_tcpLogin: {
-			strncat(memoryDtoUnion.memoryDTO._tcpLogin, pData.c_str(), TCP_LOGIN_MAX_LEN); 
+			strncpy(memoryDtoUnion.memoryDTO._tcpLogin, pData.c_str(), TCP_LOGIN_MAX_LEN); 
 			result = true;
 			break;
 		}
 		case eepr_wifiPsswd: {
-			strncat(memoryDtoUnion.memoryDTO._wifiPsswd, pData.c_str(), WIFI_PSSWD_MAX_LEN); 
+			strncpy(memoryDtoUnion.memoryDTO._wifiPsswd, pData.c_str(), WIFI_PSSWD_MAX_LEN); 
 			result = true;
 			break;
 		}
 		case eepr_wifiLogin: {
-			strncat(memoryDtoUnion.memoryDTO._wifiLogin, pData.c_str(), WIFI_SSID_MAX_LEN); 
+			strncpy(memoryDtoUnion.memoryDTO._wifiLogin, pData.c_str(), WIFI_SSID_MAX_LEN); 
 			result = true;
 			break;
 		}
@@ -151,26 +183,27 @@ bool EepromManager::saveFloat(EepromPlaceName pName, uint8_t id, float pData) {
 
 bool EepromManager::saveBool(EepromPlaceName pName, uint8_t id, bool pFlag) {
 	bool result = false;
+	uint8_t flag = btoi(pFlag);
 	// Serial.print("EepromManager::save raw data string>> ");
 	EEPROM.get(MEMORY_BEGIN_POSITION, memoryDtoUnion.byteBuffer);
 	switch (pName) {
 		case eepr_deviceDigitalBools: {
-			memoryDtoUnion.memoryDTO._deviceDigitalBools[id] = pFlag; 
+			memoryDtoUnion.memoryDTO._deviceDigitalBools[id] = flag; 
 			result = true;
 			break;
 		}		
 		case eepr_deviceAnalogBools: {
-			memoryDtoUnion.memoryDTO._deviceAnalogBools[id] = pFlag; 
+			memoryDtoUnion.memoryDTO._deviceAnalogBools[id] = flag; 
 			result = true; 
 			break;
 		}
 		case eepr_deviceAdjustableBools: {
-			memoryDtoUnion.memoryDTO._deviceAdjustableBools[id] = pFlag;
+			memoryDtoUnion.memoryDTO._deviceAdjustableBools[id] = flag;
 			result = true;
 			break;
 		}
 		case eepr_deviceRotatableBools: {
-			memoryDtoUnion.memoryDTO._deviceRotatableBools[id] = pFlag;
+			memoryDtoUnion.memoryDTO._deviceRotatableBools[id] = flag;
 			result = true;
 			break;
 		}
@@ -261,19 +294,19 @@ bool EepromManager::fetchDeviceBool(EepromPlaceName pName, uint8_t id) {
 	EEPROM.get(MEMORY_BEGIN_POSITION, memoryDtoUnion.byteBuffer);
 	switch (pName) {
 		case eepr_deviceDigitalBools: {
-			result = memoryDtoUnion.memoryDTO._deviceDigitalBools[id];
+			result = itob(memoryDtoUnion.memoryDTO._deviceDigitalBools[id]);
 			break;
 		}		
 		case eepr_deviceAnalogBools: {
-			result = memoryDtoUnion.memoryDTO._deviceAnalogBools[id];
+			result = itob(memoryDtoUnion.memoryDTO._deviceAnalogBools[id]);
 			break;
 		}
 		case eepr_deviceAdjustableBools: {
-			result = memoryDtoUnion.memoryDTO._deviceAdjustableBools[id];
+			result = itob(memoryDtoUnion.memoryDTO._deviceAdjustableBools[id]);
 			break;
 		}
 		case eepr_deviceRotatableBools: {
-			result = memoryDtoUnion.memoryDTO._deviceRotatableBools[id];
+			result = itob(memoryDtoUnion.memoryDTO._deviceRotatableBools[id]);
 			break;
 		}
 	}

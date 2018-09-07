@@ -32,6 +32,8 @@ void DeviceDigitalActuator::process() {
 	
 	if (_prevState == currState) return;
 	
+	_prevState = currState;
+	
 	if (currState == 1) {
 		riseUp();
 	}
