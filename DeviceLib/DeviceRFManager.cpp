@@ -43,14 +43,14 @@ void DeviceRFManager::sendInfo() {
 			Serial.println(String(F("Received control value = ")) + newControlData); // TEST
 			prepareDataForTransmit();
 			if (_radioMngr.sendtoWait(dataInfoUnion.byteBuffer, sizeof(DataInfo), from)) {
-				// /////// TODO не проходит прием после отправки 
+				// /////// TODO РЅРµ РїСЂРѕС…РѕРґРёС‚ РїСЂРёРµРј РїРѕСЃР»Рµ РѕС‚РїСЂР°РІРєРё 
 				// Good transmit and Ack
-				// Раскоментить код ниже после разбирательств с антеной и приемом
+				// Р Р°СЃРєРѕРјРµРЅС‚РёС‚СЊ РєРѕРґ РЅРёР¶Рµ РїРѕСЃР»Рµ СЂР°Р·Р±РёСЂР°С‚РµР»СЊСЃС‚РІ СЃ Р°РЅС‚РµРЅРѕР№ Рё РїСЂРёРµРјРѕРј
 				// updateControlFromBoard(newControlData);
 				// Serial.println(F("DeviceRFManager::searchDevice() good radio connection!"));
 				// return;										
 			}
-			// Убрать код ниже после разбирательств с антеной и приемом
+			// РЈР±СЂР°С‚СЊ РєРѕРґ РЅРёР¶Рµ РїРѕСЃР»Рµ СЂР°Р·Р±РёСЂР°С‚РµР»СЊСЃС‚РІ СЃ Р°РЅС‚РµРЅРѕР№ Рё РїСЂРёРµРјРѕРј
 			updateControlFromBoard(newControlData);
 			Serial.println(F("DeviceRFManager::searchDevice() good radio connection!"));
 			return;

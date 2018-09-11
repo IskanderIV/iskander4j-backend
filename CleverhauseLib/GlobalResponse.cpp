@@ -4,10 +4,10 @@
 #include "GlobalResponse.h"
 
 String response = "";
-int numOfHeaders = 6; 
-String headers = "";
-int headerIndex = 0;
-String body = "";
-boolean currentLineIsBlank = true;
-boolean isInsideBody = false;
+// int numOfHeaders = 6; 
+// String headers = "";
+// int headerIndex = 0;
+// String body = "";
+// boolean currentLineIsBlank = true;
+// boolean isInsideBody = false;
 

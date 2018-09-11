@@ -14,6 +14,8 @@
 #include "Object.h"
 #include "RequestBuilder.h"
 #include "ResponseParser.h"
+#include "RequestBuilder2.h"
+#include "ResponseParser2.h"
 #include "HttpExchangeType.h"
 #include <ESP8266pro.h>
 #include <ESP8266proClient.h>
@@ -25,6 +27,8 @@ class ESP8266proClient;
 class ESP8266proConnection;
 class EepromManager;
 class DataBase;
+class RequestBuilder2;
+class ResponseParser2;
 
 
 class WifiManager : public Object
@@ -33,7 +37,7 @@ public:
 	WifiManager(int _freq, DataBase* pDataBase);
 	~WifiManager();
 	
-	static void parseHttpResponse(ESP8266proConnection* connection, char* buffer, int length, boolean completed);
+	static void saveHttpResponse(ESP8266proConnection* connection, char* buffer, int length, boolean completed);
 	
 	// public interface
 	bool executeRequest(HttpExchangeType type);
@@ -49,8 +53,12 @@ private:
 	//SoftwareSerial espSerial;
 	ESP8266pro _wifi;
 	DataBase* _dataBase;
-	RequestBuilder* _responseBuilder;
+	RequestBuilder2* _requestBuilder2;
+	RequestBuilder* _requestBuilder;
 	ResponseParser* _responseParser;
+	ResponseParser2* _responseParser2;
+	char* _request2;
+	char* _response2;
 	
 	String _SSID;
 	String _ssidPassword;
@@ -76,6 +84,8 @@ private:
 	void init(int _freq, DataBase* pDataBase);
 	void initWifi(int _freq);
 	void initTcpConnection();
+	void prepareAndSendRequest(HttpExchangeType type, ESP8266proClient* con);
+	void parseHttpResponse(HttpExchangeType type, ESP8266proClient* con);
 };
 
 #endif

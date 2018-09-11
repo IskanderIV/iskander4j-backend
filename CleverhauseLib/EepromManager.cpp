@@ -17,6 +17,7 @@ void EepromManager::init() {
 	//saveBoardUID(BOARD_UID);// need rewrite by value from server when registration occur
 	
 	//STUB EEPROM DATA
+	memoryDtoUnion.memoryDTO._uniqID = 1262428L;
 	//String wifiLogin = String("acer Liquid Z630"); 
 	char wifiLogin[] = "RAZVRAT_HOUSE";
 	//String wifiPsswd = String("111222333");
@@ -29,7 +30,7 @@ void EepromManager::init() {
 	// saveString(eepr_tcpLogin, username);
 	// saveString(eepr_tcpPsswd, password);
 	
-	char host[] = "192.168.1.34";
+	char host[] = "192.168.1.37";
 	char port[] = "8090";
 	char target[] = "/cleverhause/boards/board/data";
 	// saveString(eepr_serverAdress, tcpServerIP);

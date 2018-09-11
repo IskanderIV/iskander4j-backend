@@ -13,7 +13,7 @@
 #endif
 
 enum ButtonPin {
-	btn_menu = 49,
+	btn_menu = 18,//49,
 	btn_left = 47,
 	btn_right = 45,
 	btn_up = 43,

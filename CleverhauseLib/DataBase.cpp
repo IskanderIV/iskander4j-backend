@@ -242,7 +242,7 @@ void DataBase::setDeviceControlValue(uint8_t id, float pControl) {
 	if (searched) {
 		if (searched->getControlVal() != pControl) {
 			_eepromMngr->saveFloat(eepr_deviceCtrls, id, pControl);
-			Serial.println("Remember new control in eeprom>>>>>>>");
+			Serial.println(F("Remember new control in eeprom>>>>>>>"));
 		}
 		searched->setControlVal(pControl);
 	}

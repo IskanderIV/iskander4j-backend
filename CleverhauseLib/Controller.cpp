@@ -8,6 +8,7 @@
 #include "WifiManager.h"
 #include "DataBase.h"
 #include "Event.h"
+#include <MemoryFree.h>
 
 #include "MenuSelectorEventGenerator.h"
 #include "DisplayEventGenerator.h"
@@ -18,7 +19,7 @@
 #include "ControllerChooserInterface.h"
 
 Controller::Controller() {
-	Serial.println("Controller()!");//TEST
+	Serial.println(F("Controller()!"));//TEST
 	_mnSelectorEG = new MenuSelectorEventGenerator();
 	_displayEG = new DisplayEventGenerator();
 	_inputerEG = new InputerEventGenerator();
@@ -63,13 +64,13 @@ void Controller::processLoop() {
 	if (!_mnSelector->isActive() && !_inputer->isActive() && !_chooser->isActive()) {
 		//Serial.println("Selector is not active! _inputer is not active!");
 		if (pushedBtnCode == btn_menu) {
-			Serial.println("pushedBtnCode == btn_menu");
+			Serial.println(F("pushedBtnCode == btn_menu"));
 			_mnSelectorEG->notifyMenuSelectorToBeShowen();
 			_displayEG->notifyDisplayToShowMenu();
 			_displayEG->notifyDisplayToShowCurrMenu();
 			_mnSelector->setActive(true);
 		} else {
-			Serial.println("----------------------------------------Work state!");
+			Serial.println(F("----------------------------------------Work state!"));
 			quizeDevices();
 			sendToServer(DATA);
 		}		
@@ -118,7 +119,9 @@ void Controller::sendToServer(HttpExchangeType type) {
 	{
 		if (_wifiManager && _isWifiConnectionOk) {
 			_wifiManager->setActive(true);
+			Serial.println((String)F("Free memory before executeRequest >> ") + freeMemory());//TEST
 			if (!_wifiManager->executeRequest(type)) {
+				Serial.println((String)F("Free memory after executeRequest >> ") + freeMemory());//TEST
 				_wifiManager->closeConnection();
 			}
 			_wifiManager->setActive(false);
@@ -285,6 +288,7 @@ void Controller::executeAction() {
 		case act_INPUT_SERVER_PORT:
 		case act_INPUT_SERVER_TARGET:
 		case act_INPUT_BOARD_UID: {
+			Serial.println(String(F("In eeprom = ")) + _dataBase->getUniqBaseID());//TEST
 			int maxInputerTextLen = selectMaxInputerTextLen(pAction);
 			activateInputer(maxInputerTextLen); 
 			break;

@@ -48,12 +48,12 @@ bool RFManager::searchDevices(){
         uint8_t from;
         uint8_t len = sizeof(buf);
         if (_radioMngr->recvfromAck(dataInfoUnion.byteBuffer, &len, &from)) {
-			Serial.println(String("FROM = ") + from + "; _uniqID = " + dataInfoUnion.dataInfo._uniqID);//TEST
-			Serial.println(String("FROM = ") + from + "; _deviceID = " + dataInfoUnion.dataInfo._deviceID);//TEST
-			Serial.println(String("FROM = ") + from + "; len = " + len);//TEST
+			Serial.println(String(F("FROM = ")) + from + "; _uniqID = " + dataInfoUnion.dataInfo._uniqID);//TEST
+			Serial.println(String(F("FROM = ")) + from + "; _deviceID = " + dataInfoUnion.dataInfo._deviceID);//TEST
+			Serial.println(String(F("FROM = ")) + from + "; len = " + len);//TEST
 			
 			if (!isDeviceKnown(from)) {
-				Serial.println("BAZA: No such device found");//TEST
+				Serial.println(F("BAZA: No such device found"));//TEST
 				uint8_t newDeviceId = _dataBase->generateId();
 				Serial.print(String(F("BAZA: new device number = ")) + newDeviceId);//TEST
 				prepareDataForKnowingTransmit(newDeviceId);
@@ -65,16 +65,16 @@ bool RFManager::searchDevices(){
 					return true;					
 				} else {
 					// Bad transmit or Ack. No connection between us. Radio Error of this Device should be true!
-					Serial.println("BAZA: sendtoWait unknown failed");
+					Serial.println(F("BAZA: sendtoWait unknown failed"));
 				}				
 			} else {
 				if (_radioMngr->sendtoWait(dataInfoUnion.byteBuffer, sizeof(DataInfo), from)) {
 					// Good transmit and Ack. Add this device to eeprom memory and to the dataBase
-					Serial.println("RFManager::searchDevice() Good transmit and Ack. Known device. End");
+					Serial.println(F("RFManager::searchDevice() Good transmit and Ack. Known device. End"));
 					return true;					
 				} else {
 					// Bad transmit or Ack. No connection between us. Radio Error of this Device should be true!
-					Serial.println("BAZA: sendtoWait 'I know him' failed");
+					Serial.println(F("BAZA: sendtoWait 'I know him' failed"));
 				}
 			}
 		}
@@ -125,7 +125,7 @@ void RFManager::processDeveices(){
 				}
 			}
 			if (!dataRecieved) {
-				Serial.println(String("Can't receive ack (timeout) from = ") + deviceId);
+				Serial.println(String(F("Can't receive ack (timeout) from = ")) + deviceId);
 			}
 			// ------------ end of experimental code -----------//
 			// ------------ old code -----------//
@@ -143,14 +143,14 @@ void RFManager::processDeveices(){
 			// }
 			// ------------ end of old code -----------//
 		} else {// end if sendtoWait
-			Serial.println(String("Can't send to wait to = ") + deviceId);
-			Serial.print("Device #");
+			Serial.println(String(F("Can't send to wait to = ")) + deviceId);
+			Serial.print(F("Device #"));
 			Serial.print(deviceId);
-			Serial.println(" is maybe SWITCHED OFF");
+			Serial.println(F(" is maybe SWITCHED OFF"));
 			_dataBase->setDeviceRFErr(deviceId, true);
 		}		
 	} 	// end for
-	Serial.println("RFManager::processDeveices() End");
+	Serial.println(F("RFManager::processDeveices() End"));
 }
 
 bool RFManager::hasInitError() {
@@ -195,8 +195,8 @@ void RFManager::prepareDataForWorkingTransmit(uint8_t pDeviceId) {
 void RFManager::saveDeviceData(uint8_t pDeviceId) {
 	_dataBase->setDeviceAck(pDeviceId, dataInfoUnion.dataInfo._deviceAck);
 	_dataBase->setDeviceRFErr(pDeviceId, itob(dataInfoUnion.dataInfo._radioError));
-	Serial.println(String("passedDeviceAck = ") + String(dataInfoUnion.dataInfo._deviceAck));
-	Serial.println(String("passedDeviceAdj = ") + String(dataInfoUnion.dataInfo._adjustable));
+	Serial.println(String(F("passedDeviceAck = ")) + String(dataInfoUnion.dataInfo._deviceAck));
+	Serial.println(String(F("passedDeviceAdj = ")) + String(dataInfoUnion.dataInfo._adjustable));
 }
 
 void RFManager::registerNewDevice(uint8_t pDeviceId) {

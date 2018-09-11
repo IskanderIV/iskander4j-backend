@@ -53,7 +53,7 @@ void DeviceEepromManager::init() {
 }
 
 void DeviceEepromManager::initMemoryDto() {
-	memoryDtoUnion.memoryDTO._uniqID = BOARD_UID;
+	memoryDtoUnion.memoryDTO._uniqID = 1262428L;//TEST
 	memoryDtoUnion.memoryDTO._deviceId = 0;
 	memoryDtoUnion.memoryDTO._deviceCtrl = 0.0;
 	memoryDtoUnion.memoryDTO._deviceMin = 0.0;

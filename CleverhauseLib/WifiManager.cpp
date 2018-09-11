@@ -26,8 +26,6 @@ void WifiManager::init(int pFreq, DataBase* pDataBase) {
 	_dataBase = pDataBase;
 	initWifi(pFreq);
 	initTcpConnection();
-	_responseBuilder = new RequestBuilder(_dataBase);
-	_responseParser = new ResponseParser(_dataBase);
 }
 
 void WifiManager::initWifi(int pFreq) {
@@ -42,7 +40,7 @@ void WifiManager::initWifi(int pFreq) {
 }
 
 void WifiManager::initTcpConnection() {		
-	_target = _dataBase->getTarget();//F("/cleverhause/arduino/data");
+	// _target = _dataBase->getTarget();//F("/cleverhause/arduino/data");
 	_host = _dataBase->getHost();
 	_port = _dataBase->getPort();	
 	_login = _dataBase->getLogin();
@@ -59,25 +57,57 @@ bool WifiManager::executeRequest(HttpExchangeType type) {
 		Serial.println(String(F("Can't send Put Data HTTP request. Wifi initialization fail!")));
 		return false;
 	}
+	bool result = true;
 	//Serial.println("Before StationIP = ");
 	delay(1000);
 	Serial.println((String)"Free memory >> " + freeMemory());
 	
-	String request = _responseBuilder->buildRequest(type, _host, _port, _target, _login, _password, _boardUID);
-	// Serial.println(String(F("REQUEST:\n")) + request);
-	
-	ESP8266proClient* con = new ESP8266proClient(_wifi, WifiManager::parseHttpResponse);
+	ESP8266proClient* con = new ESP8266proClient(_wifi, WifiManager::saveHttpResponse);
 	
 	if(con->connectTcp(_host, _port.toInt())) {		
-		con->send(request);
-		request = "";
-		con->waitResponse();
-		_responseParser->parseResponse(type);
-		con->close();
-	}	
+		prepareAndSendRequest(type, con);
+		parseHttpResponse(type, con);
+		
+		// int maxRepetitions = 2;
+		// int repetition = 0;
+		// while(!con->close() && ++repetition < maxRepetitions){
+			// con->waitResponse(2000);
+			// Serial.println(String(F("WAIT CLOSE CONNECTION...."))); //TEST
+		// }
+		
+		if (!con->close()) {
+			result = false;
+		}
+		Serial.println(String(F("WHEN CLOSE CONNECTION...."))); //TEST
+	} else {
+		result = false;
+	}
 	delete con;
+	// Serial.println((String)F("Free memory before out executeRequest >> ") + freeMemory());//TEST
 	
-	return true;
+	return result;
+}
+
+void WifiManager::prepareAndSendRequest(HttpExchangeType type, ESP8266proClient* con) {
+	_requestBuilder = new RequestBuilder(_dataBase);
+	String request = _requestBuilder->buildRequest(type, _host, _port, _login, _password, _boardUID);
+	delete _requestBuilder;
+		Serial.println((String)F("Free memory after build request>> ") + freeMemory());//TEST
+	con->send(request);
+		Serial.println((String)F("Free memory after send(request)>> ") + freeMemory());//TEST
+	request = "";
+		Serial.println((String)F("Free memory before exit prepareAndSendRequest>> ") + freeMemory());//TEST
+}
+
+void WifiManager::parseHttpResponse(HttpExchangeType type, ESP8266proClient* con) {
+	con->waitResponse();
+	Serial.println((String)F("Free memory before parseResponse>> ") + freeMemory());//TEST
+	
+	_responseParser = new ResponseParser(_dataBase);
+	_responseParser->parseResponse(type);
+	delete _responseParser;
+	
+	Serial.println((String)F("Free memory before exit parseResponse>> ") + freeMemory());//TEST
 }
 
 void WifiManager::fetchFindedWANs(String* _findedWANs) {
@@ -136,17 +166,22 @@ bool WifiManager::connectToWifi() {
 }
 
 void WifiManager::closeConnection() {
-	delete _responseBuilder;
-	delete _responseParser;
+	// if (_requestBuilder) {
+		// delete _requestBuilder;
+	// }
+	// if (_responseParser) {
+		// delete _responseParser;
+	// }
 }
 
 /*****************************
 Here parsing of RESPONSE
 ******************************/
 
-void WifiManager::parseHttpResponse(ESP8266proConnection* connection, char* buffer, int length, boolean completed) {
+void WifiManager::saveHttpResponse(ESP8266proConnection* connection, char* buffer, int length, boolean completed) {
 	/*
 	Serial.println(F("RESPONSE"));
 	*/
 	response += buffer;
+	
 }
