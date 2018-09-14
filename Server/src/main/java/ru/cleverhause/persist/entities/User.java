@@ -31,7 +31,7 @@ import java.util.Set;
  */
 
 @Entity
-@Table(name = "users")
+@Table(name = "clever_schema.users")
 public class User implements Serializable {
     private Long id;
     private String username;
@@ -92,7 +92,7 @@ public class User implements Serializable {
     }
 
     @ManyToMany
-    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
+    @JoinTable(name = "clever_schema.user_roles", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     @LazyCollection(value = LazyCollectionOption.FALSE)
     public Set<Role> getRoles() {

@@ -17,7 +17,7 @@ import java.io.Serializable;
  * @date 8/10/2018.
  */
 @Entity
-@Table(name = "user_new_board")
+@Table(name = "clever_schema.user_new_board")
 public class NewBoardUID implements Serializable {
     private Long id;
     private Long boardUID;

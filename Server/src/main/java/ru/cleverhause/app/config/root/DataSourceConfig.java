@@ -94,7 +94,6 @@ public class DataSourceConfig {
 //    }
 
     @Bean
-
     public JpaTransactionManager transactionManager() {
         JpaTransactionManager txManager = new JpaTransactionManager();
         txManager.setEntityManagerFactory(entityManagerFactory().getObject());

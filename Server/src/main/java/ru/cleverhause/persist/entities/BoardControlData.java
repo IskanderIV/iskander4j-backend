@@ -18,7 +18,7 @@ import java.util.Date;
  * @date 6/10/2018.
  */
 @Entity
-@Table(name = "boardControlData")
+@Table(name = "clever_schema.boardControlData")
 public class BoardControlData implements Serializable {
     private Long id;
     private String data;

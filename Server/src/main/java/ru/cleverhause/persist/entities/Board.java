@@ -23,7 +23,7 @@ import java.util.List;
  * @date 5/28/2018.
  */
 @Entity
-@Table(name = "board")
+@Table(name = "clever_schema.board")
 public class Board implements Serializable {
     private Long id;
     private Long boardUID;

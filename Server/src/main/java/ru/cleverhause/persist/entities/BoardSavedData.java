@@ -20,7 +20,7 @@ import java.util.Date;
  * @date 6/7/2018.
  */
 @Entity
-@Table(name = "boardSavedData")
+@Table(name = "clever_schema.boardSavedData")
 public class BoardSavedData implements Serializable {
     @Id
     @Column(name = "id")

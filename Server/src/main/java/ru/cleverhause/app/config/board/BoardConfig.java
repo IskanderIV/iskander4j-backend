@@ -17,9 +17,4 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @ComponentScan(basePackages = {"ru.cleverhause.app.rest.board"})
 public class BoardConfig implements WebMvcConfigurer {
 
-    @Bean
-    public String getString() {
-        String str = new String("18");
-        return str;
-    }
 }

@@ -21,7 +21,7 @@ import java.util.Set;
  */
 
 @Entity
-@Table(name = "roles")
+@Table(name = "clever_schema.roles")
 public class Role implements Serializable {
 
     @Id

@@ -18,7 +18,7 @@ import java.io.Serializable;
  * @date 6/10/2018.
  */
 @Entity
-@Table(name = "boardStructure")
+@Table(name = "clever_schema.boardStructure")
 public class BoardStructure implements Serializable {
     private Long id;
     private String structure;
