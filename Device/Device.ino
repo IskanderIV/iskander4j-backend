@@ -13,7 +13,7 @@ void setup() {
   
   btnMngr->createButton(btn_CONTROLABLE, true);
   btnMngr->createButton(btn_ONN, true);
-  btnMngr->createButton(btn_SEARCH, true);
+  btnMngr->createButton(btn_SEARCH, false);
   Serial.println(F("We have buttons!")); //TEST 
 }
 

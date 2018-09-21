@@ -49,30 +49,32 @@ void DeviceRFManager::sendInfo() {
 				// updateControlFromBoard(newControlData);
 				// Serial.println(F("DeviceRFManager::searchDevice() good radio connection!"));
 				// return;										
+			} else {
+				fixWrongRFConnection();
 			}
 			// Убрать код ниже после разбирательств с антеной и приемом
 			updateControlFromBoard(newControlData);
-			Serial.println(F("DeviceRFManager::searchDevice() good radio connection!"));
+			Serial.println(F("DeviceRFManager::searchDevice() update even without ack when send to wait!"));
 			return;
 		} 
-		// RF connection is failed (maybe transmiters and recievers on board and device sides)
-		fixWrongRFConnection();
+		// RF connection is failed (maybe transmiters and recievers on board and device sides)		
 	}
 	//Serial.println("DeviceRFManager::sendInfo() End");	
 }
 
 bool DeviceRFManager::identifyDevice() {
 	uint8_t from;
-	uint8_t len = sizeof(DataInfo); // TODO mayb needed buf here
+	uint8_t len = sizeof(rfBuf); // TODO mayb needed buf here
 	prepareDataForTransmit();
-	Serial.println(String("sizeof(dataInfoUnion.byteBuffer) = ") + sizeof(dataInfoUnion.byteBuffer));
+	Serial.println(String(F("sizeof(dataInfoUnion.byteBuffer) = ")) + String(len));
 	
 	if (_radioMngr.sendtoWait(dataInfoUnion.byteBuffer, sizeof(DataInfo), BAZA_ADDRESS)) {
+		Serial.println(String(F("good sendtoWait ")));
 		// Now wait for a reply from Device		
 		if (_radioMngr.recvfromAckTimeout(dataInfoUnion.byteBuffer, &len, 2000, &from)) {
 			// good radio connection
 			updateStructureData();
-			Serial.print(String(F("New Device number is ")) + dataInfoUnion.dataInfo._deviceId);
+			Serial.println(String(F("New Device number is ")) + dataInfoUnion.dataInfo._deviceId);
 			return true;
 		}
 	}
@@ -93,7 +95,7 @@ long DeviceRFManager::getBoardUID() {
 // TODO control
 void DeviceRFManager::updateStructureData() {
 	uint8_t newDeviceId = dataInfoUnion.dataInfo._deviceId;
-	uint8_t newBoardUID = dataInfoUnion.dataInfo._boardUID;
+	long newBoardUID = dataInfoUnion.dataInfo._boardUID;
 	
     _radioMngr.setThisAddress(newDeviceId);
     _radioMngr.setHeaderFrom(newDeviceId);
@@ -144,11 +146,11 @@ void DeviceRFManager::prepareDataForTransmit() {
 	dataInfoUnion.dataInfo._adjustable = itob(_dataBase->getDeviceAdj());
 	dataInfoUnion.dataInfo._rotatable = itob(_dataBase->getDeviceRotatable());
 	dataInfoUnion.dataInfo._radioError = itob(_dataBase->getDeviceRFErr());
-	Serial.println(String("dataInfoUnion.dataInfo._boardUID = ") + dataInfoUnion.dataInfo._boardUID);
-	Serial.println(String("dataInfoUnion.dataInfo._deviceId = ") + dataInfoUnion.dataInfo._deviceId);
-	Serial.println(String("dataInfoUnion.dataInfo._deviceAck = ") + dataInfoUnion.dataInfo._deviceAck);
-	Serial.println(String("dataInfoUnion.dataInfo._deviceControl = ") + dataInfoUnion.dataInfo._deviceControl);
-	Serial.println(String("dataInfoUnion.dataInfo._adjustable = ") + String(dataInfoUnion.dataInfo._adjustable));
-	Serial.println(String("dataInfoUnion.dataInfo._rotatable = ") + String(dataInfoUnion.dataInfo._rotatable));
-	Serial.println(String("dataInfoUnion.dataInfo._radioError = ") + String(dataInfoUnion.dataInfo._radioError));
+	// Serial.println(String("dataInfoUnion.dataInfo._boardUID = ") + dataInfoUnion.dataInfo._boardUID);
+	// Serial.println(String("dataInfoUnion.dataInfo._deviceId = ") + dataInfoUnion.dataInfo._deviceId);
+	// Serial.println(String("dataInfoUnion.dataInfo._deviceAck = ") + dataInfoUnion.dataInfo._deviceAck);
+	// Serial.println(String("dataInfoUnion.dataInfo._deviceControl = ") + dataInfoUnion.dataInfo._deviceControl);
+	// Serial.println(String("dataInfoUnion.dataInfo._adjustable = ") + String(dataInfoUnion.dataInfo._adjustable));
+	// Serial.println(String("dataInfoUnion.dataInfo._rotatable = ") + String(dataInfoUnion.dataInfo._rotatable));
+	// Serial.println(String("dataInfoUnion.dataInfo._radioError = ") + String(dataInfoUnion.dataInfo._radioError));
 }

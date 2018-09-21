@@ -105,7 +105,19 @@ void DataBase::fillDeviceInfoFromEeprom(uint8_t id) {
 *******************/
 
 uint8_t  DataBase::generateId() {
-	return getDeviceCount();
+	uint8_t newId = 0;
+	if (_deviceJsonList) {
+		Serial.println(String("if (_deviceJsonList)"));
+		DeviceInfo* temp = _deviceJsonList;
+		while (temp) {
+			if (temp->getId() > newId) {
+				newId = temp->getId();
+				Serial.println(String("if (temp->getId() > newId)"));
+			}
+			temp = temp->getNext();
+		}
+	}
+	return ++newId;
 }
 	
 void DataBase::addDeviceInfo(uint8_t id) {	

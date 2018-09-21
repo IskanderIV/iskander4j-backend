@@ -70,18 +70,21 @@ void Controller::processLoop() {
 			_displayEG->notifyDisplayToShowCurrMenu();
 			_mnSelector->setActive(true);
 		} else {
+			if (isBtnPushed) {
+				_displayEG->notifyDisplayToHideMenu();
+			}
 			Serial.println(F("----------------------------------------Work state!"));
 			quizeDevices();
-			sendToServer(DATA);
+			// sendToServer(DATA);
 		}		
-	} else if (_mnSelector->isActive()) {
-		//Serial.println("Selector is active!");
+	} else if (_mnSelector->isActive() && isBtnPushed) {
+		Serial.println(F("Selector is active!"));
 		goWithMenuSelector(pushedBtnCode);
 		//_displayEG->notifyDisplayToShowCurrMenu();
-	} else if (_inputer->isActive()) {
+	} else if (_inputer->isActive() && isBtnPushed) {
 		//Serial.println("_inputer is active!");
 		goWithInputer(pushedBtnCode);
-	} else if (_chooser->isActive()) {
+	} else if (_chooser->isActive() && isBtnPushed) {
 		//Serial.println("_inputer is active!");
 		goWithChooser(pushedBtnCode);
 	} 
@@ -344,9 +347,7 @@ void Controller::processMenuExit() {
 
 void Controller::searhDevices() {	
 	do {
-		if (_rfManager->searchDevices()) {
-			_dataBase->saveDevicesIdsToEeprom();
-		}
+		_rfManager->searchDevices();
 		delay(100);
 	} 
 	while (!WAS_MENU_BTN_PRESSED);

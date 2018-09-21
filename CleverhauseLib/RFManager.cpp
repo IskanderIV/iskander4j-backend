@@ -39,6 +39,7 @@ void RFManager::init(DataBase* pDataBase) {
 bool RFManager::searchDevices(){
 	//Serial.println("RFManager::searchDevice() Begin");
 	if (_dataBase->getDeviceCount() >= _dataBase->getMaxDevices()) {
+		Serial.println(F("max count of devices"));
 		//TODO send message to controller to display about this situation
 		return false;
 	}
@@ -55,18 +56,23 @@ bool RFManager::searchDevices(){
 			if (!isDeviceKnown(from)) {
 				Serial.println(F("BAZA: No such device found"));//TEST
 				uint8_t newDeviceId = _dataBase->generateId();
-				Serial.print(String(F("BAZA: new device number = ")) + newDeviceId);//TEST
+				Serial.println(String(F("BAZA: new device number = ")) + newDeviceId);//TEST
 				prepareDataForKnowingTransmit(newDeviceId);
 				// Send a reply back to the originator client
 				if (_radioMngr->sendtoWait(dataInfoUnion.byteBuffer, sizeof(DataInfo), from)) {
+					// /////// TODO не проходит прием после отправки
+				// Раскоментить код ниже после разбирательств с антеной и приемом
 					// Good transmit and Ack. Add this device to eeprom memory and to the dataBase
-					registerNewDevice(newDeviceId);
-					Serial.println(F("RFManager::searchDevice() Good transmit and Ack I don't know you End"));
-					return true;					
+					// registerNewDevice(newDeviceId);
+					// Serial.println(F("RFManager::searchDevice() Good transmit and Ack I don't know you End"));
+					// return true;					
 				} else {
 					// Bad transmit or Ack. No connection between us. Radio Error of this Device should be true!
-					Serial.println(F("BAZA: sendtoWait unknown failed"));
-				}				
+					Serial.println(F("BAZA: sendtoWait of unknown failed"));
+				}
+				registerNewDevice(newDeviceId);
+				Serial.println(F("RFManager::searchDevice() Good transmit and Ack I don't know you End"));
+				return true;
 			} else {
 				if (_radioMngr->sendtoWait(dataInfoUnion.byteBuffer, sizeof(DataInfo), from)) {
 					// Good transmit and Ack. Add this device to eeprom memory and to the dataBase
@@ -106,7 +112,7 @@ void RFManager::processDeveices(){
 			unsigned long currentMillis = millis();
 			unsigned long previousMillis = currentMillis;	
 	
-			while (currentMillis - previousMillis < 4000) {
+			while (currentMillis - previousMillis < 2000) {
 				currentMillis = millis();
 				if (_radioMngr->available()) {
 					Serial.println(F("DEVICE: got something by RF!"));//TEST
@@ -208,5 +214,6 @@ void RFManager::registerNewDevice(uint8_t pDeviceId) {
 	_dataBase->setDeviceAnalog(pDeviceId, itob(dataInfoUnion.dataInfo._analog));
 	_dataBase->setDeviceAdj(pDeviceId, itob(dataInfoUnion.dataInfo._adjustable));
 	_dataBase->setDeviceRotatable(pDeviceId, itob(dataInfoUnion.dataInfo._rotatable));
-	_dataBase->setDeviceRFErr(pDeviceId, itob(dataInfoUnion.dataInfo._radioError));	
+	_dataBase->setDeviceRFErr(pDeviceId, itob(dataInfoUnion.dataInfo._radioError));
+	_dataBase->saveDevicesIdsToEeprom();
 }

@@ -17,11 +17,11 @@ void EepromManager::init() {
 	//saveBoardUID(BOARD_UID);// need rewrite by value from server when registration occur
 	
 	//STUB EEPROM DATA
-	memoryDtoUnion.memoryDTO._uniqID = 1262428L;
-	//String wifiLogin = String("acer Liquid Z630"); 
-	char wifiLogin[] = "RAZVRAT_HOUSE";
-	//String wifiPsswd = String("111222333");
+	memoryDtoUnion.memoryDTO._uniqID = 1168396L;
+	char wifiLogin[] = "RAZVRAT_HOUSE"; 
+	// char wifiLogin[] = "acer Liquid Z630";
 	char wifiPsswd[] = "LaserJet";
+	// char wifiPsswd[] = "111222333";
 	// saveString(eepr_wifiLogin, wifiLogin);
 	// saveString(eepr_wifiPsswd, wifiPsswd);
 
@@ -30,8 +30,8 @@ void EepromManager::init() {
 	// saveString(eepr_tcpLogin, username);
 	// saveString(eepr_tcpPsswd, password);
 	
-	char host[] = "192.168.1.37";
-	char port[] = "8090";
+	char host[] = "cleverhause.ru";
+	char port[] = "80";
 	char target[] = "/cleverhause/boards/board/data";
 	// saveString(eepr_serverAdress, tcpServerIP);
 	// saveString(eepr_serverPort, tcpServerPort);
@@ -46,14 +46,14 @@ void EepromManager::init() {
 	
 	const int max_devices = (int) MAX_DEVICES;	
 	// saveDevicesIds(deviceIds);
-	uint8_t deviceIds[max_devices] = {1,2,0,0,0,0,0,0};
-	float deviceCtrls[max_devices] = {1.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0};
+	uint8_t deviceIds[max_devices] = {0,0,0,0,0,0,0,0};
+	float deviceCtrls[max_devices] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
 	float deviceMins[max_devices] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
-	float deviceMaxs[max_devices] = {1.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0};
-	float deviceDiscretes[max_devices] = {1.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0};
-	uint8_t deviceDigitalBools[max_devices] = {1,1,0,0,0,0,0,0};
+	float deviceMaxs[max_devices] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+	float deviceDiscretes[max_devices] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+	uint8_t deviceDigitalBools[max_devices] = {0,0,0,0,0,0,0,0};
 	uint8_t deviceAnalogBools[max_devices] = {0,0,0,0,0,0,0,0};
-	uint8_t deviceAdjustableBools[max_devices] = {1,1,0,0,0,0,0,0};
+	uint8_t deviceAdjustableBools[max_devices] = {0,0,0,0,0,0,0,0};
 	uint8_t deviceRotatableBools[max_devices] = {0,0,0,0,0,0,0,0};
 	
 	for (uint8_t i = 0; i < max_devices; i++) {

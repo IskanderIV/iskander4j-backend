@@ -30,17 +30,12 @@ void DeviceController::init() {
 
 void DeviceController::processLoop() {
 	processButtons();
-	if (_workState) {		
-		Serial.println("Work state!");
-		doWork();
-	} else if (_searchState) {
+	if (_searchState) {
 		Serial.println("Identifying state!");
 		doIdentify();
-	}
-	// else {
-		// Serial.println("Else state!");
-		// doWork();
-	// }	
+	} else {
+		doWork();
+	}	
 }
 
 /******************
@@ -48,22 +43,12 @@ void DeviceController::processLoop() {
 *******************/
 
 void DeviceController::processButtons() {
+	_searchState = false;
 	ButtonPin* buttonsStateList = _btnManager->processButtons();
-	for (uint8_t i = 0; i < _btnManager->getButtonsCount(); i++) {		
-		switch (buttonsStateList[i]) {
-			case btn_ONN: {
-				Serial.println("Button btn_ONN = pushed");
-				_workState = true;
-				_searchState = false;
-				break;
-			}
-			case btn_SEARCH: {
-				Serial.println("Button btn_SEARCH = pushed");
-				if (!_workState) {
-					_searchState = true;
-				}
-				break;
-			}
+	for (uint8_t i = 0; i < _btnManager->getButtonsCount(); i++) {
+		if (buttonsStateList[i] == btn_SEARCH) {
+			_searchState = true;
+			break;
 		}
 	}
 }
