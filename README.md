@@ -4,7 +4,7 @@
 
 ## Description
 
-  The system consist of main block named Board (based on Arduino Mega) and up to 8 standalone control-measuring modules named Devices (based on Arduino ProMini). Board connects to Wi-Fi router and interacts with server. Board has LCD display and clipboard for passing connection info - login, passwords and so on and so forth. Server is implemented on Tomcat 7.0 and deployed on AWS T2.micro for testing. URL: www.cleverhause.ru/cleverhause/home (cleverhOuse was busy). All previously said is presented at picture 1 below.
+  The system consist of main block named Board (based on Arduino Mega) and up to 8 standalone control-measuring modules named Devices (based on Arduino ProMini). Board connects to Wi-Fi router and interacts with server. Board has LCD display and clipboard for passing connection info - login, passwords and so on and so forth. Server is implemented on Tomcat 7.0 and deployed on AWS T2.micro for testing. URL: cleverhause.ru/cleverhause/home (cleverhOuse was busy). All previously said is presented at picture 1 below.
    
 ![alt text](https://user-images.githubusercontent.com/28635427/46251011-a89fa100-c458-11e8-8560-26471eadeb6c.jpg "Cleverhause structure")
 Picture 1. Cleverhause structure
@@ -33,7 +33,7 @@ $ sudo tar xzf jdk-8u151-linux-x64.tar.gz
 $ cd jdk1.8.0_151/
 $ sudo alternatives --install /usr/bin/java java /opt/jdk1.8.0_151/bin/java 2
 $ sudo alternatives --config java
-There are maybe more than one programs which provide 'java'. So you need to choose only one that corresponds to jdk1.8.0_151
+# There are maybe more than one programs which provide 'java'. So you need to choose only one that corresponds to jdk1.8.0_151
 # Checking if the server’s default java version is Sun JDK (usually it is OpenJDK)
 $ java -version
 ```
@@ -55,17 +55,21 @@ $ sudo service tomcat7 stop
 ```
 5. Install Postgresql. 
 ```
-1) Install the repository RPM:
+# Install the repository RPM:
 $ sudo yum install https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-6-x86_64/pgdg-ami201503-96-9.6-2.noarch.rpm
-2) Install the client packages:
+# Install the client packages:
 $ sudo yum install postgresql96
 $ sudo yum install postgresql96-server
-3) init database
-а) $ sudo service postgresql96 initdb 
-directory /var/lib/pgsql96 will be created
-b) $ sudo chkconfig postgresql96 on - If you want PostgreSQL to start automatically when the OS starts, do tis
-4) $ sudo vim /var/lib/pgsql96/data/pg_hba.conf - change config file of database
-Update the bottom of the file, which will read something like this, by default:
+# init database
+$ sudo service postgresql96 initdb 
+# after that directory /var/lib/pgsql96 will be created
+# If you want PostgreSQL to start automatically when the OS starts, do this
+$ sudo chkconfig postgresql96 on
+
+# change config file of database
+$ sudo vim /var/lib/pgsql96/data/pg_hba.conf
+
+# Update the bottom of the file, which will read something like this, by default:
 
 # TYPE  DATABASE        USER            ADDRESS                 METHOD
  
@@ -87,8 +91,9 @@ host    all             my_user      0.0.0.0/0                  md5
 # IPv6 local connections:
 host    all             all             ::1/128                 md5
 
-5) $ sudo vim /var/lib/pgsql96/data/postgresql.conf - postgres connection configurations
-Uncomment and edit the following lines -
+5) postgres connection configurations
+$ sudo vim /var/lib/pgsql96/data/postgresql.conf
+# Uncomment and edit the following lines -
 #listen_addresses = 'localhost'
 to
 listen_addresses='*'
@@ -97,25 +102,30 @@ and
 to
 port = 5432
 
-6) $ sudo service postgresql96 start - Start PostgreSQL server
-start : start the database
-stop : stop the database
-restart : stop/start the database; used to read changes to core configuration files
-$ sudo service postgresql96 reload : reload pg_hba.conf file while keeping database running
+6) Start PostgreSQL server
+$ sudo service postgresql96 start
+# start : start the database
+# stop : stop the database
+# restart : stop/start the database; used to read changes to core configuration files
+# $ sudo service postgresql96 reload : reload pg_hba.conf file while keeping database running
 
 7) $ sudo su - postgres
-8) psql -U postgres - Login into Postgres user. Out - Ctrl+Z
+8) Login into Postgres user. Out - Ctrl+Z
+$ psql -U postgres
 
-9) ALTER USER postgres WITH PASSWORD '$password'; - Change your login password (хочу MichaelJackson2908) сейчас postgres
+9) Change postgres login password
+ALTER USER postgres WITH PASSWORD '$password';
 
 10) CREATE ROLE my_user WITH LOGIN
   ENCRYPTED PASSWORD '$userPassword'
   NOSUPERUSER INHERIT CREATEDB CREATEROLE NOREPLICATION;
   
 11) set role;
-10) CREATE DATABASE cleverhause_db WITH OWNER my_user ENCODING = 'UTF8' CONNECTION LIMIT = -1;
+
+12) CREATE DATABASE cleverhause_db WITH OWNER my_user ENCODING = 'UTF8' CONNECTION LIMIT = -1;
 GRANT ALL ON DATABASE cleverhause_db TO my_user; - TODO think about template1 or template0
-11) (maybe the same as in 3 b) Autostart of postgresql
+
+13) (maybe the same as in 3 b) Autostart of postgresql
 $ sudo vim /etc/systemd/system/multi-user.target.wants/postgresql.service
 Environment=PGROOT=/pathto/postgresql/
 PIDFile=/pathto/postgresql/data/postmaster.pid
@@ -137,17 +147,25 @@ scp -i path/to/ssh_key.ppk path/to/cleverhause.war <amazonHostName>:/home/ec2-us
 Or just use WinSCP
 
 7. Deploy
-..a) get root permission: sudo su root
-..b) go to the home folder: cd /home/ec2-user
-..c) copy war to tomcat: cp cleverhause.war /usr/share/tomcat7/webapps/
-..d) start tomcat: sudo service tomcat7 start
+```
+# get root permission: 
+$ sudo su root
+# go to the home folder: 
+$ cd /home/ec2-user
+# copy war to tomcat: 
+$ cp cleverhause.war /usr/share/tomcat7/webapps/
+# start tomcat: 
+$ sudo service tomcat7 start
+```
 
 8. Stoping tomcat (if needed)
+```
 $ sudo service tomcat7 stop
+```
 
 9. Remove old project from tomcat 
-..a) for folders 
 ```
+..a) for folders 
 rm -r -I /usr/share/tomcat7/webapps/cleverhause/
 If the -I or --interactive=once option is given, 
 and there are more than three files or the -r, -R, 
@@ -159,9 +177,8 @@ and the -f or --force option is not given, or the -i or
 --interactive=always option is given, rm prompts the user 
 for whether to remove the file. If the response is not 
 affirmative, the file is skipped.
-```
+
 ..b) for files
-```
 rm /usr/share/tomcat7/webapps/cleverhause.war
 ```
 10. Setting tomcat to run in ports 80 & 443
