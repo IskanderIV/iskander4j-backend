@@ -16,6 +16,14 @@ Example of using cleverhause system is presented at picture 2 below.
 ![alt text](https://user-images.githubusercontent.com/28635427/46251025-f3b9b400-c458-11e8-841a-68ccfe8b8f97.jpg "Cleverhause example of using")
 Picture 2. Cleverhause example of using
 
+Prototypes of Board and Device are presented at Picture 3 and 4 correspondingly.
+
+![alt text](https://user-images.githubusercontent.com/28635427/46262286-2ecaee80-c510-11e8-92f2-bff4a55c7b76.jpg "Cleverhause Board prototype")
+Picture 3. Cleverhause Board prototype
+
+![alt text](https://user-images.githubusercontent.com/28635427/46262289-4904cc80-c510-11e8-9b3b-a36026b2e790.jpg "Cleverhause Device prototype")
+Picture 4. Cleverhause Device prototype
+
 ### Prerequisites
 
 1. Technologies: Java 7, Spring Core, Spring MVC, Spring Security, Hibernate, JSP, JSTL, Bootstrap, maven
