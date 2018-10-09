@@ -13,10 +13,10 @@
 #include <TwoStringLcdDisplay.h>
 #include <Controller.h>
 
-#define PWR_BTNS_PIN 51
-#define GND_BTNS_PIN 33
-#define DIODE_PLUS_BTNS_PIN 37
-#define DIODE_MINUS_BTNS_PIN 35
+#define PWR_BTNS_PIN 45
+#define GND_BTNS_PIN 27
+#define DIODE_PLUS_BTNS_PIN 31
+#define DIODE_MINUS_BTNS_PIN 29
 
 MenuBuilder* menuBldr;
 MenuSelector* menuSelector;
@@ -30,7 +30,7 @@ Chooser* chooser;
 TwoStringLcdDisplay* lcd;
 Controller* controller;
 
-const unsigned int HASH_SIZE = 12;
+const unsigned int HASH_SIZE = 14;
 HashMap<String, Action, HASH_SIZE> menuToActionMap = HashMap<String, Action, HASH_SIZE>();
 
 void setup() {
@@ -86,12 +86,16 @@ void setup() {
   String targetMenuName = F("Target");
   String boardMenuName = F("BOARD");
   String boardUIDMenuName = F("Board UID");
+  String clearMemoryMenuName = F("Clear Memory");
   
   menuBldr->addToMain(deviceSearchMenuName, mn_Action);
   menuToActionMap[deviceSearchMenuName] = act_SEARCH_DEVICES;
   
   menuBldr->addToMain(regBoardMenuName, mn_Action);
   menuToActionMap[regBoardMenuName] = act_REGISTER_BOARD;
+  
+  menuBldr->addToMain(clearMemoryMenuName, mn_Action);
+  menuToActionMap[clearMemoryMenuName] = act_CLEAR_MEMORY;
   
   menuBldr->addToMain(sttMenuName, mn_Us);
   
@@ -159,7 +163,7 @@ void loop() {
 //    dataBase->setDeviceControlValue(1, 0.0);
 //  }
   //Serial.println("We are in loop!");
-  delay(100);
+//  delay(100);
 }
 
 void menuPushed() {

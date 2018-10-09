@@ -147,7 +147,7 @@ bool WifiManager::connectToWifi() {
 	do
 	{
 		if (!_wifi.stationConnect(_SSID, _ssidPassword)) {
-			delay(1000);
+			delay(500);
 			repeats++;
 			Serial.println(F("WifiManager::connectToWifi Connect failed"));
 		} else {
@@ -165,13 +165,13 @@ bool WifiManager::connectToWifi() {
 	}
 }
 
-void WifiManager::closeConnection() {
-	// if (_requestBuilder) {
-		// delete _requestBuilder;
-	// }
-	// if (_responseParser) {
-		// delete _responseParser;
-	// }
+void WifiManager::disconnectFromWifi() {
+	if (!_wifi.stationDisconnect()) {
+		delay(500);
+		Serial.println(F("Disconnect From Wifi failed"));
+	} else {
+		Serial.println(F("Disconnect From Wifi is done!"));
+	}
 }
 
 /*****************************

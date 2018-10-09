@@ -75,7 +75,7 @@ void Controller::processLoop() {
 			}
 			Serial.println(F("----------------------------------------Work state!"));
 			quizeDevices();
-			// sendToServer(DATA);
+			sendToServer(DATA);
 		}		
 	} else if (_mnSelector->isActive() && isBtnPushed) {
 		Serial.println(F("Selector is active!"));
@@ -122,10 +122,9 @@ void Controller::sendToServer(HttpExchangeType type) {
 	{
 		if (_wifiManager && _isWifiConnectionOk) {
 			_wifiManager->setActive(true);
-			Serial.println((String)F("Free memory before executeRequest >> ") + freeMemory());//TEST
+			// Serial.println((String)F("Free memory before executeRequest >> ") + freeMemory());//TEST
 			if (!_wifiManager->executeRequest(type)) {
-				Serial.println((String)F("Free memory after executeRequest >> ") + freeMemory());//TEST
-				_wifiManager->closeConnection();
+				// Serial.println((String)F("Free memory after executeRequest >> ") + freeMemory());//TEST
 			}
 			_wifiManager->setActive(false);
 		} else {
@@ -134,6 +133,10 @@ void Controller::sendToServer(HttpExchangeType type) {
 		}
 	}
 	while (!_isWifiConnectionOk && repeats < numOfrepeats);
+}
+
+void Controller::clearMemory() {
+	_dataBase->clearMemory();
 }
 
 void Controller::goWithMenuSelector(ButtonPin pPushedBtnCode) {
@@ -311,12 +314,11 @@ void Controller::executeAction() {
 		case act_RESET_WIFI: {
 			doBeforeSingleAction();
 			//_displayEG->notifyDisplayToShowSmthDuringReset();
-			initWifi();
+			resetWifi();
 			doAfterSingleAction();
 			break;
         }
-		case act_RESET_GSM: {
-			
+		case act_RESET_GSM: {			
 			break;
         }
 		case act_SEARCH_DEVICES: {
@@ -328,6 +330,12 @@ void Controller::executeAction() {
 		case act_REGISTER_BOARD: {
 			doBeforeSingleAction();
 			sendToServer(REG);
+			doAfterSingleAction();
+			break;
+        }
+		case act_CLEAR_MEMORY: {
+			doBeforeSingleAction();
+			clearMemory();
 			doAfterSingleAction();
 			break;
         }
@@ -399,6 +407,11 @@ void Controller::doAfterSingleAction() {
 	_mnSelector->setActive(true);
 }
 
+void Controller::resetWifi() {
+	_wifiManager->disconnectFromWifi();
+	initWifi();
+}
+
 /*
  Other interface
 */
@@ -443,9 +456,9 @@ void Controller::setDataBase(DataBase* pDataBase) {
 void Controller::setWifiManager(WifiManager* pWifiManager) {
 	Serial.println(F("Controller::setWifiManager initWifi()"));
 	_wifiManager = pWifiManager;
-	initWifi();
+	initWifi(); //TODO comment it only for test. need uncomment
 }
 
-void Controller::setMenuToActionMap(HashMap<String, Action, 12/*unsigned int*/> pMenuToActionMap) {
+void Controller::setMenuToActionMap(HashMap<String, Action, 14/*unsigned int*/> pMenuToActionMap) {
 	_menuToActionMap = pMenuToActionMap;
 }

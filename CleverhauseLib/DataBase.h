@@ -97,6 +97,8 @@ public:
 	void setLcdError(bool pLcdError);
 	
 	void setEepromManager(EepromManager* _eepromMngr);
+	
+	void clearMemory();
 		
 	class DeviceInfo
 	{

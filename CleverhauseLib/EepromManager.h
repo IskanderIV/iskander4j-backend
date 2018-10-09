@@ -88,6 +88,9 @@ public:
 	
 	int getMaxByteOfPlace(EepromPlaceName _name);
 	
+	void clearMemory();
+	void printMemory();
+	
 private:
 	union MemoryDtoUnion {  
 		MemoryDTO memoryDTO;  
@@ -97,6 +100,10 @@ private:
 	void init();
 	void initMemoryDto();
 	void copy(char* a, int a_len, String& b);
+	
+	void print(String& title, String& element) {
+		Serial.print(String(F("Print memory:\n")));
+	};
 	
 	bool itob(int in) {
 		return in == 0 ? false : true;

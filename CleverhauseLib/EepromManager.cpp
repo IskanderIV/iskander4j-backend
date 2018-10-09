@@ -14,28 +14,24 @@ EepromManager::~EepromManager() {
 
 void EepromManager::init() {
 	initMemoryDto();
-	//saveBoardUID(BOARD_UID);// need rewrite by value from server when registration occur
-	
+	// STUB
+	clearMemory();
+}
+
+void EepromManager::clearMemory() {
 	//STUB EEPROM DATA
 	memoryDtoUnion.memoryDTO._uniqID = 1168396L;
-	char wifiLogin[] = "RAZVRAT_HOUSE"; 
-	// char wifiLogin[] = "acer Liquid Z630";
-	char wifiPsswd[] = "LaserJet";
-	// char wifiPsswd[] = "111222333";
-	// saveString(eepr_wifiLogin, wifiLogin);
-	// saveString(eepr_wifiPsswd, wifiPsswd);
+	// char wifiLogin[] = "RAZVRAT_HOUSE"; 
+	char wifiLogin[] = "acer Liquid Z630";
+	// char wifiPsswd[] = "LaserJet";
+	char wifiPsswd[] = "111222333";
 
 	char username[] = "iskander";
 	char password[] = "123";
-	// saveString(eepr_tcpLogin, username);
-	// saveString(eepr_tcpPsswd, password);
 	
 	char host[] = "cleverhause.ru";
 	char port[] = "80";
 	char target[] = "/cleverhause/boards/board/data";
-	// saveString(eepr_serverAdress, tcpServerIP);
-	// saveString(eepr_serverPort, tcpServerPort);
-	// saveString(eepr_target, tcpServertarget);
 	strncpy(memoryDtoUnion.memoryDTO._wifiLogin, wifiLogin, WIFI_SSID_MAX_LEN);
 	strncpy(memoryDtoUnion.memoryDTO._wifiPsswd, wifiPsswd, WIFI_PSSWD_MAX_LEN);
 	strncpy(memoryDtoUnion.memoryDTO._tcpLogin, username, TCP_LOGIN_MAX_LEN);
@@ -46,14 +42,14 @@ void EepromManager::init() {
 	
 	const int max_devices = (int) MAX_DEVICES;	
 	// saveDevicesIds(deviceIds);
-	uint8_t deviceIds[max_devices] = {0,0,0,0,0,0,0,0};
+	uint8_t deviceIds[max_devices] = {1,0,0,0,0,0,0,0};
 	float deviceCtrls[max_devices] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
 	float deviceMins[max_devices] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
-	float deviceMaxs[max_devices] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
-	float deviceDiscretes[max_devices] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
-	uint8_t deviceDigitalBools[max_devices] = {0,0,0,0,0,0,0,0};
+	float deviceMaxs[max_devices] = {1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+	float deviceDiscretes[max_devices] = {1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+	uint8_t deviceDigitalBools[max_devices] = {1,0,0,0,0,0,0,0};
 	uint8_t deviceAnalogBools[max_devices] = {0,0,0,0,0,0,0,0};
-	uint8_t deviceAdjustableBools[max_devices] = {0,0,0,0,0,0,0,0};
+	uint8_t deviceAdjustableBools[max_devices] = {1,0,0,0,0,0,0,0};
 	uint8_t deviceRotatableBools[max_devices] = {0,0,0,0,0,0,0,0};
 	
 	for (uint8_t i = 0; i < max_devices; i++) {
@@ -68,6 +64,31 @@ void EepromManager::init() {
 		memoryDtoUnion.memoryDTO._deviceRotatableBools[i] = deviceRotatableBools[i];
 	}
 	EEPROM.put(MEMORY_BEGIN_POSITION, memoryDtoUnion.byteBuffer);
+}
+
+void EepromManager::printMemory() {
+	EEPROM.get(MEMORY_BEGIN_POSITION, memoryDtoUnion.byteBuffer);
+	Serial.print(String(F("Print memory:\n")));
+	Serial.println(String(F("BoardUID: ")) + String(memoryDtoUnion.memoryDTO._uniqID));
+	const int max_devices = (int) MAX_DEVICES;
+	for (uint8_t i = 0; i < max_devices; i++) {
+		Serial.println(String(F("deviceId")) + F("[") + i + F("]: ") + String(memoryDtoUnion.memoryDTO._deviceIds[i]));
+		Serial.println(String(F("deviceCtrl")) + F("[") + i + F("]: ") + String(memoryDtoUnion.memoryDTO._deviceCtrls[i]));
+		Serial.println(String(F("deviceMin")) + F("[") + i + F("]: ") + String(memoryDtoUnion.memoryDTO._deviceMins[i]));
+		Serial.println(String(F("deviceMax")) + F("[") + i + F("]: ") + String(memoryDtoUnion.memoryDTO._deviceMaxs[i]));
+		Serial.println(String(F("deviceDiscrete")) + F("[") + i + F("]: ") + String(memoryDtoUnion.memoryDTO._deviceDiscretes[i]));
+		Serial.println(String(F("deviceDigitalBool")) + F("[") + i + F("]: ") + String(memoryDtoUnion.memoryDTO._deviceDigitalBools[i]));
+		Serial.println(String(F("deviceAnalogBool")) + F("[") + i + F("]: ") + String(memoryDtoUnion.memoryDTO._deviceAnalogBools[i]));
+		Serial.println(String(F("deviceAdjustableBool")) + F("[") + i + F("]: ") + String(memoryDtoUnion.memoryDTO._deviceAdjustableBools[i]));
+		Serial.println(String(F("deviceRotatableBool")) + F("[") + i + F("]: ") + String(memoryDtoUnion.memoryDTO._deviceRotatableBools[i]));
+	}
+	Serial.println(String(F("wifiLogin: ")) + String(memoryDtoUnion.memoryDTO._wifiLogin));
+	Serial.println(String(F("_wifiPsswd: ")) + String(memoryDtoUnion.memoryDTO._wifiPsswd));
+	Serial.println(String(F("_tcpLogin: ")) + String(memoryDtoUnion.memoryDTO._tcpLogin));
+	Serial.println(String(F("_tcpPsswd: ")) + String(memoryDtoUnion.memoryDTO._tcpPsswd));
+	Serial.println(String(F("_serverAdress: ")) + String(memoryDtoUnion.memoryDTO._serverAdress));
+	Serial.println(String(F("_serverPort: ")) + String(memoryDtoUnion.memoryDTO._serverPort));
+	Serial.println(String(F("_serverTarget: ")) + String(memoryDtoUnion.memoryDTO._serverTarget));
 }
 
 void EepromManager::initMemoryDto() {

@@ -47,7 +47,7 @@ public:
 	String getFindedWANsDelimiter();
 	void setDataBase(DataBase* _dataBase);
 	bool connectToWifi();
-	void closeConnection();
+	void disconnectFromWifi();
 	
 private:
 	//SoftwareSerial espSerial;

@@ -30,7 +30,8 @@ enum Action {
 	act_SEARCH_DEVICES,
 	act_SELECT_WIFI,
 	act_REGISTER_BOARD,
-	act_INPUT_BOARD_UID
+	act_INPUT_BOARD_UID,
+	act_CLEAR_MEMORY	
 };
 
 //#define DEBUG
@@ -73,7 +74,7 @@ public:
 	void setRFManager(RFManager* _rfManager);
 	void setWifiManager(WifiManager* _wifiManager);
 	void setDataBase(DataBase* _dataBase);
-	void setMenuToActionMap(HashMap<String, Action, 12/*unsigned int*/> _menuToActionMap);
+	void setMenuToActionMap(HashMap<String, Action, 14/*unsigned int*/> _menuToActionMap);
 	
 private:
 	MenuSelectorEventGenerator* _mnSelectorEG;
@@ -89,7 +90,7 @@ private:
 	RFManager* 					_rfManager;
 	DataBase* 					_dataBase;
 	
-	HashMap<String, Action, 12/*unsigned int*/> _menuToActionMap;
+	HashMap<String, Action, 14/*unsigned int*/> _menuToActionMap;
 	
 	bool _isWifiConnectionOk;
 	
@@ -97,6 +98,8 @@ private:
 	void initWifi();
 	void quizeDevices();
 	void sendToServer(HttpExchangeType type);
+	void clearMemory();
+	void resetWifi();
 	void goWithMenuSelector(ButtonPin _pushedBtnCode);
 	void goWithInputer(ButtonPin _pushedBtnCode);
 	void goWithChooser(ButtonPin _pushedBtnCode);

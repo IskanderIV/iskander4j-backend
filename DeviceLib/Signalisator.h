@@ -4,7 +4,7 @@
 #ifndef _Signalisator_H_
 #define _Signalisator_H_
 
-#define LED_PIN_DEF 13
+#define LED_PIN_DEF 7
 
 #define LED_BLINK_RARE_FREG  1.0
 #define LED_BLINK_OFTEN_FREG 0.1

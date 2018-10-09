@@ -24,20 +24,10 @@ void DeviceEepromManager::init() {
 	float deviceMax = 1.0;
 	float deviceDiscrete = 1.0;
 	
-	// saveFloat(eepr_deviceCtrl, deviceCtrl);
-	// saveFloat(eepr_deviceMin, deviceMin);	
-	// saveFloat(eepr_deviceMax, deviceMax);	
-	// saveFloat(eepr_deviceDiscrete, deviceDiscrete);
-	
 	uint8_t deviceDigitalBool = 1;
 	uint8_t deviceAnalogBool = 0;
 	uint8_t deviceAdjustableBool = 1;
-	uint8_t deviceRotatableBool = 0;	
-
-	// saveBool(eepr_deviceDigitalBool, deviceDigitalBool);	
-	// saveBool(eepr_deviceAnalogBool, deviceAnalogBool);	
-	// saveBool(eepr_deviceAdjustableBool, deviceAdjustableBool);	
-	// saveBool(eepr_deviceRotatableBool, deviceRotatableBool);
+	uint8_t deviceRotatableBool = 0;
 
 	memoryDtoUnion.memoryDTO._deviceId = deviceId;
 	memoryDtoUnion.memoryDTO._deviceCtrl = deviceCtrl;
@@ -54,7 +44,7 @@ void DeviceEepromManager::init() {
 
 void DeviceEepromManager::initMemoryDto() {
 	memoryDtoUnion.memoryDTO._uniqID = 1168396L;//TEST
-	memoryDtoUnion.memoryDTO._deviceId = 0;
+	memoryDtoUnion.memoryDTO._deviceId = 1;
 	memoryDtoUnion.memoryDTO._deviceCtrl = 0.0;
 	memoryDtoUnion.memoryDTO._deviceMin = 0.0;
 	memoryDtoUnion.memoryDTO._deviceMax = 0.0;	

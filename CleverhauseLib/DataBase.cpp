@@ -100,6 +100,24 @@ void DataBase::fillDeviceInfoFromEeprom(uint8_t id) {
 	currDevice->setRotatable(deviceRotatable);
 }
 
+void DataBase::clearMemory() {
+	DeviceInfo* curr = _deviceJsonList;
+	while (curr) {
+		DeviceInfo* next = curr->getNext();
+		delete curr;
+		curr = next;
+	}
+	_deviceJsonList = nullptr;
+	_lastDeviceJson = nullptr;
+	_deviceCount = 0;
+	_uniqBaseID = 0L;
+	_eepromMngr->printMemory();
+	_eepromMngr->clearMemory();	
+	initFromEeprom();
+	_eepromMngr->printMemory();
+	Serial.println(_SSID);
+}
+
 /******************
 * Public interface*
 *******************/
@@ -153,7 +171,7 @@ void DataBase::removeDeviceInfo(uint8_t id) {
 			_deviceJsonList = nullptr;
 			_lastDeviceJson = nullptr;
 		}
-		removed->~DeviceInfo();
+		delete removed;
 	}
 }
 

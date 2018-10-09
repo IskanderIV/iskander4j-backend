@@ -5,38 +5,46 @@
 #define _RFManager_H_
 
 #include "Object.h"
-#include <RH_ASK.h>
+#include <RH_NRF24.h>
 #include <RHReliableDatagram.h>
 #include <SPI.h>
 
 #define BAZA_ADDRESS 0
 
-#define RADIO_TX_PIN 12
-#define RADIO_RX_PIN 11
+#define RADIO_CE_PIN 48
+#define RADIO_SS_PIN 53
 
-#define RADIO_FREG 2000
+#define RADIO_FREG 4000
 
 //#define DEBUG
-class RH_ASK;
+class RH_NRF24;
 class RHReliableDatagram;
 class DataBase;
 
 struct DataInfo {
-	long  _uniqID;
-	uint8_t  _deviceID;
+	uint8_t _index;
+	long  _boardUID;
+	uint8_t  _deviceId;
 	float _deviceAck; //INPUT
-	float _min; //INPUT
-	float _max; //INPUT
-	float _discrete; //INPUT
 	float _deviceControl;
-	uint8_t  _digital;//INPUT
-	uint8_t  _analog;//INPUT
-	uint8_t  _adjustable;//INPUT
-	uint8_t  _rotatable;
 	uint8_t  _radioError; //INPUT
 };
 
-extern uint8_t buf[RH_ASK_MAX_MESSAGE_LEN]; // TODO try to experiment with that
+struct RegInfo {
+	uint8_t _index;
+	long  _boardUID;
+	uint8_t  _deviceId;
+	float _min; //INPUT
+	float _max; //INPUT
+	float _discrete; //INPUT
+	uint8_t  _digital;//INPUT
+	uint8_t  _analog;//INPUT
+	uint8_t  _adjustable;//INPUT
+	uint8_t  _rotatable;//INPUT
+	uint8_t  _radioError; //INPUT
+};
+
+extern uint8_t rfbuf[RH_NRF24_MAX_MESSAGE_LEN]; // TODO try to experiment with that
 
 class RFManager : public Object
 {
@@ -54,17 +62,24 @@ private:
 		DataInfo dataInfo;  
 		uint8_t byteBuffer[sizeof(DataInfo)];  
 	} dataInfoUnion;
+	union RegInfoUnion {  
+		RegInfo regInfo;  
+		uint8_t byteBuffer[sizeof(RegInfo)];  
+	} regInfoUnion;
 	
-	RH_ASK* _driver;
+	RH_NRF24* _driver;
 	RHReliableDatagram* _radioMngr;
 	DataBase* _dataBase;
 	bool _initError;
-	bool* blink; //TEST
+	uint8_t _currMsgIndex;
 	
 	//methods
 	void init(DataBase* pDataBase);
+	void initDataInfo();
+	void initRegInfo();
+	bool interaction(uint8_t _To);
 	long getUniqID();
-	bool isDeviceKnown(uint8_t _from);
+	bool isDeviceKnown(uint8_t index, uint8_t deviceId, long boardUID);
 	void prepareDataForKnowingTransmit(uint8_t pDeviceId);
 	void prepareDataForWorkingTransmit(uint8_t pDeviceId);
 	void saveDeviceData(uint8_t pDeviceId);	
