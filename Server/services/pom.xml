@@ -10,12 +10,12 @@
 
     <artifactId>services</artifactId>
     <version>${project.version}</version>
-    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
             <groupId>ru.cleverhause</groupId>
             <artifactId>common</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

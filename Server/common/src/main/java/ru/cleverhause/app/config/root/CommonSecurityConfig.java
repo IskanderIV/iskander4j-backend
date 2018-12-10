@@ -16,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import ru.cleverhause.app.config.board.BoardWebSecurityConfig;
 import ru.cleverhause.app.config.front.FrontWebSecurityConfig;
-import ru.cleverhause.service.security.DaoUserDetailsService;
 
 import java.util.Collections;
 

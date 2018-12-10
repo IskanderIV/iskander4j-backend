@@ -11,6 +11,8 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import ru.cleverhause.api.persist.entities.Role;
+import ru.cleverhause.api.persist.entities.User;
 
 import javax.sql.DataSource;
 import java.util.Properties;
@@ -23,16 +25,14 @@ import java.util.Properties;
  */
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = {
-        "ru.cleverhause.persist.dao",
-        "ru.cleverhause.persist.entities"})
+@EnableJpaRepositories(basePackages = "ru.cleverhause.api.persist")
 @PropertySource(value = {"classpath:database.properties"})
 public class DataSourceConfig {
 
     private static final String PROPERTY_NAME_HIBERNATE_DIALECT = "hibernate.dialect";
     private static final String PROPERTY_NAME_HIBERNATE_SHOW_SQL = "hibernate.show_sql";
-    private static final String[] HIBERNATE_ENTITY_PACKAGES = {"ru.cleverhause.persist.entities"};
-    private static final Class<?>[] HIBERNATE_ENTITY_ANNOTATED_CLASSES = {ru.cleverhause.persist.entities.User.class, ru.cleverhause.persist.entities.Role.class};
+    private static final String[] HIBERNATE_ENTITY_PACKAGES = {"ru.cleverhause.api.persist.entities"};
+    private static final Class<?>[] HIBERNATE_ENTITY_ANNOTATED_CLASSES = {User.class, Role.class};
 
     @Value("${jdbc.driverClassName}")
     private String dataSourceDriverClassName;

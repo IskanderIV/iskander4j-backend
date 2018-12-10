@@ -5,11 +5,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
-import ru.cleverhause.persist.entities.User;
-import ru.cleverhause.service.user.UserService;
+import ru.cleverhause.api.persist.entities.User;
+import ru.cleverhause.api.service.user.UserService;
 
 /**
- * Validator for {@link ru.cleverhause.persist.entities.User} class,
+ * Validator for {@link User} class,
  * implements {@link Validator} interface.
  * Created by
  *

@@ -8,7 +8,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.apache.log4j.Logger;
-import ru.cleverhause.app.dto.response.HttpResponse;
+import ru.cleverhause.api.dto.response.HttpResponse;
 
 import java.io.IOException;
 import java.util.List;

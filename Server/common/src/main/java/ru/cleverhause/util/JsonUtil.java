@@ -2,7 +2,7 @@ package ru.cleverhause.util;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import ru.cleverhause.app.dto.request.BoardRequestBody;
+import ru.cleverhause.api.dto.request.BoardRequestBody;
 
 import java.io.File;
 import java.io.IOException;
