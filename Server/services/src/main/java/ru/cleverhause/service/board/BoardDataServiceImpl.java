@@ -33,6 +33,7 @@ public class BoardDataServiceImpl implements BoardDataService {
     private static final Logger LOGGER = LoggerFactory.getLogger(BoardDataServiceImpl.class);
 
     private static final int COMMON_SAVED_DATA_NUMBER = 3;
+
     @Autowired
     private BoardDao boardDao;
 
