@@ -1,4 +1,4 @@
-package ru.cleverhause.app.session;
+package ru.cleverhause.session;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
