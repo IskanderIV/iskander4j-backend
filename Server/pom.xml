@@ -12,7 +12,7 @@
         <module>common</module>
         <module>controllers</module>
         <module>services</module>
-        <!--<module>persistance</module>-->
+        <!--<module>persistence</module>-->
         <!--<module>integration</module>-->
         <module>application</module>
     </modules>

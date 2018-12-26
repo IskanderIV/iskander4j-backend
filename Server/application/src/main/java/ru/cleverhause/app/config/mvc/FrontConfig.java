@@ -1,4 +1,4 @@
-package ru.cleverhause.app.config.front;
+package ru.cleverhause.app.config.mvc;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -18,9 +18,9 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = {
-        "ru.cleverhause.app.rest.site",
-        "ru.cleverhause.app.rest.user",
-        "ru.cleverhause.app.validators"})
+        "ru.cleverhause.rest.site",
+        "ru.cleverhause.rest.user",
+        "ru.cleverhause.validators"})
 public class FrontConfig implements WebMvcConfigurer {
 
 //    @Bean

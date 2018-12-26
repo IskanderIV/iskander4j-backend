@@ -3,7 +3,7 @@ package ru.cleverhause.app;
 import org.springframework.core.annotation.Order;
 import org.springframework.lang.Nullable;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
-import ru.cleverhause.app.config.front.FrontConfig;
+import ru.cleverhause.app.config.mvc.FrontConfig;
 
 /**
  * @author Aleksandr Ivanov

@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.cleverhause.app.validator.UserValidator;
 import ru.cleverhause.api.persist.entities.User;
 import ru.cleverhause.api.service.security.SecurityService;
 import ru.cleverhause.api.service.user.UserService;
+import ru.cleverhause.validators.UserValidator;
 
 /**
  * Created by

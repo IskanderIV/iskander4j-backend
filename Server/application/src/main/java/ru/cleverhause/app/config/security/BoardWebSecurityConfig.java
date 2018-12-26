@@ -1,4 +1,4 @@
-package ru.cleverhause.app.config.board;
+package ru.cleverhause.app.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

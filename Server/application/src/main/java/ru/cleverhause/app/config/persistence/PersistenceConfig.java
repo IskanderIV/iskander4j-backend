@@ -1,4 +1,4 @@
-package ru.cleverhause.app.config.root;
+package ru.cleverhause.app.config.persistence;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +25,7 @@ import java.util.Properties;
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "ru.cleverhause.api.persist")
 @PropertySource(value = {"classpath:database.properties"})
-public class DataSourceConfig {
+public class PersistenceConfig {
 
     private static final String PROPERTY_NAME_HIBERNATE_DIALECT = "hibernate.dialect";
     private static final String PROPERTY_NAME_HIBERNATE_SHOW_SQL = "hibernate.show_sql";
