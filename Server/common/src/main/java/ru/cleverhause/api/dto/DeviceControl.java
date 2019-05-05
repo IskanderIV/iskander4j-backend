@@ -1,12 +1,14 @@
 package ru.cleverhause.api.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.io.Serializable;
 
-@Getter
-@Setter
+/**
+ * Created by
+ *
+ * @author Aleksandr_Ivanov1
+ * @date 8/18/2018.
+ */
+
 public class DeviceControl implements Serializable {
     private Long id;
     private Double ctrlVal;
@@ -17,6 +19,22 @@ public class DeviceControl implements Serializable {
     }
 
     public DeviceControl() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Double getCtrlVal() {
+        return ctrlVal;
+    }
+
+    public void setCtrlVal(Double ctrlVal) {
+        this.ctrlVal = ctrlVal;
     }
 
     @Override

@@ -15,6 +15,7 @@
         <!--<module>persistence</module>-->
         <!--<module>integration</module>-->
         <module>application</module>
+        <module>assembly</module>
     </modules>
 
     <properties>
@@ -27,19 +28,20 @@
         <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
         <commons-dbcp.version>1.4</commons-dbcp.version>
         <apache.commons.version>3.0</apache.commons.version>
-        <google.guava.version>19.0</google.guava.version>
+        <google.guava.version>27.1-jre</google.guava.version>
         <jackson.databind-version>2.9.2</jackson.databind-version>
         <okhttp>3.10.0</okhttp>
         <jstl.version>1.2</jstl.version>
         <junit.version>4.12</junit.version>
-        <lombok.version>1.16.10</lombok.version>
         <slf4j.version>1.7.25</slf4j.version>
         <log4j.version>1.2.17</log4j.version>
-        <maven.war.plugin>2.6</maven.war.plugin>
+        <maven.war.plugin>3.2.2</maven.war.plugin>
         <maven.compiler.plugin>3.3</maven.compiler.plugin>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <!--<tomcat.deploy.path>${env.TOMCAT_HOME}\webapps</tomcat.deploy.path>-->
+        <maven.assembly.plugin>3.1.1</maven.assembly.plugin>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
+<!--        <tomcat.deploy.path>${env.TOMCAT_HOME}\webapps</tomcat.deploy.path>-->
     </properties>
     <!--Declaration of remote repo for deploy phase. Where I should deploy to-->
     <!--<distributionManagement>-->
@@ -59,6 +61,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>ru.cleverhause</groupId>
+                <artifactId>application</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>ru.cleverhause</groupId>
                 <artifactId>common</artifactId>
@@ -170,14 +177,6 @@
                 <version>${apache.commons.version}</version>
             </dependency>
 
-            <!--LOMBOK-->
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
-                <scope>provided</scope>
-            </dependency>
-
             <!--GUAVA-->
             <dependency>
                 <groupId>com.google.guava</groupId>
@@ -240,7 +239,7 @@
     </dependencyManagement>
 
     <build>
-        <finalName>my</finalName>
+        <finalName>${artifactId}-${version}</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -254,12 +253,31 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven.jar.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>${maven.assembly.plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-war-plugin</artifactId>
                     <version>${maven.war.plugin}</version>
                     <configuration>
                         <warName>cleverhause</warName>
-                        <!--<outputDirectory>${tomcat.deploy.path}</outputDirectory>-->
                         <failOnMissingWebXml>false</failOnMissingWebXml>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.tomcat.maven</groupId>
+                    <artifactId>tomcat7-maven-plugin</artifactId>
+                    <version>2.2</version>
+                    <configuration>
+                        <url>http://localhost:8080/manager/text</url>
+                        <server>Tomcat9</server>
+                        <path>/cleverhause</path>
                     </configuration>
                 </plugin>
             </plugins>

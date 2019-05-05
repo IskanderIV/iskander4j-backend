@@ -1,8 +1,5 @@
 package ru.cleverhause.api.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.io.Serializable;
 
 /**
@@ -11,21 +8,25 @@ import java.io.Serializable;
  * @author Aleksandr_Ivanov1
  * @date 6/12/2018.
  */
-@Setter
-@Getter
-public class BoardUID implements Serializable {
+
+public class BoardUidDto implements Serializable {
     private String boardUID;
 
-    public BoardUID(String boardUID) {
+    public BoardUidDto(String boardUID) {
         this.boardUID = boardUID;
     }
 
-    public BoardUID() {
+    public String getBoardUID() {
+        return boardUID;
+    }
+
+    public void setBoardUID(String boardUID) {
+        this.boardUID = boardUID;
     }
 
     @Override
     public String toString() {
-        return "BoardUID{" +
+        return "BoardUidDto{" +
                 "boardUID='" + boardUID + '\'' +
                 '}';
     }

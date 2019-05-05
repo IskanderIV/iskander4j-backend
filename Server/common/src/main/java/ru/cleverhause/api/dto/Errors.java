@@ -1,16 +1,13 @@
 package ru.cleverhause.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.io.Serializable;
 
 /**
  * Created by Alexandr on 04.01.2018.
  */
-@Getter
-@Setter
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Errors implements Serializable {
     private Boolean gsm;

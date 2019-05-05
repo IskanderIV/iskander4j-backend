@@ -1,7 +1,5 @@
 package ru.cleverhause.api.dto.form;
 
-import lombok.Data;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -11,7 +9,22 @@ import java.util.List;
  * @author Aleksandr_Ivanov1
  * @date 8/16/2018.
  */
-@Data
+
 public class DeviceList_DevicesJspForm implements Serializable {
-    private List<Device_DevicesJspForm> devices;
+    private List<DeviceOnDevicesJspForm> devices;
+
+    public DeviceList_DevicesJspForm(List<DeviceOnDevicesJspForm> devices) {
+        this.devices = devices;
+    }
+
+    public DeviceList_DevicesJspForm() {
+    }
+
+    public List<DeviceOnDevicesJspForm> getDevices() {
+        return devices;
+    }
+
+    public void setDevices(List<DeviceOnDevicesJspForm> devices) {
+        this.devices = devices;
+    }
 }

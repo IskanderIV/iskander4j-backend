@@ -8,6 +8,7 @@ import java.io.Serializable;
  * @author Aleksandr_Ivanov1
  * @date 6/9/2018.
  */
+
 public class DeviceSetting implements Serializable {
     private Long id;
     private Boolean adj;

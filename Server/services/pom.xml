@@ -42,12 +42,6 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
 
-        <!--LOMBOK-->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-
         <!--GUAVA-->
         <dependency>
             <groupId>com.google.guava</groupId>

@@ -1,12 +1,14 @@
 package ru.cleverhause.api.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.io.Serializable;
 
-@Getter
-@Setter
+/**
+ * Created by
+ *
+ * @author Aleksandr_Ivanov1
+ * @date 6/9/2018.
+ */
+
 public class DeviceStructure implements Serializable {
     private Long id;
     private Double min;
@@ -16,7 +18,13 @@ public class DeviceStructure implements Serializable {
     private Boolean rotate;
     private Boolean signaling;
 
-    public DeviceStructure(Long id, Double min, Double max, Double discrete, Boolean adj, Boolean rotate, Boolean signaling) {
+    public DeviceStructure(Long id,
+                           Double min,
+                           Double max,
+                           Double discrete,
+                           Boolean adj,
+                           Boolean rotate,
+                           Boolean signaling) {
         this.id = id;
         this.min = min;
         this.max = max;
@@ -26,7 +34,7 @@ public class DeviceStructure implements Serializable {
         this.signaling = signaling;
     }
 
-    public DeviceStructure(Builder builder) {
+    private DeviceStructure(Builder builder) {
         this.id = builder.id;
         this.min = builder.min;
         this.max = builder.max;
@@ -37,6 +45,62 @@ public class DeviceStructure implements Serializable {
     }
 
     public DeviceStructure() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Double getMin() {
+        return min;
+    }
+
+    public void setMin(Double min) {
+        this.min = min;
+    }
+
+    public Double getMax() {
+        return max;
+    }
+
+    public void setMax(Double max) {
+        this.max = max;
+    }
+
+    public Double getDiscrete() {
+        return discrete;
+    }
+
+    public void setDiscrete(Double discrete) {
+        this.discrete = discrete;
+    }
+
+    public Boolean getAdj() {
+        return adj;
+    }
+
+    public void setAdj(Boolean adj) {
+        this.adj = adj;
+    }
+
+    public Boolean getRotate() {
+        return rotate;
+    }
+
+    public void setRotate(Boolean rotate) {
+        this.rotate = rotate;
+    }
+
+    public Boolean getSignaling() {
+        return signaling;
+    }
+
+    public void setSignaling(Boolean signaling) {
+        this.signaling = signaling;
     }
 
     public static class Builder {

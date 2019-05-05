@@ -1,8 +1,5 @@
 package ru.cleverhause.api.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.io.Serializable;
 
 /**
@@ -11,8 +8,7 @@ import java.io.Serializable;
  * @author Aleksandr_Ivanov1
  * @date 12/2/2017.
  */
-@Getter
-@Setter
+
 public class DeviceData implements Serializable {
     private Long id;
     private Double ack;
@@ -31,7 +27,47 @@ public class DeviceData implements Serializable {
     public DeviceData() {
     }
 
-    public DeviceData(DeviceData.Builder builder) {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Double getAck() {
+        return ack;
+    }
+
+    public void setAck(Double ack) {
+        this.ack = ack;
+    }
+
+    public Boolean getAdj() {
+        return adj;
+    }
+
+    public void setAdj(Boolean adj) {
+        this.adj = adj;
+    }
+
+    public Double getCtrlVal() {
+        return ctrlVal;
+    }
+
+    public void setCtrlVal(Double ctrlVal) {
+        this.ctrlVal = ctrlVal;
+    }
+
+    public Boolean getRadioErr() {
+        return radioErr;
+    }
+
+    public void setRadioErr(Boolean radioErr) {
+        this.radioErr = radioErr;
+    }
+
+    private DeviceData(DeviceData.Builder builder) {
         this.id = builder.id;
         this.ack = builder.ack;
         this.adj = builder.adj;
