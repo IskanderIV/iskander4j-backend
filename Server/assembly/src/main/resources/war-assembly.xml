@@ -52,7 +52,7 @@
                     </fileSet>
                     <fileSet>
                         <directory>${project.basedir}/src/main/java/webapp/resources</directory>
-                        <outputDirectory>./</outputDirectory>
+                        <outputDirectory>/resources</outputDirectory>
                         <includes>
                             <include>/**/*</include>
                         </includes>

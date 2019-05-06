@@ -31,7 +31,12 @@
         <google.guava.version>27.1-jre</google.guava.version>
         <jackson.databind-version>2.9.2</jackson.databind-version>
         <okhttp>3.10.0</okhttp>
+
+<!--        depends on Tomcat version: for T9 use this-->
+        <servlet-api.version>4.0.1</servlet-api.version>
+        <jsp-api.version>2.3.3</jsp-api.version>
         <jstl.version>1.2</jstl.version>
+
         <junit.version>4.12</junit.version>
         <slf4j.version>1.7.25</slf4j.version>
         <log4j.version>1.2.17</log4j.version>
@@ -41,7 +46,6 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
-<!--        <tomcat.deploy.path>${env.TOMCAT_HOME}\webapps</tomcat.deploy.path>-->
     </properties>
     <!--Declaration of remote repo for deploy phase. Where I should deploy to-->
     <!--<distributionManagement>-->
@@ -81,23 +85,31 @@
                 <artifactId>services</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>javax.servlet-api</artifactId>
-                <version>3.0.1</version>
+                <version>${servlet-api.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
-                <groupId>javax.servlet.jsp.jstl</groupId>
-                <artifactId>javax.servlet.jsp.jstl-api</artifactId>
-                <version>1.2.1</version>
+                <groupId>javax.servlet.jsp</groupId>
+                <artifactId>javax.servlet.jsp-api</artifactId>
+                <version>${jsp-api.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>jstl</artifactId>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.servlet</groupId>
+                        <artifactId>servlet-api</artifactId>
+                    </exclusion>
+                </exclusions>
                 <version>${jstl.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>

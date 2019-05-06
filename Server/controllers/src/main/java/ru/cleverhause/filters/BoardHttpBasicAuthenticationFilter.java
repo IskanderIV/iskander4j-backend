@@ -18,6 +18,7 @@ import ru.cleverhause.filters.mapper.RequestBodyToObjectMapperFactory;
 import ru.cleverhause.api.service.board.BoardDataService;
 
 import javax.servlet.FilterChain;
+import javax.servlet.ReadListener;
 import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletRequest;
@@ -198,6 +199,21 @@ public class BoardHttpBasicAuthenticationFilter extends AbstractAuthenticationPr
             final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body.getBytes());
 
             ServletInputStream inputStream = new ServletInputStream() {
+                @Override
+                public boolean isFinished() {
+                    return false;
+                }
+
+                @Override
+                public boolean isReady() {
+                    return false;
+                }
+
+                @Override
+                public void setReadListener(ReadListener readListener) {
+
+                }
+
                 public int read() throws IOException {
                     return byteArrayInputStream.read();
                 }
