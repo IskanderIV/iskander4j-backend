@@ -1,7 +1,8 @@
 package ru.cleverhause.rest.board;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,11 +22,7 @@ import ru.cleverhause.api.persist.entities.Board;
 import ru.cleverhause.api.service.board.BoardDataService;
 import ru.cleverhause.util.JsonUtil;
 
-//import javax.servlet.ServletRequest;
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,7 +34,7 @@ import java.util.List;
         consumes = MediaType.APPLICATION_JSON_VALUE)
 public class BoardEndpoint {
 
-    private static final Logger logger = Logger.getLogger(BoardEndpoint.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BoardEndpoint.class);
 
     // TODO For test only
 //    @PostMapping(value = {"/board"})
@@ -48,7 +45,7 @@ public class BoardEndpoint {
 //        } catch (IOException e) {
 //            Calendar calendar = Calendar.getInstance();
 //            calendar.setTime(new Date());
-//            logger.info(calendar.getTime() + ": BoardEndpoint. Can't convert request input stream to json"); //TODO
+//            LOGGER.info(calendar.getTime() + ": BoardEndpoint. Can't convert request input stream to json"); //TODO
 //        }
 //        return body;
 //    }
@@ -65,7 +62,7 @@ public class BoardEndpoint {
     @PostMapping(value = "/board/registration")
     public ResponseBody registerBoard(@RequestBody BoardRequestBody<DeviceStructure> boardRegReq) throws Exception {
         Boolean result = boardDataService.registerBoard(boardRegReq);
-        logger.debug("Inside registerBoard");
+        LOGGER.debug("Inside registerBoard");
 
         return new ResponseBody<>(ObjectUtils.toString(result), null);
     }

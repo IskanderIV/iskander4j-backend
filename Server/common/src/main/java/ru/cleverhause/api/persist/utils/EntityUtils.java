@@ -1,6 +1,8 @@
 package ru.cleverhause.api.persist.utils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.cleverhause.api.persist.entities.Board;
 import ru.cleverhause.api.persist.entities.User;
 
@@ -12,11 +14,12 @@ import ru.cleverhause.api.persist.entities.User;
  */
 public class EntityUtils {
 
+    private static final Logger LOG = LoggerFactory.getLogger(EntityUtils.class);
+
     public static String getBoardJsonStructure(Board board) {
         if (board != null && board.getStructure() != null) {
             return board.getStructure().getStructure();
         }
-
         return StringUtils.EMPTY;
     }
 

@@ -1,7 +1,8 @@
 package ru.cleverhause.service.security;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,7 +26,7 @@ import ru.cleverhause.api.service.security.SecurityService;
 @Service
 public class SecurityServiceImpl implements SecurityService {
 
-    private static final Logger logger = Logger.getLogger(SecurityServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SecurityServiceImpl.class);
 
     @Autowired
     @Qualifier(value = "authManager")
@@ -40,8 +41,11 @@ public class SecurityServiceImpl implements SecurityService {
         if (auth != null) {
             Object principal = auth.getPrincipal();
             if (principal instanceof UserDetails) {
-                return ((UserDetails) principal).getUsername();
+                String username = ((UserDetails) principal).getUsername();
+                LOGGER.debug("Find user {}", username);
+                return username;
             } else {
+                LOGGER.debug("Find user {}", principal.toString());
                 return principal.toString();
             }
         }

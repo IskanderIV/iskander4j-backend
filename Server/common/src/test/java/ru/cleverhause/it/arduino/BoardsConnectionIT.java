@@ -3,10 +3,11 @@ package ru.cleverhause.it.arduino;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 import ru.cleverhause.api.dto.request.BoardRequestBody;
 import ru.cleverhause.api.dto.response.HttpResponse;
@@ -18,9 +19,9 @@ import java.net.URL;
 import static ru.cleverhause.util.HttpUtil.execute;
 
 public class BoardsConnectionIT {
-    public static final MediaType JSON_CONTENT_TYPE = MediaType.parse("application/json; charset=utf-8");
+    private static final MediaType JSON_CONTENT_TYPE = MediaType.parse("application/json; charset=utf-8");
     private static final String BASE_ADRESS_PATH = "/cleverhause";
-    private static final Logger logger = Logger.getLogger(BoardsConnectionIT.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BoardsConnectionIT.class);
 
     @Before
     public void setUp() {

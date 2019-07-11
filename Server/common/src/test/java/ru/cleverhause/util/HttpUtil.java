@@ -7,7 +7,8 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.cleverhause.api.dto.response.HttpResponse;
 
 import java.io.IOException;
@@ -16,7 +17,7 @@ import java.util.Map;
 
 public class HttpUtil {
 
-    private static final Logger LOGGER = Logger.getLogger(HttpUtil.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HttpUtil.class);
 
     public static HttpResponse execute(final Request request) {
         OkHttpClient httpClient = new OkHttpClient();

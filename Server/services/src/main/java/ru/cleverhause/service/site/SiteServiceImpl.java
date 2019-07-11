@@ -64,7 +64,7 @@ public class SiteServiceImpl implements SiteService {
                 userBoards.add(userBoard);
             }
         }
-
+        LOGGER.info("Find boards {}", userBoards);
         return userBoards; // а надо возвращать List<Boards> потом менеджером все собирать и конвертить и выдавать нужное потребителю
         // httpTools или Utils будут работать с RESPONSE
     }

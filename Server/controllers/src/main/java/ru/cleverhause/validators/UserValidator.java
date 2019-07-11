@@ -1,5 +1,7 @@
 package ru.cleverhause.validators;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -20,6 +22,8 @@ import ru.cleverhause.api.service.user.UserService;
 
 @Component
 public class UserValidator implements Validator {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserValidator.class);
 
     @Autowired
     private UserService userService;

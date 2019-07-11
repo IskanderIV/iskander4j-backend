@@ -1,5 +1,7 @@
 package ru.cleverhause.rest.user;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.cleverhause.api.persist.entities.User;
 import ru.cleverhause.api.service.security.SecurityService;
 import ru.cleverhause.api.service.user.UserService;
+import ru.cleverhause.rest.site.SiteEndpoint;
 import ru.cleverhause.validators.UserValidator;
 
 /**
@@ -23,6 +26,8 @@ import ru.cleverhause.validators.UserValidator;
 
 @Controller
 public class UserEndpoint {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserEndpoint.class);
 
     @Autowired
     private UserService userService;

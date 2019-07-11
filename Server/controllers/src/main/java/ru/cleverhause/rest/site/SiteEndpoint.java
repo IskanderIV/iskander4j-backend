@@ -1,6 +1,7 @@
 package ru.cleverhause.rest.site;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +30,7 @@ import java.util.Map;
 @Controller
 public class SiteEndpoint {
 
-    private static final Logger logger = Logger.getLogger(SiteEndpoint.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SiteEndpoint.class);
 
     @Autowired
     private SiteService siteService;
@@ -42,7 +43,9 @@ public class SiteEndpoint {
 
     @GetMapping(value = {"/", "/home"})
     public ModelAndView home(Map<String, Object> model) {
+        LOGGER.debug("Calling /home endpoint");
         String currUserName = securityService.findLoggedInUsername();
+        LOGGER.info("Current user {}", currUserName);
         model.put("principal", currUserName);
         return new ModelAndView("home", model);
     }

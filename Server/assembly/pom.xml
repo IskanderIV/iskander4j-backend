@@ -41,7 +41,7 @@
                     <descriptors>
                         <descriptor>src/main/resources/war-assembly.xml</descriptor>
                     </descriptors>
-                    <finalName>${parent.artifactId}-${parent.version}</finalName>
+                    <finalName>${project.parent.artifactId}-${project.parent.version}</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                 </configuration>
                 <executions>
