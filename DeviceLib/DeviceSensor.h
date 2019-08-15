@@ -1,4 +1,4 @@
-// DeviceSensor
+// DeviceSensor.h
 // (c) Ivanov Aleksandr, 2018
 
 #ifndef _DeviceSensor_H_
@@ -9,20 +9,16 @@
 #define READ_VALUE_MIN 0
 #define VOLTAGE_MAX 5
 
-#if defined(ARDUINO) && ARDUINO >= 100
-	#include "Arduino.h"
-#else
-	#include "WProgram.h"
-#endif
+#include "DeviceDataBase.h"
 
 class DeviceSensor
 {
 private:
+	DeviceDataBase* _dataBase;
 	uint8_t _pin;
-	int  	_value;
 	
 public:
-	DeviceSensor(uint8_t _pin = SENSOR_PIN_DEF);
+	DeviceSensor(DeviceDataBase* pDataBase = nullptr);
 	~DeviceSensor();
 	
 	float measure();

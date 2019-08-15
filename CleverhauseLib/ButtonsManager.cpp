@@ -7,7 +7,7 @@ ButtonsManager::ButtonsManager() {
 	_pushedBtnCodeList = NULL;
 	_buttonsCount = 0;
 	_lastButton = NULL;
-	Serial.println("ButtonsManager()!");//TEST
+	Serial.println(F("ButtonsManager()!"));//TEST
 }
 
 ButtonsManager::~ButtonsManager(){
