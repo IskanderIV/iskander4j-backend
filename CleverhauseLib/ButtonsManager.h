@@ -13,12 +13,12 @@
 #endif
 
 enum ButtonPin {
-	btn_menu = 49,
-	btn_left = 47,
-	btn_right = 45,
-	btn_up = 43,
-	btn_down = 41,
-	btn_select = 39
+	btn_menu = 18,
+	btn_left = 41,
+	btn_right = 39,
+	btn_up = 37,
+	btn_down = 35,
+	btn_select = 33
 };
 
 class ButtonsManager

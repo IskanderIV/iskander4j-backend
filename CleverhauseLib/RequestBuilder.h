@@ -6,37 +6,39 @@
 
 #define END_OF_STRING "\r\n"
 
-#define DEVICES_STATES_BLOCK_NAME 		"devicesState"
-
-#define DEVICE_ID_KEY_NAME 				"id"
-#define DEVICE_ACK_KEY_NAME 			"ack"
-#define DEVICE_ADJUSTABLE_KEY_NAME 		"adj"
-#define DEVICE_CONTROL_VALUE_KEY_NAME 	"ctrlVal"
-#define DEVICE_RADIO_ERROR_KEY_NAME 	"radioErr"
-
-#define GLOBAL_ERRORS_BLOCK_NAME 		"errors"
-
-#define GSM_ERROR_KEY_NAME 				"gsm"
-#define RADIO_ERROR_KEY_NAME 			"radio"
-#define LCD_ERROR_KEY_NAME 				"lcd"
-
 #include "DataBase.h"
+#include "HttpExchangeType.h"
+#include "HttpJsonKeys.h"
+
+// enum HttpExchangeType {
+	// DATA,
+	// REG
+// };
 
 class DataBase;
 
-class RequestBuilder : public Object
+class RequestBuilder
 {
 public:
-	RequestBuilder();
+	RequestBuilder(DataBase* pDataBasePointer);
 	~RequestBuilder();
 	
 	// public interfaces
-	bool interface();
+	String buildRequest(HttpExchangeType type, String& host, String& port, String& SSID, String& password, String& boardUID);
 	
 private:
 	DataBase* _dataBase;
-	
-	void init();
+	int _bodyLength;
+	void init(DataBase* pDataBasePointer);
+	String formRequestHeaders(HttpExchangeType type, String& host, String& port);
+	String formRequestBody(HttpExchangeType type, String& SSID, String& password, String& boardUID);
+	String buildDevicesBlockJson(HttpExchangeType type);
+	String buildDeviceDataJson(uint8_t id);
+	String buildDeviceRegistratonJson(uint8_t id);
+	String buildRequestGlobalErrorsJson();
+	String jsonKeyWrapper(String key);
+	String jsonBoolValueWrapper(bool val);
+	String jsonStringValueWrapper(String& val);
 };
 
 #endif

@@ -4,6 +4,6 @@
 #ifndef _GlobalFlags_H_
 #define _GlobalFlags_H_
 
-extern bool bShouldShowMenu;
+extern bool WAS_MENU_BTN_PRESSED;
 
 #endif
