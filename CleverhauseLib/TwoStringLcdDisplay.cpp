@@ -41,7 +41,8 @@ void TwoStringLcdDisplay::showMenu(){
 	printHeader(str);
 }
 
-void TwoStringLcdDisplay::showCurrMenu(){
+void TwoStringLcdDisplay::showCurrMenu() {
+	Serial.println(F("showCurrMenu!"));
 	_lcd->cursor_off();
 	clearInfo();
 	if (_menuSelector) {
