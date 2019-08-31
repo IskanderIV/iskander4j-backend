@@ -5,11 +5,11 @@
 <offline/>
 <pluginGroups/>
 <servers>
-  <server>
-    <id>Tomcat9</id>
-    <username>cleverhause</username>
-    <password>cleverhause</password>
-  </server>
+    <server>
+        <id>cleverhause-nexus</id>
+        <username>clever_nexus</username>
+        <password>123456</password>
+    </server>
 </servers>
 <mirrors/>
 <proxies/>

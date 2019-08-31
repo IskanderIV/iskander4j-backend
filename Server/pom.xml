@@ -14,8 +14,13 @@
         <module>services</module>
         <!--<module>persistence</module>-->
         <!--<module>integration</module>-->
-        <module>application</module>
+        <module>device-backend</module>
         <module>assembly</module>
+        <module>device-backend-api</module>
+        <module>device-backend-persist</module>
+        <module>web-backend</module>
+        <module>web-backend-api</module>
+        <module>web-backend-persist</module>
     </modules>
 
     <properties>
@@ -43,25 +48,35 @@
         <maven.war.plugin>3.2.2</maven.war.plugin>
         <maven.compiler.plugin>3.3</maven.compiler.plugin>
         <maven.assembly.plugin>3.1.1</maven.assembly.plugin>
+        <maven.deploy.plugin>2.8.2</maven.deploy.plugin>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
     </properties>
-    <!--Declaration of remote repo for deploy phase. Where I should deploy to-->
-    <!--<distributionManagement>-->
-    <!--<repository>-->
-    <!--<id>TomcatWebApps</id>-->
-    <!--<url>file://c:\Program Files\Tomcat\apache-tomcat-7.0.75\webapps</url>-->
-    <!--</repository>-->
-    <!--</distributionManagement>-->
 
-    <!--Declaration From I should upload dependencies to my project during install phase-->
-    <!--<repositories>-->
-    <!--<repository>-->
-    <!--<id>localRepo</id>-->
-    <!--<url>C:\Users\Alexandr\.m2\repository</url>-->
-    <!--</repository>-->
-    <!--</repositories>-->
+    <repositories>
+        <repository>
+            <id>cleverhause-nexus</id>
+            <url>http://localhost:8081/repository/cleverhause_repository/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>cleverhause-nexus</id>
+            <url>http://localhost:8081/repository/clever_releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>cleverhause-nexus</id>
+            <url>http://localhost:8081/repository/clever_snapshot/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <dependencyManagement>
         <dependencies>
@@ -288,16 +303,24 @@
                     </configuration>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.tomcat.maven</groupId>
-                    <artifactId>tomcat7-maven-plugin</artifactId>
-                    <version>2.2</version>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>${maven.deploy.plugin}</version>
                     <configuration>
-                        <url>http://localhost:8080/manager/text</url>
-                        <server>Tomcat9</server>
-                        <path>/cleverhause</path>
+                        <skip>true</skip>
                     </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <useDefaultDelimiters>true</useDefaultDelimiters>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>
