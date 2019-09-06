@@ -1,11 +1,11 @@
 package ru.cleverhause.device.services;
 
+import com.google.common.base.Converter;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import ru.cleverhause.common.api.service.security.SecurityService;

@@ -23,13 +23,15 @@ import java.util.Properties;
  */
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = "ru.cleverhause.api.persist")
+@EnableJpaRepositories(basePackages = {
+        "ru.cleverhause.common.persist.api.entity",
+        "ru.cleverhause.common.persist.api.repository"})
 @PropertySource(value = {"classpath:database.properties"})
-public class PersistenceConfig {
+public class WebPersistenceConfig {
 
     private static final String PROPERTY_NAME_HIBERNATE_DIALECT = "hibernate.dialect";
     private static final String PROPERTY_NAME_HIBERNATE_SHOW_SQL = "hibernate.show_sql";
-    private static final String[] HIBERNATE_ENTITY_PACKAGES = {"ru.cleverhause.api.persist.entities"};
+    private static final String[] HIBERNATE_ENTITY_PACKAGES = {"ru.cleverhause.common.persist.api.entity"};
 
     @Value("${jdbc.driverClassName}")
     private String dataSourceDriverClassName;

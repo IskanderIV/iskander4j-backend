@@ -1,15 +1,10 @@
 package ru.cleverhause.web;
 
-import org.springframework.core.annotation.Order;
 import org.springframework.lang.Nullable;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 import ru.cleverhause.web.config.ApplicationContextConfig;
+import ru.cleverhause.web.config.mvc.WebMvcConfig;
 
-/**
- * @author Aleksandr Ivanov
- * @version v1-0 $Date 3/5/2017
- */
-@Order(value = 4)
 public class FrontDispatcherInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     @Override
@@ -20,13 +15,15 @@ public class FrontDispatcherInitializer extends AbstractAnnotationConfigDispatch
     @Nullable
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[0];
+        return new Class[]{
+                ApplicationContextConfig.class
+        };
     }
 
     @Nullable
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[]{ApplicationContextConfig.class};
+        return new Class[]{WebMvcConfig.class};
     }
 
     @Override

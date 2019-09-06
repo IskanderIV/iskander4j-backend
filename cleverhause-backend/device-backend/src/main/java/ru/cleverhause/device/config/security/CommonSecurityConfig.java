@@ -18,14 +18,6 @@ import ru.cleverhause.device.services.security.DaoUserDetailsService;
 
 import java.util.Collections;
 
-/**
- * Security configuration class
- * Created by
- *
- * @author Aleksandr_Ivanov1
- * @version v.1.0.0
- * @date 3/5/2018.
- */
 @Configuration
 @Import(value = {DeviceWebSecurityConfig.class})
 public class CommonSecurityConfig {

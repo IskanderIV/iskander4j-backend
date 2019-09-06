@@ -10,13 +10,13 @@ import java.io.Serializable;
  */
 
 public class DeviceStructure implements Serializable {
-    private Long id;
-    private Double min;
-    private Double max;
-    private Double discrete;
-    private Boolean adj;
-    private Boolean rotate;
-    private Boolean signaling;
+    private final Long id;
+    private final Double min;
+    private final Double max;
+    private final Double discrete;
+    private final Boolean adj;
+    private final Boolean rotate;
+    private final Boolean signaling;
 
     public DeviceStructure(Long id,
                            Double min,
@@ -44,63 +44,32 @@ public class DeviceStructure implements Serializable {
         this.signaling = builder.signaling;
     }
 
-    public DeviceStructure() {
-    }
-
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Double getMin() {
         return min;
     }
 
-    public void setMin(Double min) {
-        this.min = min;
-    }
-
     public Double getMax() {
         return max;
-    }
-
-    public void setMax(Double max) {
-        this.max = max;
     }
 
     public Double getDiscrete() {
         return discrete;
     }
 
-    public void setDiscrete(Double discrete) {
-        this.discrete = discrete;
-    }
-
     public Boolean getAdj() {
         return adj;
-    }
-
-    public void setAdj(Boolean adj) {
-        this.adj = adj;
     }
 
     public Boolean getRotate() {
         return rotate;
     }
 
-    public void setRotate(Boolean rotate) {
-        this.rotate = rotate;
-    }
-
     public Boolean getSignaling() {
         return signaling;
-    }
-
-    public void setSignaling(Boolean signaling) {
-        this.signaling = signaling;
     }
 
     public static class Builder {
@@ -112,41 +81,62 @@ public class DeviceStructure implements Serializable {
         private Boolean rotate;
         private Boolean signaling;
 
-        public Builder(Long id, Double min, Double max, Double discrete, Boolean adj, Boolean rotate, Boolean signaling) {
-            this.id = id;
-            this.min = min;
-            this.max = max;
-            this.discrete = discrete;
-            this.adj = adj;
-            this.rotate = rotate;
-            this.signaling = signaling;
+        private Builder() {
+            this.id = null;
+            this.min = 0.0;
+            this.max = 1.0;
+            this.discrete = 0.1;
+            this.adj = true;
+            this.rotate = false;
+            this.signaling = true;
+        }
+
+        public Builder(DeviceStructure structure) {
+            this.id = structure.id;
+            this.min = structure.min;
+            this.max = structure.max;
+            this.discrete = structure.discrete;
+            this.adj = structure.adj;
+            this.rotate = structure.rotate;
+            this.signaling = structure.signaling;
+        }
+
+        public static Builder create() {
+            return new Builder();
         }
 
         public DeviceStructure.Builder setId(Long id) {
+            this.id = id;
             return this;
         }
 
-        public DeviceStructure.Builder setMin(int min) {
+        public DeviceStructure.Builder setMin(Double min) {
+            this.min = min;
             return this;
         }
 
-        public DeviceStructure.Builder setMax(int max) {
+        public DeviceStructure.Builder setMax(Double max) {
+            this.max = max;
             return this;
         }
 
         public DeviceStructure.Builder setDiscrete(Double discrete) {
+            this.discrete = discrete;
             return this;
         }
 
         public DeviceStructure.Builder setAdj(Boolean adj) {
+            this.adj = adj;
             return this;
         }
 
         public DeviceStructure.Builder setRotate(Boolean rotate) {
+            this.rotate = rotate;
             return this;
         }
 
         public DeviceStructure.Builder setSignaling(Boolean signaling) {
+            this.signaling = signaling;
             return this;
         }
 

@@ -1,6 +1,5 @@
 package ru.cleverhause.web.services;
 
-import com.google.common.base.Converter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Longs;
@@ -30,6 +29,8 @@ import ru.cleverhause.web.api.dto.request.form.DeviceOnDevicesJspForm;
 import ru.cleverhause.web.api.dto.request.form.NewBoardUidForm;
 import ru.cleverhause.web.api.dto.request.page.BoardDto_MyBoardsJsp;
 import ru.cleverhause.web.api.service.SiteService;
+import ru.cleverhause.web.services.model.BoardInfo;
+import ru.cleverhause.web.services.model.converter.BoardToBoardInfoConverter;
 
 import java.io.IOException;
 import java.util.Comparator;
@@ -66,10 +67,8 @@ public class SiteServiceImpl implements SiteService {
     private NewBoardUID_To_NewBoardUidFormConverter newBoardUidToUidFormConverter;
 
     @Autowired
-    @Qualifier(value = "boardEntityToBoardDtoConverter")
-    private Converter<Board, BoardDto> boardEntityToBoardDtoConverter;
+    private BoardToBoardInfoConverter boardToBoardInfoConverter;
 
-    // сделать более ООПшную разбивку объектов. Над сервисами поставить менеджеров и ввести спец конверторы и тулзы
     @Override
     public List<BoardDto_MyBoardsJsp> getBoardsByUserName(@Nullable String username) {
         String userName = !Strings.isNullOrEmpty(username) ? username : StringUtils.EMPTY;
@@ -134,17 +133,17 @@ public class SiteServiceImpl implements SiteService {
     public List<DeviceOnDevicesJspForm> getDevicesDtoByBoardUID(@Nullable String boardUID) throws IOException {
         List<DeviceOnDevicesJspForm> devices = Lists.newArrayList();
         Board board = findBoardByUID(boardUID);
-        BoardDto boardDto = boardEntityToBoardDtoConverter.convert(board);
+        BoardInfo boardInfo = boardToBoardInfoConverter.convert(board);
 
-        if (boardDto != null) {
-            for (DeviceStructure deviceStructure : boardDto.getStructureList()) {
+        if (boardInfo != null) {
+            for (DeviceStructure deviceStructure : boardInfo.getStructures()) {
                 DeviceOnDevicesJspForm device = new DeviceOnDevicesJspForm();
 
-                DeviceControl control = findControlByDeviceId(deviceStructure.getId(), boardDto.getControlList());
+                DeviceControl control = findControlByDeviceId(deviceStructure.getId(), boardInfo.getControls());
                 fillControlData(device, control);
 
                 // npe in getDeviceDataList
-                List<DeviceDataRecord> dataRecords = boardDto.getDataRecords();
+                List<DeviceDataRecord> dataRecords = boardInfo.getData();
                 DeviceData data = null;
                 if (dataRecords != null && !dataRecords.isEmpty()) {
                     data = findDataByDeviceId(deviceStructure.getId(), findNewestDataRecord(dataRecords).getDeviceDataList());
@@ -216,12 +215,12 @@ public class SiteServiceImpl implements SiteService {
     @Override
     public boolean updateBoardControl(@Nullable String boardUID, final List<DeviceOnDevicesJspForm> dtoDeviceList) throws Exception {
         Board board = findBoardByUID(boardUID);
-        BoardDto savedBoardDto = boardEntityToBoardDtoConverter.convert(board);
+        BoardInfo boardInfo = boardToBoardInfoConverter.convert(board);
         boolean controlChanged = false;
-        if (savedBoardDto != null) {
-            for (DeviceControl control : savedBoardDto.getControlList()) {
+        if (boardInfo != null) {
+            for (DeviceControl control : boardInfo.getControls()) {
                 long savedId = control.getId();
-                if (isDeviceAdjustable(savedId, savedBoardDto)) {
+                if (isDeviceAdjustable(savedId, boardInfo)) {
                     for (DeviceOnDevicesJspForm dtoDevice : dtoDeviceList) {
                         long dtoId = dtoDevice.getId();
 
@@ -238,7 +237,7 @@ public class SiteServiceImpl implements SiteService {
 
             // TODO move to updateControl in BoardManager
             if (controlChanged) {
-                String controlToSave = JsonUtil.toJson(savedBoardDto.getControlList());
+                String controlToSave = JsonUtil.toJson(boardInfo.getControls());
                 BoardControlData boardControlData = board.getControlData();
                 boardControlData.setData(controlToSave);
                 boardControlData.setCreated(new Date()); // TODO перенести в setData
@@ -251,9 +250,9 @@ public class SiteServiceImpl implements SiteService {
         return false;
     }
 
-    private boolean isDeviceAdjustable(final long savedId, final BoardDto savedBoardDto) {
+    private boolean isDeviceAdjustable(final long savedId, final BoardInfo boardInfo) {
         // TODO make BoardService for util operations with board
-        for (DeviceStructure deviceStructure : savedBoardDto.getStructureList()) {
+        for (DeviceStructure deviceStructure : boardInfo.getStructures()) {
             long currDeviceId = deviceStructure.getId();
             if (currDeviceId == savedId) {
                 return deviceStructure.getAdj();

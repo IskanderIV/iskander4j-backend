@@ -18,9 +18,8 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = {
-        "ru.cleverhause.rest.site",
-        "ru.cleverhause.rest.user",
-        "ru.cleverhause.validators"})
+        "ru.cleverhause.web.api.rest",
+        "ru.cleverhause.web.api.validation"})
 public class WebMvcConfig implements WebMvcConfigurer {
 
 //    @Bean

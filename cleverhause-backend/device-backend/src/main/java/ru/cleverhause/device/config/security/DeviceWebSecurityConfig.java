@@ -17,17 +17,11 @@ import ru.cleverhause.device.filters.BoardHttpBasicAuthenticationFilter;
 import ru.cleverhause.device.filters.SecurityFilterChainPostProcessor;
 import ru.cleverhause.device.filters.handler.BoardHttpBasicAuthenticationSuccessHandler;
 
-/**
- * Created by
- *
- * @author Aleksandr_Ivanov1
- * @date 7/9/2018.
- */
 @Configuration
 @EnableWebSecurity
 public class DeviceWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final String BOARDS = "/boards";
+    private static final String BOARDS = "/";
     private static final String ALL_INSIDE = "/**";
 
     @Bean

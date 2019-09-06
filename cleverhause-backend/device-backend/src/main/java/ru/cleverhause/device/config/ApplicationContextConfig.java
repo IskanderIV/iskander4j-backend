@@ -1,4 +1,4 @@
-package ru.cleverhause.device.config.root;
+package ru.cleverhause.device.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -7,17 +7,17 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import ru.cleverhause.device.config.mvc.DeviceWebMvcConfig;
 import ru.cleverhause.device.config.security.CommonSecurityConfig;
 import ru.cleverhause.device.config.service.ServiceConfig;
-import ru.cleverhause.device.dao.config.PersistenceConfig;
+import ru.cleverhause.device.dao.config.DevicePersistenceConfig;
 
-/**
- * Created by Alexandr on 15.11.2017.
- */
 @Configuration
-@ComponentScan(basePackages = {"ru.cleverhause.app.config.root"})
 @PropertySource(value = {"classpath:application.properties"})
-@Import(value = {PersistenceConfig.class, CommonSecurityConfig.class, ServiceConfig.class})
+@ComponentScan(value = {
+        "ru.cleverhause.device.filters",
+        "ru.cleverhause.device.converter"})
+@Import(value = {DevicePersistenceConfig.class, CommonSecurityConfig.class, ServiceConfig.class})
 public class ApplicationContextConfig {
 
     @Bean

@@ -25,10 +25,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Order(value = 200)
 @Configuration
 @EnableWebSecurity
-@ComponentScan(basePackages = {"ru.cleverhause.service.security"})
+@ComponentScan(basePackages = {"ru.cleverhause.common.api.service.security"})
 public class FrontWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final String SITE = "/site";
+    private static final String SITE = "/";
     private static final String ALL_INSIDE = "/**";
 
     @Autowired

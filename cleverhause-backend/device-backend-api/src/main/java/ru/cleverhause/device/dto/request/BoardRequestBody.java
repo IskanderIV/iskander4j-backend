@@ -13,7 +13,7 @@ import java.util.List;
  * @date 12/1/2017.
  */
 public class BoardRequestBody<T extends Serializable> extends AbstractRequestBody implements Serializable {
-    private List<T> devices = new ArrayList<>();
+    private List<T> devices = new ArrayList<>(); // replace with name "input"
     private Errors errors;
 
     public BoardRequestBody(String userName, String pass, Long boardUID, List<T> devices, Errors errors) {

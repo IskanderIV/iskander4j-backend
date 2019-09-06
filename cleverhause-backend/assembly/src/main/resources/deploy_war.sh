@@ -1,23 +1,17 @@
 #!/bin/bash
 
-war_path=$(<project_war_path.dat)
-#removelast '\r' character
-war_path=${war_path/$'\r'/}
-echo "war_path = $war_path"
+file="project_war_path.dat"
+
 host_url=$(<tomcat_host_url.dat)
 host_url=${host_url/$'\r'/}
 echo "host_url = $host_url"
-#curl -X PUT --data-binary "@(< project-war-path.dat)cleverhauseServer-1.0-SNAPSHOT.war" -u cleverhause:cleverhause http://localhost:8080/manager/text/deploy?path=/clever
 
 curl_args=(
 #  -H 'accept:application/json'
   -u cleverhause:cleverhause
 )
 
-curl_data="$war_path/cleverhauseServer-1.0-SNAPSHOT.war"
-echo "curl_data = $curl_data"
-
-curl_put() {
+function curl_put() {
   local url
   url="$host_url/${1#/}"
   echo "url = $url"
@@ -26,9 +20,30 @@ curl_put() {
   curl -X PUT "${curl_args[@]}" "$url" "$@"
 }
 
-curl_put deploy?path=/clever --data-binary "@$curl_data"
+function save_war_path() {
+    local war_path=${1/$'\n'/}
+    # echo "war_path = $war_path"
+    warfile=($(ls "$war_path"/*.war ))
 
-#echo $command
+    if [ -e $warfile ] 
+    then 
+        # do here what you want
+        local deploy_path=$(basename "${warfile%.*}")
+        # echo $deploy_path
+        curl_put deploy?path=/"$deploy_path" --data-binary "@$warfile"
+        # echo "${warfile[@]}"
+    else
+        echo 'war file not exist'
+        exit
+    fi
+}
 
-#response=`$command`
-#echo $response
+function read_file() {
+    while IFS= read -r line || [[ -n "$line" ]]
+    do
+        echo line = "$line"
+        save_war_path "$line"
+    done < "$1"
+}
+
+read_file "${file}"

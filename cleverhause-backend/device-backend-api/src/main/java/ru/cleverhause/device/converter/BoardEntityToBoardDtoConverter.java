@@ -1,4 +1,4 @@
-package ru.cleverhause.device.services.converter;
+package ru.cleverhause.device.converter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Converter;

@@ -7,17 +7,19 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import ru.cleverhause.web.config.mvc.WebMvcConfig;
 import ru.cleverhause.web.config.security.CommonSecurityConfig;
 import ru.cleverhause.web.config.service.ServiceConfig;
-import ru.cleverhause.web.persist.config.PersistenceConfig;
+import ru.cleverhause.web.persist.config.WebPersistenceConfig;
 
 /**
  * Created by Alexandr on 15.11.2017.
  */
 @Configuration
-@ComponentScan(basePackages = {"ru.cleverhause.app.config.root"})
+@ComponentScan(basePackages = {"ru.cleverhause.web.api",
+        "ru.cleverhause.web.services.model.converter"})
 @PropertySource(value = {"classpath:application.properties"})
-@Import(value = {PersistenceConfig.class, CommonSecurityConfig.class, ServiceConfig.class})
+@Import(value = {WebMvcConfig.class, WebPersistenceConfig.class, CommonSecurityConfig.class, ServiceConfig.class})
 public class ApplicationContextConfig {
 
     @Bean

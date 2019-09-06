@@ -20,7 +20,7 @@ public class SecurityFilterChainPostProcessor implements BeanPostProcessor {
 
         if (beanName.equals("springSecurityFilterChain")) {
             FilterChainProxy fc = (FilterChainProxy) bean;
-            List<Filter> filters = fc.getFilters("/boards/**");
+            List<Filter> filters = fc.getFilters("/");
 
             Filter removed = null;
             for (Filter filter : filters) {
