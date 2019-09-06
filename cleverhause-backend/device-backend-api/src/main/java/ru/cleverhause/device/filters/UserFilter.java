@@ -12,7 +12,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.annotation.WebInitParam;
 import java.io.IOException;
 
-@WebFilter(filterName = "UserFilter", urlPatterns = {"/boards/*"},
+@WebFilter(filterName = "UserFilter", urlPatterns = {"/"},
         initParams = {@WebInitParam(name = "paramName", value = "someString")})
 public class UserFilter implements Filter {
     private FilterConfig cfg;
