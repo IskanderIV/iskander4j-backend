@@ -20,7 +20,7 @@ import javax.servlet.ServletContext;
 @WebAppConfiguration(value = "")
 @ContextConfiguration(classes = {ApplicationContextConfig.class})
 @ActiveProfiles("dev")
-public class ItTest {
+public class HealthCheckIT {
 
     @Autowired
     private WebApplicationContext wac;

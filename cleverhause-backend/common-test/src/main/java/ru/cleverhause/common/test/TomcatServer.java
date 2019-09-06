@@ -25,7 +25,7 @@ abstract public class TomcatServer {
         server.getHost().setAutoDeploy(true);
         server.getHost().setDeployOnStartup(true);
 //        server.setAddDefaultWebXmlToWebapp(false);
-
+//        tomcat.addWebapp("/app", new File("src/main/webapp").getAbsolutePath());
 //        String contextPath = "/" + getApplicationId();
         File webApp = new File(baseDir);
 //        File oldWebApp = new File(webApp.getAbsolutePath());
