@@ -36,23 +36,9 @@ public class BoardEndpoint {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BoardEndpoint.class);
 
-    // TODO For test only
-//    @PostMapping(value = {"/board"})
-//    public BoardRequestBody<?> boardsPost(ServletRequest req) {
-//        BoardRequestBody<?> body = null;
-//        try {
-//            body = JsonUtil.fromInputStreamToBoardData(req.getInputStream());
-//        } catch (IOException e) {
-//            Calendar calendar = Calendar.getInstance();
-//            calendar.setTime(new Date());
-//            LOGGER.info(calendar.getTime() + ": BoardEndpoint. Can't convert request input stream to json"); //TODO
-//        }
-//        return body;
-//    }
-
-    // TODO Test only
-    @GetMapping(value = {"/board"})
-    public String boardsGet() {
+    @GetMapping(value = {"/board/healthcheck"})
+    public String boardHealthCheck() {
+        LOGGER.info("Inside Health Check!");
         return "Boards Get";
     }
 

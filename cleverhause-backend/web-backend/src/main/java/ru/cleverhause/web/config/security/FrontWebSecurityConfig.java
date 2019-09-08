@@ -1,13 +1,9 @@
 package ru.cleverhause.web.config.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -16,25 +12,12 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationEn
 import org.springframework.security.web.session.SimpleRedirectInvalidSessionStrategy;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-/**
- * Created by
- *
- * @author Aleksandr_Ivanov1
- * @date 7/9/2018.
- */
-@Order(value = 200)
 @Configuration
 @EnableWebSecurity
 @ComponentScan(basePackages = {"ru.cleverhause.common.api.service.security"})
 public class FrontWebSecurityConfig extends WebSecurityConfigurerAdapter {
-
     private static final String SITE = "/";
     private static final String ALL_INSIDE = "/**";
-
-    @Autowired
-    @Qualifier(value = "authManager")
-    public AuthenticationManager authenticationManager;
-
 
     @Bean
     public BasicAuthenticationEntryPoint frontAuthEntryPoint() {
@@ -59,7 +42,7 @@ public class FrontWebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage("/login")
-//                .defaultSuccessUrl("/myboard/myboard")
+                .defaultSuccessUrl("/home")
                 .failureUrl("/login?error")
                 .usernameParameter("username")
                 .passwordParameter("password")

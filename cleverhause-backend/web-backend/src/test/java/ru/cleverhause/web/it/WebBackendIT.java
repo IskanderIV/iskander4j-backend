@@ -1,35 +1,30 @@
-package ru.cleverhause.device.it;
+package ru.cleverhause.web.it;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleState;
 import org.apache.http.Header;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import ru.cleverhause.common.test.TomcatServer;
-import ru.cleverhause.device.BoardDispatcherInitializer;
 import ru.cleverhause.device.dto.DeviceStructure;
 import ru.cleverhause.device.dto.request.BoardRequestBody;
+import ru.cleverhause.web.FrontDispatcherInitializer;
 
-import javax.servlet.ServletException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URI;
@@ -38,8 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class DeviceBackendIT {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DeviceBackendIT.class);
+public class WebBackendIT {
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebBackendIT.class);
     private static String HOST_NAME = "localhost";
     private static int PORT = 8090;
 
@@ -51,17 +46,17 @@ public class DeviceBackendIT {
         tomcatServer = new TomcatServer() {
             @Override
             protected Class<?> getServletContainerInitializer() {
-                return BoardDispatcherInitializer.class;
+                return FrontDispatcherInitializer.class;
             }
 
             @Override
             protected String getContextPath() {
-                return "/device-backend";
+                return "/user-backend";
             }
 
             @Override
             protected String getWarPath() {
-                return "target/device-backend.war";
+                return "target/user-backend.war";
             }
 
             @Override
@@ -93,28 +88,27 @@ public class DeviceBackendIT {
     }
 
     @Test
-    public void healthCheckDeviceBackendIT() {
-        HttpClient client = HttpClients.createDefault();
+    public void healthCheckWebBackendIT() throws InterruptedException {
+        HttpClient client = HttpClientBuilder.create().disableContentCompression().build();
         try {
-            final String endpoint = "/device-backend/board";
+            final String endpoint = "/user-backend/home";
             URI uri = new URIBuilder()
                     .setScheme("http")
                     .setHost(HOST_NAME)
                     .setPort(PORT)
                     .setPath(endpoint)
                     .build();
-            LOGGER.info("URI={}", uri);
-            final HttpPost httpPost = new HttpPost(uri);
+            LOGGER.info("URL:{}", uri);
+            final HttpGet httpGet = new HttpGet(uri);
             final Header[] headers = getHttpHeaders(MediaType.APPLICATION_JSON_UTF8_VALUE);
-            List<DeviceStructure> devices = List.of((DeviceStructure) getDevice(DeviceStructure.class));
-            final HttpEntity entity = new StringEntity(getRequestBody(devices), ContentType.APPLICATION_JSON);
-            httpPost.setEntity(entity);
-            httpPost.setHeaders(headers);
-
-            HttpResponse response = client.execute(httpPost);
+            httpGet.setHeaders(headers);
+            LOGGER.info("Headers:{}", headers);
+            LOGGER.info("Request:{}", httpGet);
+            HttpResponse response = client.execute(httpGet);
             Optional.ofNullable(response)
                     .map(HttpResponse::getStatusLine)
                     .ifPresent(status -> {
+                        System.out.println("EVERYTHING IS OK!!!!");
                         Assert.assertEquals(200, status.getStatusCode());
                     });
         } catch (IOException | URISyntaxException e) {
@@ -139,6 +133,7 @@ public class DeviceBackendIT {
     private Header[] getHttpHeaders(String contentType) {
         final List<Header> headers = new ArrayList<>();
         headers.add(new BasicHeader(HttpHeaders.CONTENT_TYPE, contentType));
+//        headers.add(new BasicHeader(HttpHeaders.ACCEPT_ENCODING, MediaType.));
 
         return headers.toArray(new Header[0]);
     }

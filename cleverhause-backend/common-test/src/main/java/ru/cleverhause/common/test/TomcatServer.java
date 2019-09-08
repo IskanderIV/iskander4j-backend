@@ -2,44 +2,39 @@ package ru.cleverhause.common.test;
 
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
+import org.apache.catalina.connector.Connector;
 import org.apache.catalina.startup.Tomcat;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
-import org.springframework.web.SpringServletContainerInitializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.servlet.ServletContainerInitializer;
 import java.io.File;
 import java.io.IOException;
 
 abstract public class TomcatServer {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TomcatServer.class);
+
     private Tomcat server = new Tomcat();
     private Context context;
 
     protected TomcatServer() throws IOException {
         String baseDir = System.getProperty("java.io.tmpdir");
-        File docBase = new File(baseDir);
-        server.setPort(getPort());
+        server.getServer().setPort(getPort());
         server.setHostname(getHost());
         server.setBaseDir(baseDir);
         String appBase = ".";
-        server.getHost().setAppBase(baseDir);//(appBase);
-        server.getHost().setAutoDeploy(true);
-        server.getHost().setDeployOnStartup(true);
+        server.getHost().setAppBase(baseDir);
+        Connector connector = new Connector("HTTP/1.1");
+        connector.setPort(getPort());
+        server.setConnector(connector);
+//        server.getHost().setAutoDeploy(true);
+//        server.getHost().setDeployOnStartup(true);
 //        server.setAddDefaultWebXmlToWebapp(false);
-//        tomcat.addWebapp("/app", new File("src/main/webapp").getAbsolutePath());
-//        String contextPath = "/" + getApplicationId();
-        File webApp = new File(baseDir);
-//        File oldWebApp = new File(webApp.getAbsolutePath());
-//        FileUtils.deleteDirectory(oldWebApp);
-
-        context = server.addContext("", docBase.getAbsolutePath());
-        ServletContainerInitializer springSci = new SpringServletContainerInitializer();
-//        springSci.onStartup(Set.of(getServletContainerInitializer()), context.getServletContext());
-        context.addServletContainerInitializer(springSci, null);
-//        server.addWebapp(mTomcat.getHost(), contextPath, webApp.getAbsolutePath());
+        server.addWebapp(getContextPath(), new File(getWarPath()).getAbsolutePath());
     }
 
     public void start() throws LifecycleException {
         server.start();
+        LOGGER.info("TOMCAT SERVER has been started!");
 //        server.getServer().await();
     }
 
@@ -68,4 +63,8 @@ abstract public class TomcatServer {
     }
 
     abstract protected Class<?> getServletContainerInitializer();
+
+    abstract protected String getContextPath();
+
+    abstract protected String getWarPath();
 }

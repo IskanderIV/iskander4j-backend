@@ -23,7 +23,9 @@ public class FrontDispatcherInitializer extends AbstractAnnotationConfigDispatch
     @Nullable
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[]{WebMvcConfig.class};
+        return new Class[]{
+                WebMvcConfig.class
+        };
     }
 
     @Override

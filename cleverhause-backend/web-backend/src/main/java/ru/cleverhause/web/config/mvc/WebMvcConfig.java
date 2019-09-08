@@ -1,7 +1,6 @@
 package ru.cleverhause.web.config.mvc;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -17,23 +16,8 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = {
-        "ru.cleverhause.web.api.rest",
-        "ru.cleverhause.web.api.validation"})
 public class WebMvcConfig implements WebMvcConfigurer {
 
-//    @Bean
-//    public static PropertyPlaceholderConfigurer placeHolderConfigurer() {
-//        return new PropertyPlaceholderConfigurer();
-//    }
-
-    //This is a straightforward mechanism to map views names to URLs with no need for an explicit controller in between
-//    @Override
-//    public void addViewControllers(ViewControllerRegistry registry) {
-//        super.addViewControllers(registry);
-//
-//        registry.addViewController("/somepage.html");
-//    }
     @Bean
     public ReloadableResourceBundleMessageSource messageSource() {
         ReloadableResourceBundleMessageSource resourceBundleMessageSource =

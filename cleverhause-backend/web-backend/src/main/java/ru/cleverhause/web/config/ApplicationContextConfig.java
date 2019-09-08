@@ -10,16 +10,16 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import ru.cleverhause.web.config.mvc.WebMvcConfig;
 import ru.cleverhause.web.config.security.CommonSecurityConfig;
 import ru.cleverhause.web.config.service.ServiceConfig;
-import ru.cleverhause.web.persist.config.WebPersistenceConfig;
+import ru.cleverhause.web.persist.config.FrontPersistenceConfig;
 
 /**
  * Created by Alexandr on 15.11.2017.
  */
 @Configuration
 @ComponentScan(basePackages = {"ru.cleverhause.web.api",
-        "ru.cleverhause.web.services.model.converter"})
+        "ru.cleverhause.web.services"})
 @PropertySource(value = {"classpath:application.properties"})
-@Import(value = {WebMvcConfig.class, WebPersistenceConfig.class, CommonSecurityConfig.class, ServiceConfig.class})
+@Import(value = {FrontPersistenceConfig.class, CommonSecurityConfig.class, ServiceConfig.class})
 public class ApplicationContextConfig {
 
     @Bean

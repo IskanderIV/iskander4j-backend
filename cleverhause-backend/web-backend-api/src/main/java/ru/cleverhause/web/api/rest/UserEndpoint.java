@@ -3,13 +3,15 @@ package ru.cleverhause.web.api.rest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.MediaType;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import ru.cleverhause.common.api.service.security.SecurityService;
 import ru.cleverhause.common.persist.api.entity.User;
 import ru.cleverhause.web.api.service.UserService;
@@ -23,7 +25,10 @@ import ru.cleverhause.web.api.validation.UserValidator;
  * @date 11/27/2017.
  */
 
-@Controller
+@RestController
+@RequestMapping(
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        consumes = MediaType.APPLICATION_JSON_VALUE)
 public class UserEndpoint {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserEndpoint.class);
