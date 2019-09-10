@@ -15,7 +15,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import ru.cleverhause.device.config.ApplicationContextConfig;
+import ru.cleverhause.device.config.DeviceAppConfig;
 import ru.cleverhause.device.config.mvc.DeviceWebMvcConfig;
 
 import javax.servlet.ServletContext;
@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration(value = "")
-@ContextConfiguration(classes = {ApplicationContextConfig.class, DeviceWebMvcConfig.class})
+@ContextConfiguration(classes = {DeviceAppConfig.class, DeviceWebMvcConfig.class})
 @ActiveProfiles("dev")
 public class DeviceHealthCheckIT {
     private static final Logger LOGGER = LoggerFactory.getLogger(DeviceHealthCheckIT.class);

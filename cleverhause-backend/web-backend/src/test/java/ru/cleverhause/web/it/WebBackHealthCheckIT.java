@@ -15,7 +15,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import ru.cleverhause.web.config.ApplicationContextConfig;
+import ru.cleverhause.web.config.WebBackAppConfig;
 import ru.cleverhause.web.config.mvc.WebMvcConfig;
 
 import javax.servlet.ServletContext;
@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration(value = "")
-@ContextConfiguration(classes = {ApplicationContextConfig.class, WebMvcConfig.class})
+@ContextConfiguration(classes = {WebBackAppConfig.class, WebMvcConfig.class})
 @ActiveProfiles("dev")
 public class WebBackHealthCheckIT {
     private static final Logger LOGGER = LoggerFactory.getLogger(WebBackHealthCheckIT.class);

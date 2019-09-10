@@ -1,11 +1,11 @@
-package ru.cleverhause.web;
+package ru.cleverhause.device;
 
 import org.springframework.lang.Nullable;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
-import ru.cleverhause.web.config.WebBackAppConfig;
-import ru.cleverhause.web.config.mvc.WebMvcConfig;
+import ru.cleverhause.device.config.DeviceAppConfig;
+import ru.cleverhause.device.config.mvc.DeviceWebMvcConfig;
 
-public class FrontDispatcherInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
+public class DeviceDispatcherInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     @Override
     protected String[] getServletMappings() {
@@ -15,21 +15,17 @@ public class FrontDispatcherInitializer extends AbstractAnnotationConfigDispatch
     @Nullable
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[]{
-                WebBackAppConfig.class
-        };
+        return new Class[]{DeviceAppConfig.class};
     }
 
     @Nullable
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[]{
-                WebMvcConfig.class
-        };
+        return new Class[]{DeviceWebMvcConfig.class};
     }
 
     @Override
     protected String getServletName() {
-        return "frontDispatcher";
+        return "deviceDispatcher";
     }
 }

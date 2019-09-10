@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = {"ru.cleverhause.device.rest"})
+@ComponentScan(basePackages = {"ru.cleverhause.device.api.rest"})
 public class DeviceWebMvcConfig implements WebMvcConfigurer {
 
 }

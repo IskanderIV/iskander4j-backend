@@ -12,10 +12,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter;
-import ru.cleverhause.device.filters.BoardBasicPreAuthenticationFilter;
-import ru.cleverhause.device.filters.BoardHttpBasicAuthenticationFilter;
-import ru.cleverhause.device.filters.SecurityFilterChainPostProcessor;
-import ru.cleverhause.device.filters.handler.BoardHttpBasicAuthenticationSuccessHandler;
+import ru.cleverhause.device.api.filters.BoardBasicPreAuthenticationFilter;
+import ru.cleverhause.device.api.filters.BoardHttpBasicAuthenticationFilter;
+import ru.cleverhause.device.api.filters.SecurityFilterChainPostProcessor;
+import ru.cleverhause.device.api.filters.handler.BoardHttpBasicAuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity

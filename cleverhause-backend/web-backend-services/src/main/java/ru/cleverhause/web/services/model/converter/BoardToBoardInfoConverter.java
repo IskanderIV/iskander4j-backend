@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 import ru.cleverhause.common.persist.api.entity.Board;
 import ru.cleverhause.common.persist.api.entity.BoardSavedData;
 import ru.cleverhause.common.utils.JsonUtil;
-import ru.cleverhause.device.dto.DeviceControl;
-import ru.cleverhause.device.dto.DeviceDataRecord;
-import ru.cleverhause.device.dto.DeviceStructure;
+import ru.cleverhause.device.api.dto.DeviceControl;
+import ru.cleverhause.device.api.dto.DeviceDataRecord;
+import ru.cleverhause.device.api.dto.DeviceStructure;
 import ru.cleverhause.web.services.model.BoardInfo;
 
 import javax.annotation.ParametersAreNonnullByDefault;

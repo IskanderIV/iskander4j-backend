@@ -23,22 +23,16 @@ import ru.cleverhause.common.persist.api.repository.BoardStructureDao;
 import ru.cleverhause.common.persist.api.repository.NewBoardUidDao;
 import ru.cleverhause.common.persist.api.repository.UserDao;
 import ru.cleverhause.common.utils.JsonUtil;
-import ru.cleverhause.device.dto.BoardDto;
-import ru.cleverhause.device.dto.DeviceControl;
-import ru.cleverhause.device.dto.DeviceData;
-import ru.cleverhause.device.dto.DeviceDataRecord;
-import ru.cleverhause.device.dto.DeviceStructure;
-import ru.cleverhause.device.dto.request.BoardRequestBody;
-import ru.cleverhause.device.service.BoardDataService;
+import ru.cleverhause.device.api.dto.BoardDto;
+import ru.cleverhause.device.api.dto.DeviceControl;
+import ru.cleverhause.device.api.dto.DeviceData;
+import ru.cleverhause.device.api.dto.DeviceDataRecord;
+import ru.cleverhause.device.api.dto.DeviceStructure;
+import ru.cleverhause.device.api.dto.request.BoardRequestBody;
+import ru.cleverhause.device.api.service.BoardDataService;
 
 import java.util.*;
 
-/**
- * Created by
- *
- * @author Aleksandr_Ivanov1
- * @date 12/2/2017.
- */
 @Service
 public class BoardDataServiceImpl implements BoardDataService {
 

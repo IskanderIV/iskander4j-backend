@@ -1,9 +1,9 @@
 package ru.cleverhause.web.services.model;
 
 import com.google.common.base.Objects;
-import ru.cleverhause.device.dto.DeviceControl;
-import ru.cleverhause.device.dto.DeviceDataRecord;
-import ru.cleverhause.device.dto.DeviceStructure;
+import ru.cleverhause.device.api.dto.DeviceControl;
+import ru.cleverhause.device.api.dto.DeviceDataRecord;
+import ru.cleverhause.device.api.dto.DeviceStructure;
 
 import java.util.List;
 
