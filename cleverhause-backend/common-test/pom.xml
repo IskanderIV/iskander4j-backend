@@ -12,7 +12,7 @@
     <artifactId>common-test</artifactId>
 
     <properties>
-        <tomcat.version>9.0.24</tomcat.version>
+        <tomcat.version>9.0.30</tomcat.version>
     </properties>
 
     <dependencies>
