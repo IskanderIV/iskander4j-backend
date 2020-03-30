@@ -1,0 +1,8 @@
+spring:
+  application.name: cleverhause-auth
+  profiles.active: local
+  cloud:
+    config:
+      uri: "http://${SERVICE_HOST}/${PROJECT_KEY}-settings"
+      enabled: false
+      failFast: true
