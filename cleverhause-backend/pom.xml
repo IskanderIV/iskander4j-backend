@@ -112,8 +112,8 @@
 
     <repositories>
         <repository>
-            <id>cleverhause-nexus</id>
-            <url>http://localhost:8081/repository/cleverhause_repository/</url>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/IskanderIV/cleverhause</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -125,12 +125,13 @@
 
     <distributionManagement>
         <repository>
-            <id>cleverhause-nexus</id>
-            <url>http://localhost:8081/repository/clever_releases/</url>
+            <id>github</id>
+            <name>GitHub IskanderIV Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/IskanderIV/cleverhause</url>
         </repository>
         <snapshotRepository>
-            <id>cleverhause-nexus</id>
-            <url>http://localhost:8081/repository/clever_snapshot/</url>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/IskanderIV/cleverhause</url>
         </snapshotRepository>
     </distributionManagement>
 
