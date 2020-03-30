@@ -4,9 +4,10 @@ CREATE ROLE clever_admin WITH LOGIN
   NOSUPERUSER INHERIT CREATEDB CREATEROLE NOREPLICATION;
 
 CREATE DATABASE cleverhause_db WITH OWNER clever_admin ENCODING = 'UTF8' CONNECTION LIMIT = -1;
+\connect cleverhause_db;
 GRANT ALL ON DATABASE cleverhause_db TO clever_admin;
 
-CREATE SCHEMA clever_schema
+CREATE SCHEMA IF NOT EXISTS clever_schema
     AUTHORIZATION clever_admin;
 
 GRANT ALL ON SCHEMA clever_schema TO clever_admin;

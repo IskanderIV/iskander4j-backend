@@ -23,3 +23,12 @@ pass=WindowsVista123
 
 ###Remember
 init sqls will be processed in linguistic order (init1, init2...)
+
+###Backup
+docker exec -t -u test postgress-service pg_dumpall -c > dump_`date +%d-%m-%Y"_"%H_%M_%S`.sql
+
+###Adminer
+Postgresql
+server - service_name:<inner_port> (postgresql:5432)
+username - postgres
+password - POSTGRES_PASSWORD
