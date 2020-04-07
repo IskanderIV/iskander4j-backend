@@ -29,5 +29,5 @@ logging.level.org.springframework.data: debug
 
 eureka:
   client:
-    service-url:
-      defaultZone: 'http://localhost:8010/eureka'
+    enabled: true
+    service-url.defaultZone: 'http://localhost:8010/eureka'
