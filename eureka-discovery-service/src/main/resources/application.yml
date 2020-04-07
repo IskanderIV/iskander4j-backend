@@ -6,7 +6,7 @@ eureka:
     fetch-registry: false
 
 eureka.client.service-url:
-  - defaultZone: 'http://localhost:${server.port}/eureka}'
+  defaultZone: 'http://localhost:${server.port}/eureka'
 
 server:
   port: 8010
