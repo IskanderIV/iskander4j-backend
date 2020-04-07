@@ -1,7 +1,7 @@
 version: '3.1'
 
 services:
-  postgresql-auth:
+  postgresql-users:
     image: 'postgres:11'
     restart: always
     environment:
@@ -11,13 +11,7 @@ services:
       - './init/insert.sql:/docker-entrypoint-initdb.d/insert.sql'
       - './data:/var/lib/postgresql/data'
     ports:
-      - '5432:5432'
-
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8888:8080
+      - '5433:5432'
 
 volumes:
   data:
