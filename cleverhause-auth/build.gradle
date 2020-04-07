@@ -1,0 +1,75 @@
+plugins {
+	id 'org.springframework.boot' version '2.2.6.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'java'
+}
+
+group = 'ru.cleverhause'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	developmentOnly
+	runtimeClasspath {
+		extendsFrom developmentOnly
+	}
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	set('springBootAdminVersion', "2.2.1")
+	set('springCloudVersion', "Hoxton.SR3")
+	set('assertj.version', '3.12.2')
+	set('logback_version', '6.3')
+    set('postgresql_version', '2.9')
+	set('junit-jupiter.version', '5.5.1')
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'de.codecentric:spring-boot-admin-starter-client'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	// ELK
+	implementation "net.logstash.logback:logstash-logback-encoder:${logback_version}"
+
+	// CLOUD
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
+	// DB
+	runtimeOnly 'org.postgresql:postgresql'
+	implementation "ru.yandex.qatools.embed:postgresql-embedded:${postgresql_version}"
+	implementation "org.hibernate:hibernate-entitymanager"
+	implementation 'org.liquibase:liquibase-core'
+
+	// LOMBOK
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// TEST
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	testImplementation 'org.springframework.kafka:spring-kafka-test'
+	testImplementation 'org.assertj:assertj-core'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "de.codecentric:spring-boot-admin-dependencies:${springBootAdminVersion}"
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+
+test {
+	useJUnitPlatform()
+}

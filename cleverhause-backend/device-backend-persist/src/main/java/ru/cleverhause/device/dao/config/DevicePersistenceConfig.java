@@ -51,7 +51,7 @@ public class DevicePersistenceConfig {
         jpaProperties.put("hibernate.show_sql", "true");
 
         entityManagerFactory.setJpaProperties(jpaProperties);
-
+        entityManagerFactory.afterPropertiesSet();
         return entityManagerFactory;
     }
 

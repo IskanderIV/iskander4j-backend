@@ -4,58 +4,37 @@
     <interactiveMode/>
     <usePluginRegistry/>
     <offline/>
-    <servers>
-        <server>
-            <id>cleverhause-nexus</id>
-            <username>clever_nexus</username>
-            <password>123456</password>
-        </server>
-    </servers>
-    <mirrors>
-        <mirror> <!--Send all requests to the public group -->
-            <id>cleverhause-nexus</id>
-            <mirrorOf>*</mirrorOf>
-            <url>http://localhost:8081/repository/cleverhause_repository/</url>
-        </mirror>
-    </mirrors>
     <activeProfiles>
-        <!--make the profile active all the time -->
-        <activeProfile>cleverhause-nexus</activeProfile>
+        <activeProfile>github</activeProfile>
     </activeProfiles>
+
     <profiles>
         <profile>
-            <id>cleverhause-nexus</id>
-            <!--Override the repository (and pluginRepository) "central" from the Maven Super POM
-                to activate snapshots for both! -->
+            <id>github</id>
             <repositories>
                 <repository>
                     <id>central</id>
-                    <url>http://central</url>
-                    <releases>
-                        <enabled>true</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>true</enabled>
-                    </snapshots>
+                    <url>https://repo1.maven.org/maven2</url>
+                    <releases><enabled>true</enabled></releases>
+                    <snapshots><enabled>true</enabled></snapshots>
+                </repository>
+                <repository>
+                    <id>github</id>
+                    <name>GitHub IskanderIV Apache Maven Packages</name>
+                    <url>https://maven.pkg.github.com/IskanderIV/cleverhause</url>
+                    <releases><enabled>true</enabled></releases>
+                    <snapshots><enabled>true</enabled></snapshots>
                 </repository>
             </repositories>
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>central</id>
-                    <url>http://central</url>
-                    <releases>
-                        <enabled>true</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>true</enabled>
-                    </snapshots>
-                </pluginRepository>
-            </pluginRepositories>
         </profile>
     </profiles>
 
-    <pluginGroups>
-        <pluginGroup>org.sonatype.plugins</pluginGroup>
-    </pluginGroups>
+    <servers>
+        <server>
+            <id>github</id>
+            <username>IskanderIV</username>
+            <password>c8d8a0b7dea7f3a57e1aa4c44f79be79530cb248</password>
+        </server>
+    </servers>
     <proxies/>
 </settings>

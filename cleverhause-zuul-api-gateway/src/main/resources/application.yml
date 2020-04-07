@@ -1,0 +1,11 @@
+server.port: 8887
+
+spring:
+  application:
+    name: cleverhause-api-gateway
+
+eureka:
+  client:
+    enabled: true
+    service-url:
+      defaultZone: 'http://localhost:8010/eureka'
