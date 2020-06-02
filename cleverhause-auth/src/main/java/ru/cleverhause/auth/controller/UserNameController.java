@@ -16,8 +16,9 @@ import java.util.Collections;
 public class UserNameController {
 
     @RequestMapping(value = "/oauth/test")
-    public ResponseEntity<?> username(@RequestParam(required = true) String name) {
+    public ResponseEntity<?> username(@RequestParam String name,
+                                      @RequestParam(required = false) String error) {
         log.info("Username= {}", name);
-        return new ResponseEntity<>(Collections.singletonMap("name", name), HttpStatus.OK);
+        return new ResponseEntity<>(Collections.singletonMap("name", error != null ? name : "error"), HttpStatus.OK);
     }
 }
