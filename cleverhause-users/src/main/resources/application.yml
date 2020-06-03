@@ -1,5 +1,4 @@
-server.port: 8080
-
+server.port: 8082
 spring:
   application.name: cleverhause-users
   profiles.active: local
@@ -31,3 +30,7 @@ eureka:
   client:
     enabled: false
     service-url.defaultZone: 'http://localhost:8010/eureka'
+
+server:
+  servlet:
+    context-path: '/api/users'

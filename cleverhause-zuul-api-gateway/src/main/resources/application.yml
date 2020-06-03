@@ -1,4 +1,4 @@
-server.port: 8887
+server.port: 8080
 
 spring:
   application:
@@ -6,6 +6,28 @@ spring:
 
 eureka:
   client:
-    enabled: true
+    enabled: false
     service-url:
       defaultZone: 'http://localhost:8010/eureka'
+
+# ROUTES
+
+zuul:
+  routes:
+#    sensitiveHeaders: 'Cookie,Set-Cookie'
+    users:
+      sensitiveHeaders:
+      path: '/api/users/**'
+      url: 'http://localhost:8082/api/users'
+    oauth:
+      sensitiveHeaders:
+      path: '/oauth/**'
+      url: 'http://localhost:8081/oauth'
+    login:
+      sensitiveHeaders:
+      path: '/login/**'
+      url: 'http://localhost:8081/login'
+    logout:
+      sensitiveHeaders:
+      path: '/logout/**'
+      url: 'http://localhost:8081/logout'

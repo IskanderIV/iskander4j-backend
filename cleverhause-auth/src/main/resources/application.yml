@@ -1,33 +1,26 @@
-server.port: 0
+server.port: 8081
 
 spring:
   application.name: cleverhause-auth
   profiles.active: local
-  datasource:
-    name: local-docker-db
-    url: "jdbc:postgresql://localhost:5432/cleverhause_db"
-    username: 'clever_admin'
-    password: 'WindowsVista123'
-    driver-class-name: 'org.postgresql.Driver'
-  jpa:
-    hibernate.ddl-auto: update
-    show-sql: true
-    generate-ddl: false
-    properties:
-      - hibernate.dialect: 'org.hibernate.dialect.PostgreSQL95Dialect'
-      - hibernate.current_session_context_class: 'org.springframework.orm.hibernate5.SpringSessionContext'
-      - hibernate.connection.characterEncoding: "UTF-8"
-      - hibernate.connection.charSet: "UTF-8"
-      - hibernate.temp.use_jdbc_metadata_defaults: false
-  liquibase:
-    enabled: false
   devtools:
     restart:
       enabled: true
 
-logging.level.org.springframework.data: debug
+security:
+  oauth2:
+    clients:
+      clever-ui:
+        clientId: 'client'
+        secret: '{noop}secret'
+        accessTokenLifeSecond: 3600
+        refreshTokenLifeSecond: 50000
+        grandTypes: 'authorization_code, refresh_token'
+  #      'authorization_code, client_credentials, password, refresh_token'
+        redirectUri:
+        scopes: read
 
 eureka:
   client:
-    enabled: true
+    enabled: false
     service-url.defaultZone: 'http://localhost:8010/eureka'
