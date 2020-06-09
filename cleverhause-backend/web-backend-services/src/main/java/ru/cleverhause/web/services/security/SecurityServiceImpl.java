@@ -22,7 +22,7 @@ import ru.cleverhause.common.api.service.security.SecurityService;
  * @version v1.0.0
  * @date 3/4/2018.
  */
-
+//TODO should be implemented in auth
 @Service
 public class SecurityServiceImpl implements SecurityService {
 

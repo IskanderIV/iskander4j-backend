@@ -22,6 +22,13 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    compile {
+        exclude group:'de.codecentric', module:'spring-boot-admin-starter-client'
+        exclude group:'de.codecentric', module:'spring-boot-admin-client'
+    }
+}
+
 ext {
     set('springBootAdminVersion', "2.2.1")
     set('springCloudVersion', "Hoxton.SR3")
