@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.cleverhause.users.dto.request.UserInfoRequest;
 import ru.cleverhause.users.dto.request.UserRequest;
 import ru.cleverhause.users.dto.response.UserInfoResponse;
 import ru.cleverhause.users.entity.User;
@@ -28,9 +27,9 @@ public class UsersServiceImpl implements UsersService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserInfoResponse userInfo(@NotNull UserInfoRequest userInfoRequest) {
-        Optional<User> user = userDao.findUser(userInfoRequest.getUserId(), userInfoRequest.getUserName());
-        return user.map(u -> UserInfoResponse.builder()
+    public UserInfoResponse userInfo(@NotNull String user) {
+        Optional<User> savedUser = userDao.findUser(Long.valueOf(user), user);
+        return savedUser.map(u -> UserInfoResponse.builder()
                 .userId(u.getId())
                 .username(u.getUsername())
                 .build())

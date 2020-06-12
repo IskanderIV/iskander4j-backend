@@ -27,49 +27,49 @@ public class DataBaseConfig {
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
     }
+//
+//    @Bean
+//    @Profile("local")
+//    public DataSource simpleDataSource(DataSourceProperties properties) {
+//        DriverManagerDataSource ds = new DriverManagerDataSource(properties.getUrl());
+//        ds.setUsername(properties.getUsername());
+//        ds.setPassword(properties.getPassword());
+//        ds.setDriverClassName(properties.getDriverClassName());
+//        return ds;
+//    }
+//
+//    @Bean
+//    @Profile("prod")
+//    public DataSource dataSource(DataSourceProperties properties) {
+//        HikariConfig config = new HikariConfig();
+//        config.setJdbcUrl(properties.getUrl());
+//        config.setUsername(properties.getUsername());
+//        config.setPassword(properties.getPassword());
+//        config.setDriverClassName(properties.getDriverClassName());
+//        return new HikariDataSource(config);
+//    }
+//
+//    @Bean
+//    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource, JpaProperties jpaConfig) {
+//        JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+//
+//        LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
+//        entityManagerFactory.setDataSource(dataSource);
+//        entityManagerFactory.setPackagesToScan("ru.cleverhause.users.entity");
+//        entityManagerFactory.setJpaVendorAdapter(vendorAdapter);
+//
+//        Properties jpaProperties = new Properties();
+//        jpaProperties.putAll(jpaConfig.getProperties());
+//
+//        entityManagerFactory.setJpaProperties(jpaProperties);
+//
+//        return entityManagerFactory;
+//    }
 
-    @Bean
-    @Profile("local")
-    public DataSource simpleDataSource(DataSourceProperties properties) {
-        DriverManagerDataSource ds = new DriverManagerDataSource(properties.getUrl());
-        ds.setUsername(properties.getUsername());
-        ds.setPassword(properties.getPassword());
-        ds.setDriverClassName(properties.getDriverClassName());
-        return ds;
-    }
-
-    @Bean
-    @Profile("prod")
-    public DataSource dataSource(DataSourceProperties properties) {
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(properties.getUrl());
-        config.setUsername(properties.getUsername());
-        config.setPassword(properties.getPassword());
-        config.setDriverClassName(properties.getDriverClassName());
-        return new HikariDataSource(config);
-    }
-
-    @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource, JpaProperties jpaConfig) {
-        JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-
-        LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
-        entityManagerFactory.setDataSource(dataSource);
-        entityManagerFactory.setPackagesToScan("ru.cleverhause.users.entity");
-        entityManagerFactory.setJpaVendorAdapter(vendorAdapter);
-
-        Properties jpaProperties = new Properties();
-        jpaProperties.putAll(jpaConfig.getProperties());
-
-        entityManagerFactory.setJpaProperties(jpaProperties);
-
-        return entityManagerFactory;
-    }
-
-    @Bean
-    public JpaTransactionManager transactionManager(DataSource dataSource, JpaProperties jpaConfig) {
-        JpaTransactionManager txManager = new JpaTransactionManager();
-        txManager.setEntityManagerFactory(entityManagerFactory(dataSource, jpaConfig).getObject());
-        return txManager;
-    }
+//    @Bean
+//    public JpaTransactionManager transactionManager(DataSource dataSource, JpaProperties jpaConfig) {
+//        JpaTransactionManager txManager = new JpaTransactionManager();
+//        txManager.setEntityManagerFactory(entityManagerFactory(dataSource, jpaConfig).getObject());
+//        return txManager;
+//    }
 }

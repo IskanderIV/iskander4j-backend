@@ -12,6 +12,6 @@ public interface UserDao extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
 
     //TODO need first find do with id and if only it crashed nedd do second one with username
-    @Query(value = "SELECT * FROM User u WHERE u.id = :id OR u.username = :username")
+    @Query(value = "SELECT u FROM User u WHERE u.id = :id OR u.username = :username")
     Optional<User> findUser(@Param("id") Long id, @Param("username") String username);
 }

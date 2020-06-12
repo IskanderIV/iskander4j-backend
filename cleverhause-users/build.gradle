@@ -56,26 +56,35 @@ dependencies {
     // DB
     implementation 'org.liquibase:liquibase-core'
     runtimeOnly 'org.postgresql:postgresql'
-    implementation "ru.yandex.qatools.embed:postgresql-embedded:${postgresql_version}"
     implementation "org.hibernate:hibernate-entitymanager"
 
     // CLOUD
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
     // LOMBOK
-    compileOnly 'org.projectlombok:lombok'
+    compile 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
+    //UTIL
+    implementation 'org.apache.commons:commons-lang3:3.10'
+    compile ('com.google.guava:guava:29.0-jre') {
+        exclude group:'com.google.guava', module:'guava:28.2-android'
+    }
+
     // TEST
+
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'junit', module: 'junit'
     }
-    testImplementation 'org.springframework.security:spring-security-test'
     testCompile("org.springframework.cloud:spring-cloud-contract-wiremock:2.1.2.RELEASE")
     testImplementation 'org.assertj:assertj-core'
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    testImplementation  'org.junit.vintage:junit-vintage-engine'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params'
+    testCompile "org.junit.jupiter:junit-jupiter-api"
+    testCompile "org.junit.jupiter:junit-jupiter-params"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+
+    testCompile "org.testcontainers:postgresql:1.14.+"
+    testCompile "org.testcontainers:testcontainers:1.14.+"
+    testCompile "org.testcontainers:junit-jupiter:1.14.+"
     testAnnotationProcessor 'org.projectlombok:lombok'
 }
 

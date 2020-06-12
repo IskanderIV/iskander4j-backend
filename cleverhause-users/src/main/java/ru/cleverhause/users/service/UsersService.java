@@ -6,7 +6,7 @@ import ru.cleverhause.users.dto.response.UserInfoResponse;
 
 public interface UsersService {
 
-    UserInfoResponse userInfo(UserInfoRequest userInfoRequest);
+    UserInfoResponse userInfo(String user);
 
     UserInfoResponse addUser(UserRequest userRequest);
 

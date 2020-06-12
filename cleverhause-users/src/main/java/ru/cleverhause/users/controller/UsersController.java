@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.cleverhause.users.dto.request.UserInfoRequest;
@@ -19,20 +18,20 @@ import ru.cleverhause.users.service.UsersService;
 import ru.cleverhause.users.validation.ValidUserInfo;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "api/web")
 @RequiredArgsConstructor
 public class UsersController {
 
     private final UsersService userService;
 
-    @GetMapping("/userInfo")
-    public ResponseEntity<UserInfoResponse> getUserInfo(@ValidUserInfo @RequestBody UserInfoRequest userInfoRequest) {
-        log.info("Input request getUsersInfo with body: {}", userInfoRequest);
-        UserInfoResponse userInfoResponse = userService.userInfo(userInfoRequest);
-        log.info("User {} info: {}", userInfoRequest.getUserId(), userInfoResponse);
+    @GetMapping("{user}/userInfo")
+    public ResponseEntity<UserInfoResponse> getUserInfo(@RequestParam("user") String user) {
+        log.info("Input request getUsersInfo for user: {}", user);
+        UserInfoResponse userInfoResponse = userService.userInfo(user);
+        log.info("User '{}' info: {}", user, userInfoResponse);
         return ResponseEntity.ok(userInfoResponse);
     }
 
@@ -45,11 +44,15 @@ public class UsersController {
     }
 
     @PutMapping("/user")
-    public ResponseEntity<?> addUser(@Valid @RequestBody UserRequest userRequest) {
-        log.info("Input request addUser with body: {}", userRequest);
-        UserInfoResponse userInfoResponse = userService.addUser(userRequest);
-        log.info("Added user {} info: {}", userRequest.getUserId(), userInfoResponse);
-        return ResponseEntity.ok(userInfoResponse);
+    public ResponseEntity<?> updateUser(@Valid @RequestBody UserRequest userRequest) {
+        log.info("Input request updateUser with body: {}", userRequest);
+        boolean isUpdated = userService.updateUser(userRequest);
+        if (isUpdated) {
+            log.info("User {} was updated", userRequest.getUserId());
+        } else {
+            log.info("User {} was not updated", userRequest.getUserId());
+        }
+        return ResponseEntity.ok(Map.of("updated", isUpdated));
     }
 
     @DeleteMapping("/user/{id}")
