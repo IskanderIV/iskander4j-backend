@@ -47,9 +47,6 @@ dependencies {
     implementation 'de.codecentric:spring-boot-admin-starter-client'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-    //JWT
-    implementation("org.springframework.security:spring-security-jwt:1.0.9.RELEASE")
-
     // ELK
     implementation "net.logstash.logback:logstash-logback-encoder:${logback_version}"
 
