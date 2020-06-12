@@ -21,7 +21,7 @@ import java.util.Set;
  * @version 1.0.0
  * @date 3/4/2018.
  */
-
+//TODO should be implemented in auth
 public class DaoUserDetailsService implements UserDetailsService {
 
     @Autowired

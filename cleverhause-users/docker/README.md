@@ -28,8 +28,9 @@ init sqls will be processed in linguistic order (init1, init2...)
 docker exec -t -u test postgress-service pg_dumpall -c > dump_`date +%d-%m-%Y"_"%H_%M_%S`.sql
 
 ###Adminer
-I want to take adminer from the postgresql-auth docker container
+I want to take adminer from the postgresql-users docker container
 Postgresql
-server - postgresql-users (postgresql:5433)
-username - postgres
-password - POSTGRES_PASSWORD
+server - postgresql-users:5432 // because adminer sees 5432
+username - clever_admin
+password - WindowsVista123
+db - cleverhause_users_db

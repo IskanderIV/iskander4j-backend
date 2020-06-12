@@ -1,6 +1,6 @@
 package ru.cleverhause.users.entity;
 
-import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.io.Serializable;
@@ -20,7 +21,7 @@ import java.util.Collections;
 import java.util.Set;
 
 @Entity
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
 @Table(name = "clever_schema.users")
 public class User implements Serializable {
@@ -31,7 +32,8 @@ public class User implements Serializable {
     private Set<Role> roles = Collections.emptySet();
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_ID")
+    @SequenceGenerator(name = "SEQ_ID", sequenceName = "users_id_seq", schema = "clever_schema")
     public Long getId() {
         return id;
     }
