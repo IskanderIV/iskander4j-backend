@@ -35,21 +35,21 @@
                     <div class="form-group ${status.error ? 'has-error' : ''}">
                         <form:input type="text" path="username" class="form-ctrlVal" placeholder="Username"
                                     autofocus="true"/>
-                        <form:errors path="username"/>
+                        <form:deviceErrors path="username"/>
                     </div>
                 </spring:bind>
                 <spring:bind path="password">
                     <div class="form-group ${status.error ? 'has-error' : ''}">
                         <form:input type="password" path="password" class="form-ctrlVal"
                                     placeholder="Password"/>
-                        <form:errors path="password"/>
+                        <form:deviceErrors path="password"/>
                     </div>
                 </spring:bind>
                 <spring:bind path="confirmPassword">
                     <div class="form-group ${status.error ? 'has-error' : ''}">
                         <form:input type="password" path="confirmPassword" class="form-ctrlVal"
                                     placeholder="Confirm password"/>
-                        <form:errors path="confirmPassword"/>
+                        <form:deviceErrors path="confirmPassword"/>
                     </div>
                 </spring:bind>
 

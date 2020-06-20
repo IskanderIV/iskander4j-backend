@@ -1,28 +1,19 @@
 package ru.cleverhause.devices.converter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Converter;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
-import ru.cleverhause.common.persist.api.entity.Board;
-import ru.cleverhause.common.persist.api.entity.BoardControlData;
-import ru.cleverhause.common.persist.api.entity.BoardSavedData;
-import ru.cleverhause.common.persist.api.entity.BoardStructure;
-import ru.cleverhause.device.api.dto.BoardDto;
-import ru.cleverhause.device.api.dto.DeviceControl;
-import ru.cleverhause.device.api.dto.DeviceData;
-import ru.cleverhause.device.api.dto.DeviceDataRecord;
-import ru.cleverhause.device.api.dto.DeviceStructure;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
 @Component
-public class BoardEntityToBoardDtoConverter extends Converter<Board, BoardDto> {
+public class BoardEntityToBoardDtoConverter extends Converter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BoardEntityToBoardDtoConverter.class);
 

@@ -5,71 +5,103 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.cleverhause.users.dto.request.UserInfoRequest;
-import ru.cleverhause.users.dto.request.UserRequest;
-import ru.cleverhause.users.dto.response.UserInfoResponse;
-import ru.cleverhause.users.service.UsersService;
-import ru.cleverhause.users.validation.ValidUserInfo;
+import ru.cleverhause.devices.dto.request.DeviceDataRequest;
+import ru.cleverhause.devices.dto.request.DeviceParamsRequest;
+import ru.cleverhause.devices.dto.request.DevicesControlRequest;
+import ru.cleverhause.devices.dto.response.DeviceControlResponse;
+import ru.cleverhause.devices.dto.response.DevicesDataResponse;
+import ru.cleverhause.devices.dto.response.UserDevicesResponse;
+import ru.cleverhause.devices.service.DeviceService;
 
 import javax.validation.Valid;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/device")
+@RequestMapping("/api")
 public class DevicesController {
 
-    private final DevSer userService;
+    private final DeviceService deviceService;
 
-    @GetMapping("{user}/userInfo")
-    public ResponseEntity<UserInfoResponse> getUserInfo(@RequestParam("user") String user) {
-        log.info("Input request getUsersInfo for user: {}", user);
-        UserInfoResponse userInfoResponse = userService.userInfo(user);
-        log.info("User '{}' info: {}", user, userInfoResponse);
-        return ResponseEntity.ok(userInfoResponse);
+    /**
+     * Interaction with web
+     * Should be cacheable and cache must be evicted if params changed
+     */
+    @GetMapping("/devices/params")
+    public ResponseEntity<UserDevicesResponse> getDevicesParams(@RequestParam("username") String username) {
+        log.info("Input request getDevicesParams for username: {}", username);
+        UserDevicesResponse userDevicesResponse = deviceService.findAllByUsername(username);
+        log.info("User '{}' devices: {}", username, userDevicesResponse);
+        return ResponseEntity.ok(userDevicesResponse);
     }
 
-    @PostMapping("/registration")
-    public ResponseEntity<?> addDevice(@Valid @RequestBody UserRequest userRequest) {
-        log.info("Input request addUser with body: {}", userRequest);
-        Boolean result = boardDataService.registerBoard(boardRegReq);
-        log.info("Added user {} info: {}", userRequest.getUserId(), userInfoResponse);
-        return ResponseEntity.ok(userInfoResponse);
+    /**
+     * Interaction with web
+     */
+    @GetMapping("/devices/data")
+    public ResponseEntity<DevicesDataResponse> getDevicesData(@RequestParam("ids") String deviceIds) {
+        log.info("Input request getDevicesParams for ids: {}", deviceIds);
+        DevicesDataResponse devicesDataResponse = deviceService.findAllByIds(idsToList(deviceIds));
+        log.info("Devices data: {}", devicesDataResponse);
+        return ResponseEntity.ok(devicesDataResponse);
     }
 
-    @PostMapping("/data")
-    public ResponseEntity<?> addDeviceData(@Valid @RequestBody UserRequest userRequest) {
-        log.info("Input request addUser with body: {}", userRequest);
-        UserInfoResponse userInfoResponse = userService.addUser(userRequest);
-        log.info("Added user {} info: {}", userRequest.getUserId(), userInfoResponse);
-        return ResponseEntity.ok(userInfoResponse);
+    /**
+     * Interaction with web
+     */
+    @PutMapping("/devices/control")
+    public ResponseEntity<?> updateDevicesControl(@RequestBody DevicesControlRequest devicesControlRequest) {
+        log.info("Input request updateDevicesControl with deviceIds: {}", devicesControlRequest);
+        deviceService.updateControl(devicesControlRequest);
+        log.info("New controls for devices were accepted");
+        return ResponseEntity.accepted().build();
     }
 
-    @PutMapping("/data")
-    public ResponseEntity<?> updateUser(@Valid @RequestBody UserRequest userRequest) {
-        log.info("Input request updateUser with body: {}", userRequest);
-        boolean isUpdated = userService.updateUser(userRequest);
-        if (isUpdated) {
-            log.info("User {} was updated", userRequest.getUserId());
-        } else {
-            log.info("User {} was not updated", userRequest.getUserId());
-        }
-        return ResponseEntity.ok(Map.of("updated", isUpdated));
+    /**
+     * Interaction with web
+     */
+    @DeleteMapping("/devices")
+    public ResponseEntity<?> deleteDevices(@RequestParam("ids") String deviceIds) {
+        log.info("Input request deleteDevices for ids: {}", deviceIds);
+        deviceService.deleteDevices(idsToList(deviceIds));
+        log.info("Deletion of devices were accepted");
+        return ResponseEntity.accepted().build();
     }
 
-    @DeleteMapping("/user/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable("id") String userId) {
-        log.info("Input request deleteUser with id: {}", userId);
-        UserInfoResponse userInfoResponse = userService.deleteUser(userId);
-        log.info("User {} was deleted", userId);
-        return ResponseEntity.ok(userInfoResponse);
+    /**
+     * Interaction with device
+     */
+    @PostMapping("/device/params")
+    public ResponseEntity<?> addDevice(@Valid @RequestBody DeviceParamsRequest deviceParamsRequest) {
+        log.info("Input request addDevice with body: {}", deviceParamsRequest);
+        deviceService.addDevice(deviceParamsRequest);
+        log.info("Addition of device '{}' was accepted", deviceParamsRequest.getDeviceId());
+        return ResponseEntity.accepted().build();
+    }
+
+    /**
+     * Interaction with device
+     */
+    @PutMapping("/device/data")
+    public ResponseEntity<?> updateDeviceData(@Valid @RequestBody DeviceDataRequest deviceDataRequest) {
+        log.info("Input request updateDeviceData with body: {}", deviceDataRequest);
+        DeviceControlResponse deviceControlResponse = deviceService.updateDeviceData(deviceDataRequest);
+        log.info("Device control response: {}", deviceControlResponse);
+        return ResponseEntity.ok(deviceControlResponse);
+    }
+
+    private List<String> idsToList(String ids) {
+        return Arrays.stream(ids.split(","))
+                .map(String::trim)
+                .collect(Collectors.toList());
     }
 }
