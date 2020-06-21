@@ -18,10 +18,12 @@ import ru.cleverhause.devices.dto.response.DeviceControlResponse;
 import ru.cleverhause.devices.dto.response.DevicesDataResponse;
 import ru.cleverhause.devices.dto.response.UserDevicesResponse;
 import ru.cleverhause.devices.service.DeviceService;
+import ru.cleverhause.devices.validation.ValidDeviceParamsRequest;
 
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -81,10 +83,22 @@ public class DevicesController {
      * Interaction with device
      */
     @PostMapping("/device/params")
-    public ResponseEntity<?> addDevice(@Valid @RequestBody DeviceParamsRequest deviceParamsRequest) {
-        log.info("Input request addDevice with body: {}", deviceParamsRequest);
-        deviceService.addDevice(deviceParamsRequest);
-        log.info("Addition of device '{}' was accepted", deviceParamsRequest.getDeviceId());
+    public ResponseEntity<?> insertDeviceParams(@ValidDeviceParamsRequest @RequestBody DeviceParamsRequest deviceParamsRequest) {
+        log.info("Input request insertDeviceParams: {}", deviceParamsRequest);
+        String deviceId = deviceService.insertDeviceParams(deviceParamsRequest);
+        log.info("Device '{}' was successfully registered", deviceId);
+        return ResponseEntity.ok(Map.of("deviceId", deviceId));
+    }
+
+    /**
+     * Interaction with device
+     */
+    @PutMapping("/device/params")
+    public ResponseEntity<?> updateDeviceParams(@ValidDeviceParamsRequest(type = ValidDeviceParamsRequest.RequestType.UPDATE)
+                                                @RequestBody DeviceParamsRequest deviceParamsRequest) {
+        log.info("Input request updateDeviceParams: {}", deviceParamsRequest);
+        deviceService.updateDeviceParams(deviceParamsRequest);
+        log.info("Device '{}'params were updated", deviceParamsRequest.getDeviceId());
         return ResponseEntity.accepted().build();
     }
 

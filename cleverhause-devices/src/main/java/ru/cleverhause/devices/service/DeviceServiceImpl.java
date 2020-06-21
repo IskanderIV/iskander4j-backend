@@ -19,9 +19,12 @@ import ru.cleverhause.devices.dto.sensor.SensorControlDto;
 import ru.cleverhause.devices.dto.sensor.SensorDto;
 import ru.cleverhause.devices.entity.DeviceDataEntity;
 import ru.cleverhause.devices.entity.DeviceParamsEntity;
+import ru.cleverhause.devices.exception.DeviceServiceErrorCode;
+import ru.cleverhause.devices.exception.DeviceServiceException;
 import ru.cleverhause.devices.repository.DeviceDataDao;
 import ru.cleverhause.devices.repository.DeviceParamsDao;
 
+import javax.annotation.Nonnull;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
@@ -54,31 +57,26 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public DevicesDataResponse findAllByIds(List<String> deviceIds) {
-        List<Long> ids = deviceIds.stream()
-                .map(Long::valueOf)
-                .collect(Collectors.toList());
-        return DevicesDataResponse.builder()
-                .devices(getDeviceDataEntityStream(ids)
+        return new DevicesDataResponse(getDeviceDataEntityStream(deviceIds)
                         .map(dataConverter::convert)
-                        .collect(Collectors.toList()))
-                .build();
+                        .collect(Collectors.toList()));
     }
 
-    private Stream<DeviceDataEntity> getDeviceDataEntityStream(List<Long> ids) {
+    private Stream<DeviceDataEntity> getDeviceDataEntityStream(List<String> ids) {
         return StreamSupport.stream(deviceDataDao.findAllById(ids).spliterator(), false);
     }
 
     @Transactional
     @Override
     public void updateControl(final DevicesControlRequest devicesControlRequest) {
-        final Map<Long, DeviceControlDto> deviceControlMap =
+        final Map<String, DeviceControlDto> deviceControlMap =
                 convertToMap(devicesControlRequest.getDevices(), DeviceControlDto::getDeviceId);
-        List<Long> deviceIds = devicesControlRequest.getDevices().stream()
+        List<String> deviceIds = devicesControlRequest.getDevices().stream()
                 .map(DeviceDto::getDeviceId)
                 .collect(Collectors.toList());
         List<DeviceDataEntity> updatedDevices = getDeviceDataEntityStream(deviceIds)
                 .peek(updatedEntity -> {
-                    Long deviceId = updatedEntity.getId();
+                    String deviceId = updatedEntity.getId();
                     if (deviceControlMap.containsKey(deviceId)) {
                         updateDeviceControl(updatedEntity, deviceControlMap.get(deviceId));
                     }
@@ -107,24 +105,34 @@ public class DeviceServiceImpl implements DeviceService {
     @Transactional
     @Override
     public void deleteDevices(List<String> deviceIds) {
-        deviceIds.stream()
-                .mapToLong(Long::valueOf)
-                .forEach(deviceDataDao::deleteById);
+        deviceIds.forEach(deviceDataDao::deleteById);
     }
 
     @Transactional
     @Override
-    public void addDevice(DeviceParamsRequest deviceParamsRequest) {
-        DeviceParamsEntity deviceParams = paramsConverter.reverse().convert(deviceParamsRequest);
-        if (deviceParams != null) {
-            if (ObjectUtils.isEmpty(deviceParamsRequest.getDeviceId())) {
-                deviceParams.setId(deviceParamsRequest.getDeviceId());
-                deviceParamsDao.save(deviceParams);
-            } else {
-                deviceParams.setCreated(LocalDateTime.now());
-                deviceParamsDao.insert(deviceParams);
-            }
+    public String insertDeviceParams(@Nonnull DeviceParamsRequest deviceParamsRequest) {
+        if (suchDeviceIsAlreadyInserted(deviceParamsRequest)) {
+            throw new DeviceServiceException(DeviceServiceErrorCode.INSERTED_DEVICE_ALREADY_EXIST);
         }
+        DeviceParamsEntity deviceParams = paramsConverter.reverse().convert(deviceParamsRequest);
+        deviceParams.setCreated(LocalDateTime.now());
+        deviceParams = deviceParamsDao.insert(deviceParams);
+        return deviceParams.getId();
+    }
+
+    // Should be cached
+    private boolean suchDeviceIsAlreadyInserted(@Nonnull DeviceParamsRequest deviceParamsRequest) {
+        String deviceName = deviceParamsRequest.getDeviceName();
+        String username = deviceParamsRequest.getUsername();
+        return deviceParamsDao.existsByDeviceNameAndUsername(deviceName, username);
+    }
+
+    @Transactional
+    @Override
+    public void updateDeviceParams(DeviceParamsRequest deviceParamsRequest) {
+        DeviceParamsEntity deviceParams = paramsConverter.reverse().convert(deviceParamsRequest);
+        deviceParams.setId(deviceParamsRequest.getDeviceId());
+        deviceParamsDao.save(deviceParams);
     }
 
     @Transactional
@@ -135,10 +143,10 @@ public class DeviceServiceImpl implements DeviceService {
             if (ObjectUtils.isNotEmpty((deviceDataRequest.getDeviceId()))) {
                 deviceData.setId(deviceDataRequest.getDeviceId());
                 deviceData = deviceDataDao.save(deviceData);
-                return DeviceControlResponse.builder()
+                return DeviceControlResponse.deviceControlResponseBuilder()
                         .deviceId(deviceData.getId())
                         .sensors(deviceData.getSensors().stream()
-                                .map(sensorDataEntity -> SensorControlDto.builder()
+                                .map(sensorDataEntity -> SensorControlDto.sensorControlDtoBuilder()
                                         .id(sensorDataEntity.getId())
                                         .ctrlVal(sensorDataEntity.getCtrlVal())
                                         .build())

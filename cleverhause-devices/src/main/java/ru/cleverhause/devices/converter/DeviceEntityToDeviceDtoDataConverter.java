@@ -16,10 +16,10 @@ public class DeviceEntityToDeviceDtoDataConverter extends Converter<DeviceDataEn
     @Nullable
     @Override
     protected DeviceDataDto doForward(DeviceDataEntity entity) {
-        return DeviceDataDto.<SensorDataDto>builder()
+        return DeviceDataDto.deviceDataDtoBuilder()
                 .deviceId(entity.getId())
                 .sensors(entity.getSensors().stream()
-                        .map(sensorEntity -> SensorDataDto.builder()
+                        .map(sensorEntity -> SensorDataDto.sensorDataDtoBuilder()
                                 .id(sensorEntity.getId())
                                 .ack(sensorEntity.getAck())
                                 .adj(sensorEntity.getAdj())

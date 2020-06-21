@@ -6,22 +6,23 @@ import ru.cleverhause.devices.dto.device.DeviceParamsDto;
 import ru.cleverhause.devices.dto.sensor.SensorParamsDto;
 import ru.cleverhause.devices.entity.DeviceParamsEntity;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 @Component
 public class DeviceEntityToDeviceDtoParamsConverter extends Converter<DeviceParamsEntity, DeviceParamsDto> {
 
-    @Nullable
+    @Nonnull
     @Override
-    protected DeviceParamsDto doForward(DeviceParamsEntity entity) {
-        return DeviceParamsDto.<SensorParamsDto>builder()
+    protected DeviceParamsDto doForward(@Nonnull DeviceParamsEntity entity) {
+        return DeviceParamsDto.deviceParamsDtoBuilder()
                 .deviceId(entity.getId())
                 .deviceName(entity.getDeviceName())
                 .username(entity.getUsername())
                 .sensors(entity.getSensors().stream()
-                        .map(sensorEntity -> SensorParamsDto.builder()
+                        .map(sensorEntity -> SensorParamsDto.sensorParamsDtoBuilder()
+                                .id(sensorEntity.getId())
                                 .min(sensorEntity.getMin())
                                 .max(sensorEntity.getMax())
                                 .adj(sensorEntity.getAdj())
@@ -33,14 +34,15 @@ public class DeviceEntityToDeviceDtoParamsConverter extends Converter<DevicePara
                 .build();
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    protected DeviceParamsEntity doBackward(DeviceParamsDto dto) {
+    protected DeviceParamsEntity doBackward(@Nonnull DeviceParamsDto dto) {
         return DeviceParamsEntity.builder()
                 .deviceName(dto.getDeviceName())
                 .username(dto.getUsername())
                 .sensors(dto.getSensors().stream()
                         .map(sensorDto -> DeviceParamsEntity.SensorParamsEntity.builder()
+                                .id(sensorDto.getId())
                                 .min(sensorDto.getMin())
                                 .max(sensorDto.getMax())
                                 .adj(sensorDto.getAdj())

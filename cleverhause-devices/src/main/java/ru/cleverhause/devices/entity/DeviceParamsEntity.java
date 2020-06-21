@@ -29,9 +29,10 @@ import java.util.Set;
 @Document(collection = "device_params")
 public class DeviceParamsEntity implements Serializable {
     @MongoId
-    private Long id;
+    private String id;
     private String deviceName;
-    @Indexed(unique = true)
+    // should be unique with  deviceName
+//    @Indexed(unique = true)
     private String username;
     @CreatedDate
     private LocalDateTime created;
@@ -47,6 +48,7 @@ public class DeviceParamsEntity implements Serializable {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class SensorParamsEntity {
+        private Integer id;
         private Double min;
         private Double max;
         private Double discrete;

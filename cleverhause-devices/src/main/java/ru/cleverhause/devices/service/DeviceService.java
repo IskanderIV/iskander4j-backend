@@ -19,7 +19,9 @@ public interface DeviceService {
 
     void deleteDevices(List<String> deviceIds);
 
-    void addDevice(DeviceParamsRequest deviceParamsRequest);
+    String insertDeviceParams(DeviceParamsRequest deviceParamsRequest);
+
+    void updateDeviceParams(DeviceParamsRequest deviceParamsRequest);
 
     DeviceControlResponse updateDeviceData(DeviceDataRequest deviceDataRequest);
 }

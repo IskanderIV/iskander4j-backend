@@ -2,6 +2,7 @@ package ru.cleverhause.devices.dto.request;
 
 import lombok.Data;
 import lombok.NonNull;
+import lombok.ToString;
 import ru.cleverhause.devices.dto.device.DeviceControlDto;
 
 import java.io.Serializable;
