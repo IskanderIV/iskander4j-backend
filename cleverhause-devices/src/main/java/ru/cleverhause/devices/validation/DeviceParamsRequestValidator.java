@@ -1,5 +1,6 @@
 package ru.cleverhause.devices.validation;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import ru.cleverhause.devices.dto.request.DeviceParamsRequest;
@@ -7,6 +8,7 @@ import ru.cleverhause.devices.dto.request.DeviceParamsRequest;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+@Slf4j
 public class DeviceParamsRequestValidator implements ConstraintValidator<ValidDeviceParamsRequest, DeviceParamsRequest> {
 
     protected static final String NON_NULL_REQUEST_MSG = "Body should not be null";
@@ -19,6 +21,7 @@ public class DeviceParamsRequestValidator implements ConstraintValidator<ValidDe
     @Override
     public void initialize(ValidDeviceParamsRequest constraintAnnotation) {
         this.type = constraintAnnotation.type();
+        log.info("DeviceParamsRequestValidator {}, type {} ", this, type);
     }
 
     @Override

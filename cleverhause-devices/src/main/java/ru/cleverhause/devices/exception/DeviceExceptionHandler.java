@@ -18,7 +18,7 @@ public class DeviceExceptionHandler {
     @ExceptionHandler(value = {DeviceServiceException.class})
     public ResponseEntity<?> handleDeviceExceptions(DeviceServiceException dse) {
         log.error(dse.getLocalizedMessage(), dse);
-        return ResponseEntity.of(Optional.of(Map.of("code", dse.getCode(), "msg", dse.getCode().getMsg())));
+        return ResponseEntity.of(Optional.of(Map.of("code", dse.getCode().getCode(), "msg", dse.getCode().getMsg())));
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
