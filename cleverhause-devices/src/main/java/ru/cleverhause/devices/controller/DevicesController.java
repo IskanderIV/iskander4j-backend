@@ -19,9 +19,11 @@ import ru.cleverhause.devices.dto.response.DeviceControlResponse;
 import ru.cleverhause.devices.dto.response.DevicesDataResponse;
 import ru.cleverhause.devices.dto.response.UserDevicesResponse;
 import ru.cleverhause.devices.service.DeviceService;
+import ru.cleverhause.devices.validation.ValidDeviceControlRequest;
 import ru.cleverhause.devices.validation.ValidDeviceParamsRequest;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +43,7 @@ public class DevicesController {
      * Should be cacheable and cache must be evicted if params changed
      */
     @GetMapping("/devices/params")
-    public ResponseEntity<UserDevicesResponse> getDevicesParams(@RequestParam("username") String username) {
+    public ResponseEntity<UserDevicesResponse> getDevicesParams(@NotBlank @RequestParam("username") String username) {
         log.info("Input request getDevicesParams for username: {}", username);
         UserDevicesResponse userDevicesResponse = deviceService.findAllByUsername(username);
         log.info("User '{}' devices: {}", username, userDevicesResponse);
@@ -52,8 +54,8 @@ public class DevicesController {
      * Interaction with web
      */
     @GetMapping("/devices/data")
-    public ResponseEntity<DevicesDataResponse> getDevicesData(@RequestParam("ids") String deviceIds) {
-        log.info("Input request getDevicesParams for ids: {}", deviceIds);
+    public ResponseEntity<DevicesDataResponse> getDevicesData(@NotBlank @RequestParam("ids") String deviceIds) {
+        log.info("Input request getDevicesData for ids: {}", deviceIds);
         DevicesDataResponse devicesDataResponse = deviceService.findAllByIds(idsToList(deviceIds));
         log.info("Devices data: {}", devicesDataResponse);
         return ResponseEntity.ok(devicesDataResponse);
@@ -63,7 +65,7 @@ public class DevicesController {
      * Interaction with web
      */
     @PutMapping("/devices/control")
-    public ResponseEntity<?> updateDevicesControl(@RequestBody DevicesControlRequest devicesControlRequest) {
+    public ResponseEntity<?> updateDevicesControl(@ValidDeviceControlRequest @RequestBody DevicesControlRequest devicesControlRequest) {
         log.info("Input request updateDevicesControl with deviceIds: {}", devicesControlRequest);
         deviceService.updateControl(devicesControlRequest);
         log.info("New controls for devices were accepted");
@@ -74,7 +76,7 @@ public class DevicesController {
      * Interaction with web
      */
     @DeleteMapping("/devices")
-    public ResponseEntity<?> deleteDevices(@RequestParam("ids") String deviceIds) {
+    public ResponseEntity<?> deleteDevices(@NotBlank @RequestParam("ids") String deviceIds) {
         log.info("Input request deleteDevices for ids: {}", deviceIds);
         deviceService.deleteDevices(idsToList(deviceIds));
         log.info("Deletion of devices were accepted");

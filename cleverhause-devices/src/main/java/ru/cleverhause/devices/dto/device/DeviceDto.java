@@ -16,5 +16,6 @@ import java.util.List;
 @ToString
 public class DeviceDto<T extends SensorDto> implements Serializable {
     private final String deviceId;
+//    @ValidSensors
     private final List<@Valid T> sensors;
 }

@@ -82,7 +82,9 @@ public class DeviceServiceImpl implements DeviceService {
                     }
                 })
                 .collect(Collectors.toList());
-        deviceDataDao.saveAll(updatedDevices);
+        if (!updatedDevices.isEmpty()) {
+            deviceDataDao.saveAll(updatedDevices);
+        }
     }
 
     private void updateDeviceControl(DeviceDataEntity updatedEntity, DeviceControlDto deviceControlDto) {
