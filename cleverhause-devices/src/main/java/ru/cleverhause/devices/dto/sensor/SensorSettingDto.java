@@ -4,11 +4,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+import javax.validation.constraints.NotNull;
+
 @Getter
 @ToString(callSuper = true)
 public class SensorSettingDto extends SensorControlDto {
+    @NotNull
     private final Boolean adj;
+    @NotNull
     private final Boolean rotate;
+    @NotNull
     private final Boolean signaling;
 
     @Builder(builderMethodName = "sensorSettingDtoBuilder")

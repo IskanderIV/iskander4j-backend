@@ -6,8 +6,10 @@ import lombok.ToString;
 import ru.cleverhause.devices.dto.device.DeviceDataDto;
 import ru.cleverhause.devices.dto.sensor.SensorDataDto;
 
+import javax.validation.Valid;
 import java.util.List;
 
+@Valid
 @Getter
 @ToString(callSuper = true)
 public class DeviceDataRequest extends DeviceDataDto {

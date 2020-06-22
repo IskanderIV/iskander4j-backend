@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.ToString;
 import ru.cleverhause.devices.dto.sensor.SensorDataDto;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
@@ -13,6 +15,8 @@ import java.util.List;
 @ToString(callSuper = true)
 public class DeviceDataDto extends DeviceDto<SensorDataDto> {
 
+    @Valid
+    @NotNull
     private final DeviceErrorsDto deviceErrors;
 
     @Builder(builderMethodName = "deviceDataDtoBuilder")
@@ -26,8 +30,11 @@ public class DeviceDataDto extends DeviceDto<SensorDataDto> {
     @Data
     @Builder
     public static class DeviceErrorsDto implements Serializable {
+        @NotNull
         private final Boolean gsm;
+        @NotNull
         private final Boolean lcd;
+        @NotNull
         private final Boolean radio;
     }
 }

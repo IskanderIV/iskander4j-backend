@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.ToString;
 import ru.cleverhause.devices.dto.sensor.SensorDto;
 
+import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.List;
 
@@ -15,5 +16,5 @@ import java.util.List;
 @ToString
 public class DeviceDto<T extends SensorDto> implements Serializable {
     private final String deviceId;
-    private final List<T> sensors;
+    private final List<@Valid T> sensors;
 }
