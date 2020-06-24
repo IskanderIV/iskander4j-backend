@@ -9,15 +9,6 @@
     <url>http://cleverhause.ru</url>
 
     <modules>
-        <module>common-api</module>
-        <module>common-utils</module>
-        <module>common-test</module>
-        <module>common-persist-api</module>
-<!--        <module>assembly</module>-->
-        <module>device-backend</module>
-        <module>device-backend-services</module>
-        <module>device-backend-api</module>
-        <module>device-backend-persist</module>
         <module>web-backend</module>
         <module>web-backend-services</module>
         <module>web-backend-api</module>

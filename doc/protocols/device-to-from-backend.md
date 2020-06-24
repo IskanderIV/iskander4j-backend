@@ -73,7 +73,7 @@
       "radioErr": true
     }
   ],
-  "errors": {
+  "deviceErrors": {
     "gsm": false,
     "lcd": false,
     "radio": false
@@ -108,7 +108,7 @@
         "radioErr": true
       }
     ],
-    "errors": {
+    "deviceErrors": {
       "gsm": false,
       "lcd": false,
       "radio": false

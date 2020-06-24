@@ -5,7 +5,7 @@
 2. Tomcat9 path
  $ /opt/tomcat/late
 
-3. If there are no errors enable the Tomcat service to be automatically started at boot time:
+3. If there are no deviceErrors enable the Tomcat service to be automatically started at boot time:
  $ sudo systemctl enable tomcat
 
 4. To run Tomcat as a service we will create a new unit file. Open your text editor and create a file named tomcat.service in the /etc/systemd/system/:

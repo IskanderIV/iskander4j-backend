@@ -1,17 +1,8 @@
-server.port: 8080
-
 spring:
   application.name: cleverhause-devices
-  profiles.active: local
-  data:
-    mongodb:
-      uri: 'mongodb://clever_admin:admin@localhost:27017/cleverhause_devices_db?authMechanism=SCRAM-SHA-1'
   devtools:
     restart:
       enabled: true
-
-logging.level.org.springframework.data: debug
-
 eureka:
   client:
     enabled: false

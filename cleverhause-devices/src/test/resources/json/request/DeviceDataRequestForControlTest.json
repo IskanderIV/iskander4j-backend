@@ -1,0 +1,26 @@
+{
+  "deviceId": "aefaeraerrraer",
+  "deviceName": "kitchen",
+  "username": "ivanov",
+  "sensors": [
+    {
+      "id": "1",
+      "ack": 5.0,
+      "ctrlVal": 1.0,
+      "adj": true,
+      "radioErr": false
+    },
+    {
+      "id": 2,
+      "ack": 3.0,
+      "ctrlVal": 0.5,
+      "adj": true,
+      "radioErr": false
+    }
+  ],
+  "deviceErrors": {
+    "gsm": true,
+    "lcd": true,
+    "radio": false
+  }
+}

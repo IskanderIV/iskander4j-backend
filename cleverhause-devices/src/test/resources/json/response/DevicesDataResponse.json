@@ -1,0 +1,28 @@
+{
+  "devices": [
+    {
+      "deviceId": "aefaeraerrraer",
+      "sensors": [
+        {
+          "id": 2,
+          "ack": 3.0,
+          "adj": true,
+          "ctrlVal": 0.5,
+          "radioErr": false
+        },
+        {
+          "id": 1,
+          "ack": 5.0,
+          "adj": true,
+          "ctrlVal": 1.0,
+          "radioErr": false
+        }
+      ],
+      "deviceErrors": {
+        "gsm": false,
+        "lcd": true,
+        "radio": false
+      }
+    }
+  ]
+}
