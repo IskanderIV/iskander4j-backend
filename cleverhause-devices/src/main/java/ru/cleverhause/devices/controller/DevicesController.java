@@ -68,8 +68,8 @@ public class DevicesController {
     public ResponseEntity<?> updateDevicesControl(@ValidDeviceControlRequest @RequestBody DevicesControlRequest devicesControlRequest) {
         log.info("Input request updateDevicesControl with deviceIds: {}", devicesControlRequest);
         deviceService.updateControl(devicesControlRequest);
-        log.info("New controls for devices were accepted");
-        return ResponseEntity.accepted().build();
+        log.info("New controls for devices were saved");
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -110,7 +110,7 @@ public class DevicesController {
      * Interaction with device
      */
     @PutMapping("/device/data")
-    public ResponseEntity<?> updateDeviceData(@Valid @RequestBody DeviceDataRequest deviceDataRequest) {
+    public ResponseEntity<DeviceControlResponse> updateDeviceData(@Valid @RequestBody DeviceDataRequest deviceDataRequest) {
         log.info("Input request updateDeviceData with body: {}", deviceDataRequest);
         DeviceControlResponse deviceControlResponse = deviceService.updateDeviceData(deviceDataRequest);
         log.info("Device control response: {}", deviceControlResponse);

@@ -104,13 +104,15 @@ public class DeviceServiceImpl implements DeviceService {
         return list.stream().collect(Collectors.toUnmodifiableMap(keyFunction, e -> e));
     }
 
-    @Transactional
     @Override
     public void deleteDevices(List<String> deviceIds) {
-        deviceIds.forEach(deviceDataDao::deleteById);
+        //TODO it's to slow to delete each id. need to customize and delete the whole ids at once
+        deviceIds.forEach(id -> {
+            deviceDataDao.deleteById(id);
+            deviceParamsDao.deleteById(id);
+        });
     }
 
-    @Transactional
     @Override
     public String insertDeviceParams(@Nonnull DeviceParamsRequest deviceParamsRequest) {
         if (suchDeviceIsAlreadyInserted(deviceParamsRequest)) {

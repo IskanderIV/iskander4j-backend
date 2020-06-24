@@ -1,5 +1,6 @@
 package ru.cleverhause.devices.dto.sensor;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -23,7 +24,13 @@ public class SensorParamsDto extends SensorDto {
     private final Boolean signaling;
 
     @Builder(builderMethodName = "sensorParamsDtoBuilder")
-    public SensorParamsDto(int id, Double min, Double max, Double discrete, Boolean adj, Boolean rotate, Boolean signaling) {
+    public SensorParamsDto(@JsonProperty("id") int id,
+                           @JsonProperty("min") Double min,
+                           @JsonProperty("max") Double max,
+                           @JsonProperty("discrete") Double discrete,
+                           @JsonProperty("adj") Boolean adj,
+                           @JsonProperty("rotate") Boolean rotate,
+                           @JsonProperty("signaling") Boolean signaling) {
         super(id);
         this.min = min;
         this.max = max;

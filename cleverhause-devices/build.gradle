@@ -72,6 +72,11 @@ dependencies {
     testCompile "org.junit.jupiter:junit-jupiter-api"
     testCompile "org.junit.jupiter:junit-jupiter-params"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+    testCompile 'org.mockito:mockito-junit-jupiter:3.3.3'
+
+    testCompile "org.testcontainers:mongodb:1.14.+"
+    testCompile "org.testcontainers:testcontainers:1.14.+"
+    testCompile "org.testcontainers:junit-jupiter:1.14.+"
     testAnnotationProcessor 'org.projectlombok:lombok'
 }
 

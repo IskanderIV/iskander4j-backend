@@ -1,0 +1,21 @@
+{
+  "devices": [
+    {
+      "deviceId": "aefaeraerrraer",
+      "sensors": [
+        {
+          "id": 1,
+          "ctrlVal": 11.0
+        },
+        {
+          "id": 3,
+          "ctrlVal": 20.0
+        },
+        {
+          "id": 2,
+          "ctrlVal": 33.0
+        }
+      ]
+    }
+  ]
+}

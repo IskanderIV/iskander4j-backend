@@ -1,5 +1,7 @@
 package ru.cleverhause.devices.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.ToString;
 import ru.cleverhause.devices.dto.device.DeviceControlDto;
@@ -11,7 +13,9 @@ import java.util.List;
 public class DeviceControlResponse extends DeviceControlDto {
 
     @Builder(builderMethodName = "deviceControlResponseBuilder")
-    public DeviceControlResponse(String deviceId, List<SensorControlDto> sensors) {
+    @JsonCreator
+    public DeviceControlResponse(@JsonProperty("deviceId") String deviceId,
+                                 @JsonProperty("sensors") List<SensorControlDto> sensors) {
         super(deviceId, sensors);
     }
 }

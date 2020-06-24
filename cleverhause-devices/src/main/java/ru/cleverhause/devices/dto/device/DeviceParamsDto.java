@@ -1,5 +1,7 @@
 package ru.cleverhause.devices.dto.device;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -15,10 +17,11 @@ public class DeviceParamsDto extends DeviceDto<SensorParamsDto> {
     private final String username;
 
     @Builder(builderMethodName = "deviceParamsDtoBuilder")
-    public DeviceParamsDto(String deviceId,
-                           List<SensorParamsDto> sensors,
-                           String deviceName,
-                           String username) {
+    @JsonCreator
+    public DeviceParamsDto(@JsonProperty("deviceId") String deviceId,
+                           @JsonProperty("sensors") List<SensorParamsDto> sensors,
+                           @JsonProperty("deviceName") String deviceName,
+                           @JsonProperty("username") String username) {
         super(deviceId, sensors);
         this.deviceName = deviceName;
         this.username = username;

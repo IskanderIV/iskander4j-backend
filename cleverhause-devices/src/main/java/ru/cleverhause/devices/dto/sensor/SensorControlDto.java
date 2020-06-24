@@ -1,5 +1,7 @@
 package ru.cleverhause.devices.dto.sensor;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -13,7 +15,9 @@ public class SensorControlDto extends SensorDto {
     private final Double ctrlVal;
 
     @Builder(builderMethodName = "sensorControlDtoBuilder")
-    public SensorControlDto(int id, Double ctrlVal) {
+    @JsonCreator
+    public SensorControlDto(@JsonProperty("id") int id,
+                            @JsonProperty("ctrlVal") Double ctrlVal) {
         super(id);
         this.ctrlVal = ctrlVal;
     }
