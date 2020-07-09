@@ -1,0 +1,4 @@
+spring:
+  application.name: cleverhause-web-api
+  profiles:
+    active: local
