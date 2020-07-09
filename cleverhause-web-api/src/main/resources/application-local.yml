@@ -1,0 +1,12 @@
+server.port: 8080
+spring:
+  devtools:
+    restart:
+      enabled: true
+
+logging.level.org.springframework.data: debug
+
+eureka:
+  client:
+    enabled: false
+    service-url.defaultZone: 'http://localhost:8010/eureka'
