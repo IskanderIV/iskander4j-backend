@@ -1,6 +1,7 @@
 package ru.cleverhause.users.entity;
 
 import lombok.Data;
+import ru.cleverhause.users.authorities.Role;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,9 +17,11 @@ import java.util.Set;
 @Entity
 @Data
 @Table(name = "clever_schema.roles")
-public class Role implements Serializable {
+public class RoleEntity implements Serializable {
 
-    public static final String DEF_ROLE = "ROLE_USER";
+    public RoleEntity() {
+        this.rolename = Role.ROLE_USER;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_ID")
@@ -26,8 +29,8 @@ public class Role implements Serializable {
     private Long id;
 
     @Column(name = "rolename")
-    private String rolename;
+    private Role rolename;
 
     @ManyToMany(mappedBy = "roles")
-    private Set<User> users;
+    private Set<UserEntity> users;
 }

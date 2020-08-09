@@ -24,13 +24,7 @@ spring:
     restart:
       enabled: true
 
-logging.level.org.springframework.data: debug
-
 eureka:
   client:
     enabled: false
     service-url.defaultZone: 'http://localhost:8010/eureka'
-
-server:
-  servlet:
-    context-path: '/api/users'

@@ -27,7 +27,3 @@ logging.level.org.springframework.data: debug
 eureka:
   client:
     enabled: false
-
-server:
-  servlet:
-    context-path: '/api/users'

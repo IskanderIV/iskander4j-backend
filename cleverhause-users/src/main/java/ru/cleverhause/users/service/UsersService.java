@@ -1,16 +1,20 @@
 package ru.cleverhause.users.service;
 
-import ru.cleverhause.users.dto.request.UserInfoRequest;
-import ru.cleverhause.users.dto.request.UserRequest;
+import ru.cleverhause.users.dto.request.AddUserRequest;
+import ru.cleverhause.users.dto.request.UpdateUserRequest;
 import ru.cleverhause.users.dto.response.UserInfoResponse;
+
+import java.util.List;
 
 public interface UsersService {
 
+    List<UserInfoResponse> users();
+
     UserInfoResponse userInfo(String user);
 
-    UserInfoResponse addUser(UserRequest userRequest);
+    UserInfoResponse addUser(AddUserRequest userRequest);
 
-    boolean updateUser(UserRequest userRequest);
+    boolean updateUser(UpdateUserRequest userRequest);
 
     UserInfoResponse deleteUser(String userId);
 }

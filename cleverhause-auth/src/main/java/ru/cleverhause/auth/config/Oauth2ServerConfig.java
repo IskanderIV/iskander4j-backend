@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.builders.InMemoryClientDetailsServiceBuilder;
@@ -12,7 +13,9 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.CompositeTokenGranter;
 import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
+import org.springframework.security.oauth2.provider.TokenGranter;
 import org.springframework.security.oauth2.provider.client.ClientCredentialsTokenGranter;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeTokenGranter;
 import org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices;
@@ -25,12 +28,13 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import ru.cleverhause.auth.config.properties.OAuth2ClientProperties;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
 @EnableAuthorizationServer
 @RequiredArgsConstructor
-public class Oauth2SecurityConfig extends AuthorizationServerConfigurerAdapter {
+public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 
     private final AuthenticationManager authenticationManager;
 
@@ -41,14 +45,15 @@ public class Oauth2SecurityConfig extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints
-                .authorizationCodeServices(getAuthorizationCodeServices())
+//                .(getAuthorizationCodeServices())
                 .tokenStore(tokenStore())
                 .tokenEnhancer(tokenEnhancerChain())
                 .accessTokenConverter(accessTokenConverter())
-                .tokenGranter(getAuthorizationCodeTokenGranter())
+                .tokenGranter(getMixedTokenGranter())
                 .authenticationManager(authenticationManager)
                 .userDetailsService(userDetailsService)
                 .tokenServices(tokenServices())
+                .allowedTokenEndpointRequestMethods(HttpMethod.POST, HttpMethod.GET)
                 .requestFactory(getRequestFactory())
                 .setClientDetailsService(getClientDetailsService());
     }
@@ -109,6 +114,11 @@ public class Oauth2SecurityConfig extends AuthorizationServerConfigurerAdapter {
         tokenServices.setRefreshTokenValiditySeconds(24 * 60 * 60);
         tokenServices.setTokenEnhancer(tokenEnhancerChain());
         return tokenServices;
+    }
+
+    @Bean
+    public TokenGranter getMixedTokenGranter() throws Exception {
+        return new CompositeTokenGranter(Arrays.asList(getClientCredentialsTokenGranter(), getPasswordTokenGranter()));
     }
 
     @Bean

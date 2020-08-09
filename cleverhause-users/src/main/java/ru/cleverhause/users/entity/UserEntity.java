@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,6 +17,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Set;
@@ -24,12 +26,13 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @Table(name = "clever_schema.users")
-public class User implements Serializable {
+public class UserEntity implements Serializable {
     private Long id;
     private String username;
+    private String email;
     private String password;
     private String confirmPassword;
-    private Set<Role> roles = Collections.emptySet();
+    private Set<RoleEntity> roles = Collections.emptySet();
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_ID")
@@ -42,7 +45,7 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    @Column(name = "username")
+    @Column(name = "username", unique = true)
     public String getUsername() {
         return username;
     }
@@ -69,15 +72,15 @@ public class User implements Serializable {
         this.confirmPassword = confirmPassword;
     }
 
-    @ManyToMany
+    @ManyToMany(cascade= CascadeType.ALL)
     @JoinTable(name = "clever_schema.user_roles", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     @LazyCollection(value = LazyCollectionOption.FALSE)
-    public Set<Role> getRoles() {
+    public Set<RoleEntity> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(Set<RoleEntity> roles) {
         this.roles = roles;
     }
 }

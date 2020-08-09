@@ -18,7 +18,11 @@
 
     <springProfile name="local,test,default">
 
-        <logger name="org.springframework" level="WARN" additivity="false">
+        <logger name="org.springframework" level="INFO" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+
+        <logger name="org.springframework.data" level="INFO" additivity="false">
             <appender-ref ref="CONSOLE"/>
         </logger>
 

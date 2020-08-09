@@ -1,25 +1,18 @@
 package ru.cleverhause.users.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hibernate.annotations.Filter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.cleverhause.users.dto.request.UserRequest;
+import ru.cleverhause.users.dto.request.AddUserRequest;
 import ru.cleverhause.users.dto.response.UserInfoResponse;
 
 import javax.persistence.EntityManager;
@@ -32,9 +25,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-// TODO it does not work because spring-security-test is still in the classpath and he does it's autoconfiguration for csrf protection
 class UsersControllerWithEmbeddedPostgresTest {
 
+    private static final String CONTEXT_PATH = "/api/users";
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Autowired
@@ -48,11 +41,12 @@ class UsersControllerWithEmbeddedPostgresTest {
 
     @Test
     void getUserInfoHappyFlowTest() throws Exception {
-        UserRequest newUser = UserRequest.builder()
+        AddUserRequest newUser = AddUserRequest.builder()
+                .username("Alise")
                 .email("lala@mail.ru")
                 .password("password")
                 .build();
-        String savedUser = mockMvc.perform(MockMvcRequestBuilders.post("/api/users/user")
+        String savedUser = mockMvc.perform(MockMvcRequestBuilders.post(CONTEXT_PATH + "/user")
                 .content(MAPPER.writeValueAsString(newUser))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -61,7 +55,7 @@ class UsersControllerWithEmbeddedPostgresTest {
 
         UserInfoResponse userInfoResponse = MAPPER.readValue(savedUser, UserInfoResponse.class);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/" + userInfoResponse.getUserId() + "/userInfo")
+        mockMvc.perform(MockMvcRequestBuilders.get(CONTEXT_PATH + userInfoResponse.getUserId() + "/userInfo")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
