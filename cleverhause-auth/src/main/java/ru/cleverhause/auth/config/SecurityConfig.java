@@ -20,19 +20,12 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 
 @Configuration
 @EnableWebSecurity
-//@EnableOAuth2Client
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    @Qualifier("successFormLoginHandler")
-    private final AuthenticationSuccessHandler successFormLoginHandler;
-    @Qualifier("failureFormLoginHandler")
-    private final AuthenticationFailureHandler failureFormLoginHandler;
     @Qualifier("successOAuth2LoginHandler")
     private final AuthenticationSuccessHandler successOAuth2LoginHandler;
     @Qualifier("failureOAuth2LoginHandler")
     private final AuthenticationFailureHandler failureOAuth2LoginHandler;
-
-//    public final OAuth2ClientConfig.OAuth2AuthorizationCodeAccessTokenResponseClient client;
 
     @Override
     public void configure(WebSecurity web) {
@@ -48,22 +41,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/oauth/token/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-//                .formLogin()
-//                .permitAll()
-//                .successHandler(successFormLoginHandler)
-//                .failureHandler(failureFormLoginHandler)
-//                .and()
-//                .logout().permitAll()
-//                .and()
-//                .httpBasic()
-//                .and()
                 .oauth2Login()
-//                .defaultSuccessUrl("http://cleverhause.ru/oauth/token")
                 .successHandler(successOAuth2LoginHandler)
                 .failureHandler(failureOAuth2LoginHandler);
 //                .tokenEndpoint()
-//                .accessTokenResponseClient(client);
-//                .oauth2Client();
     }
 
     @Override

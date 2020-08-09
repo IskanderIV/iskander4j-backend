@@ -15,15 +15,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-@Component(value = "failureFormLoginHandler")
-public class FailureFormLoginHandler implements AuthenticationFailureHandler {
+@Component(value = "failureOAuth2LoginHandler")
+public class FailureOAuth2LoginHandler implements AuthenticationFailureHandler {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         String json = MAPPER.writeValueAsString(new LoginError(HttpStatus.UNAUTHORIZED.value(), exception.getMessage()));
-        response.setStatus(HttpStatus.OK.value());
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8.toString());
         response.setContentLength(json.length());

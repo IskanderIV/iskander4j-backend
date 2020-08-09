@@ -32,15 +32,11 @@ import static org.springframework.security.oauth2.core.AuthorizationGrantType.CL
 @RequiredArgsConstructor
 public class SuccessOAuth2LoginHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    @Value("${spring.security.oauth2.redirectUrl}")
+    @Value("${spring.security.oauth2.client.redirectUrl}")
     private String redirectUrl;
-
-    private final ClientRegistrationRepository clientRegistrationRepository;
 
     @Override
     protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-//        String registrationId = authentication.getName();
-//        ClientRegistration clientRegistration = this.clientRegistrationRepository.findByRegistrationId(registrationId);
         String enrichedRedirectUri = redirectUrl + "?grant_type=" + CLIENT_CREDENTIALS.getValue();
         setDefaultTargetUrl(enrichedRedirectUri);
         super.handle(request, response, authentication);

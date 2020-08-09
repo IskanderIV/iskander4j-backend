@@ -8,8 +8,8 @@ spring:
       enabled: true
   security:
     oauth2:
-      redirectUrl: "http://cleverhause.ru/oauth/token"
       client:
+        redirectUrl: "http://cleverhause.ru/oauth/token"
         registration:
           github:
             clientId: 'b4ccc96cfd49bff036a6'
