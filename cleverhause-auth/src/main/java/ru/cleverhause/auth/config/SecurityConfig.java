@@ -29,7 +29,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/oauth/test");
+        web.ignoring()
+                .antMatchers("/oauth/test")
+                .antMatchers("/actuator/**");
         web.debug(true);
     }
 
