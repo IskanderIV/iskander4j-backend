@@ -27,16 +27,17 @@ public class DataBaseConfig {
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
     }
-//
-//    @Bean
-//    @Profile("local")
-//    public DataSource simpleDataSource(DataSourceProperties properties) {
-//        DriverManagerDataSource ds = new DriverManagerDataSource(properties.getUrl());
-//        ds.setUsername(properties.getUsername());
-//        ds.setPassword(properties.getPassword());
-//        ds.setDriverClassName(properties.getDriverClassName());
-//        return ds;
-//    }
+
+    @Bean
+    @Profile("test")
+    public DataSource simpleDataSource(DataSourceProperties properties) {
+        DriverManagerDataSource ds = new DriverManagerDataSource(properties.getUrl());
+        ds.setUrl(properties.getUrl());
+        ds.setUsername(properties.getUsername());
+        ds.setPassword(properties.getPassword());
+        ds.setDriverClassName(properties.getDriverClassName());
+        return ds;
+    }
 //
 //    @Bean
 //    @Profile("prod")

@@ -2,27 +2,27 @@ spring:
   application.name: cleverhause-users
   datasource:
     name: local-users-db
-    url: "jdbc:tc:postgresql:///cleverhause_users_db"
-    username: 'clever_admin'
-    password: 'WindowsVista123'
+    database: "cleverhause_users_db"
+    url: "jdbc:tc:postgresql:///${spring.datasource.database}?loggerLevel=On"
+    username: "clever_admin"
+    password: "WindowsVista123"
     driver-class-name: 'org.testcontainers.jdbc.ContainerDatabaseDriver'
   jpa:
     hibernate.ddl-auto: none
     show-sql: true
     generate-ddl: false
     properties:
-      - hibernate.dialect: 'org.hibernate.dialect.PostgreSQL95Dialect'
-      - hibernate.current_session_context_class: 'org.springframework.orm.hibernate5.SpringSessionContext'
-      - hibernate.connection.characterEncoding: "UTF-8"
-      - hibernate.connection.charSet: "UTF-8"
-      - hibernate.temp.use_jdbc_metadata_defaults: false
+      hibernate.dialect: 'org.hibernate.dialect.PostgreSQL95Dialect'
+      hibernate.current_session_context_class: 'org.springframework.orm.hibernate5.SpringSessionContext'
+      hibernate.connection.characterEncoding: "UTF-8"
+      hibernate.connection.charSet: "UTF-8"
+      hibernate.temp.use_jdbc_metadata_defaults: "true"
+      hibernate.physical_naming_strategy: "org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl"
   liquibase:
     enabled: false
   devtools:
     restart:
       enabled: false
-
-logging.level.org.springframework.data: debug
 
 eureka:
   client:

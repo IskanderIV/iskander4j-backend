@@ -25,13 +25,12 @@ import java.util.Set;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "clever_schema.users")
+@Table(name = "users", schema = "clever_schema")
 public class UserEntity implements Serializable {
     private Long id;
     private String username;
     private String email;
     private String password;
-    private String confirmPassword;
     private Set<RoleEntity> roles = Collections.emptySet();
 
     @Id
@@ -63,13 +62,9 @@ public class UserEntity implements Serializable {
         this.password = password;
     }
 
-    @Transient
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
-
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
+    @Column(name = "email")
+    public String getEmail() {
+        return email;
     }
 
     @ManyToMany(cascade= CascadeType.ALL)

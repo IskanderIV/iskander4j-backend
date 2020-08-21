@@ -1,11 +1,11 @@
 -- I had to write script .bat: invoke plsql using postgres creds after that switch on to my user and call other db scripts
-CREATE ROLE clever_admin WITH LOGIN
-  ENCRYPTED PASSWORD 'WindowsVista123'
-  NOSUPERUSER INHERIT CREATEDB CREATEROLE NOREPLICATION;
-
-CREATE DATABASE cleverhause_users_db WITH OWNER clever_admin ENCODING = 'UTF8' CONNECTION LIMIT = -1;
-\connect cleverhause_users_db;
-GRANT ALL ON DATABASE cleverhause_users_db TO clever_admin;
+-- CREATE ROLE clever_admin WITH LOGIN
+--   ENCRYPTED PASSWORD 'WindowsVista123'
+--   NOSUPERUSER INHERIT CREATEDB CREATEROLE NOREPLICATION;
+--
+-- CREATE DATABASE cleverhause_users_db WITH OWNER clever_admin ENCODING = 'UTF8' CONNECTION LIMIT = -1;
+-- \connect cleverhause_users_db;
+-- GRANT ALL ON DATABASE cleverhause_users_db TO clever_admin;
 
 CREATE SCHEMA IF NOT EXISTS clever_schema
     AUTHORIZATION clever_admin;
@@ -47,8 +47,9 @@ ALTER TABLE clever_schema.profiles
 
 CREATE TABLE IF NOT EXISTS clever_schema.users (
   id int NOT NULL UNIQUE PRIMARY KEY,
-  username varchar(255) NOT NULL,
+  username varchar(255) NOT NULL UNIQUE,
   password varchar(255) NOT NULL,
+  email varchar(255),
   CONSTRAINT voidUserName CHECK (username <> '')
 );
 

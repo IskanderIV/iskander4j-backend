@@ -58,10 +58,11 @@ public class UsersServiceImpl implements UsersService {
         newUser.setEmail(userRequest.getEmail());
         newUser.setRoles(Set.of(new RoleEntity()));
         UserEntity savedUser = userDao.save(newUser);
+        userDao.flush();
         return UserInfoResponse.builder()
                 .userId(savedUser.getId())
                 .username(String.valueOf(savedUser.getUsername()))
-                .email(String.valueOf(savedUser.getId()))
+                .email(String.valueOf(savedUser.getEmail()))
                 .build();
     }
 

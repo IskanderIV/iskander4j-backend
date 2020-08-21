@@ -34,3 +34,42 @@ server - postgresql-users:5432 // because adminer sees 5432
 username - clever_admin
 password - WindowsVista123
 db - cleverhause_users_db
+
+
+$: docker exec -it docker_postgresql-users_1 bash
+$: su postgres
+$: psql -U postgres
+$: postgres=#
+$: postgres=> select current_user;
+    current_user
+   --------------
+    clever_admin
+   (1 row)
+   
+$: postgres=> show searchpath;
+ERROR:  unrecognized configuration parameter "searchpath"
+postgres=> show search_path;
+   search_path
+-----------------
+ "$user", public
+(1 row)
+
+$: postgres=> select current_database();
+ current_database
+------------------
+ postgres
+(1 row)
+
+docker logs -f docker_postgresql-users_1
+
+Using database tool by idea do not forget to check 
+'Manage Shown schemas' in menu. 
+Needed schema could be simply switched off
+
+`\dt *.*` - shows all schemas and tables for current user
+`SELECT * FROM information_schema.tables WHERE table_schema = 'public'`
+
+#CREATE USER clever_admin WITH ENCRYPTED PASSWORD 'WindowsVista123' NOSUPERUSER INHERIT CREATEDB CREATEROLE NOREPLICATION;
+#CREATE DATABASE cleverhause_users_db WITH OWNER clever_admin ENCODING = 'UTF8' CONNECTION LIMIT = -1;
+#GRANT ALL ON DATABASE cleverhause_users_db TO clever_admin;
+#\c cleverhause_users_db clever_admin;

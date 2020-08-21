@@ -54,6 +54,10 @@ class CleverhauseAuthApplicationTests {
 
 	@Test
 	void formLogin() throws Exception {
-
+		mockMvc.perform(MockMvcRequestBuilders.get("/actuator/health")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().isOk())
+				.andExpect(content().json(TestUtils.fromFile("responses/actuator_health_ok.json")));
 	}
 }

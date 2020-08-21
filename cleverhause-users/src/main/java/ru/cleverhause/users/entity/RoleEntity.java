@@ -1,5 +1,6 @@
 package ru.cleverhause.users.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import ru.cleverhause.users.authorities.Role;
 
@@ -16,7 +17,7 @@ import java.util.Set;
 
 @Entity
 @Data
-@Table(name = "clever_schema.roles")
+@Table(name = "roles", schema = "clever_schema")
 public class RoleEntity implements Serializable {
 
     public RoleEntity() {
@@ -25,7 +26,7 @@ public class RoleEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_ID")
-    @SequenceGenerator(name = "SEQ_ID", sequenceName = "users_id_seq", schema = "clever_schema")
+    @SequenceGenerator(name = "SEQ_ID", sequenceName = "roles_id_seq", schema = "clever_schema")
     private Long id;
 
     @Column(name = "rolename")
