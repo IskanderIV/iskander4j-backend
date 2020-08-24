@@ -3,7 +3,6 @@ package ru.cleverhause.users.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.BeforeClass;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,23 +22,26 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.MountableFile;
+import ru.cleverhause.users.TestUtils;
 import ru.cleverhause.users.dto.request.AddUserRequest;
 import ru.cleverhause.users.dto.response.UserInfoResponse;
 
 import javax.persistence.EntityManager;
-import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Slf4j
 @Testcontainers
 @ExtendWith({SpringExtension.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ContextConfiguration(initializers = {UsersControllerWithEmbeddedPostgresTest.PropertiesInitializer.class})
+@ContextConfiguration(initializers = {UsersControllerWithTestcontainersIT.PropertiesInitializer.class})
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-class UsersControllerWithEmbeddedPostgresTest {
+class UsersControllerWithTestcontainersIT {
 
     private static final String CONTEXT_PATH = "/api/users";
     private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -78,61 +80,47 @@ class UsersControllerWithEmbeddedPostgresTest {
         }
     }
 
-//    @DynamicPropertySource
-//    static void databaseProperties(DynamicPropertyRegistry registry) {
-////        registry.add("spring.datasource.database", postgresContainer::getDatabaseName);
-////        registry.add("spring.datasource.username", postgresContainer::getUsername);
-////        registry.add("spring.datasource.password", postgresContainer::getPassword);
-//    }
-
-    @BeforeClass
-    public static void globalInit() throws IOException, InterruptedException {
-//        postgresContainer.start();
-////        postgresContainer.withEnv(Map.of("POSTGRES_DB", postgresContainer.getD));
-////        postgresContainer.withEnv("POSTGRES_URL", postgresContainer.getJdbcUrl());
-////        postgresContainer.withInitScript("script/initUsersDb.sql");
-//        postgresContainer.copyFileToContainer(
-//                MountableFile.forClasspathResource("/script/init-users-db.sh"),
-//                "/docker-entrypoint-initdb.d/init-users-db.sh");
-//        postgresContainer.copyFileToContainer(
-//                MountableFile.forClasspathResource("/script/initUsersDb.sql"),
-//                "/var/lib/postgresql/init/initUsersDb.sql");
-//        org.testcontainers.containers.Container.ExecResult lsResult = postgresContainer.execInContainer("chmod", "u+x", "/docker-entrypoint-initdb.d/init-users-db.sh");
-//        log.info("Result2: {}", lsResult);
+    @Test
+    void contextLoads() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/actuator/health")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json(TestUtils.fromFile("responses/actuator_health_ok.json")));
     }
 
     @Test
     void getUserInfoHappyFlowTest() throws Exception {
+        String testName = "Alise";
+        String testEmail = "lala@mail.ru";
         AddUserRequest newUser = AddUserRequest.builder()
-                .username("Alise")
+                .username(testName)
                 .email("lala@mail.ru")
                 .password("password")
                 .build();
-        String savedUser = mockMvc.perform(MockMvcRequestBuilders.post(CONTEXT_PATH + "/user")
+        mockMvc.perform(MockMvcRequestBuilders.post(CONTEXT_PATH + "/user")
                 .content(MAPPER.writeValueAsString(newUser))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+                .andExpect(status().isOk());
 
-        UserInfoResponse userInfoResponse = MAPPER.readValue(savedUser, UserInfoResponse.class);
-
-        String userInfo = mockMvc.perform(MockMvcRequestBuilders.get(CONTEXT_PATH + "/" + userInfoResponse.getUsername() + "/info")
+        String userInfo = mockMvc.perform(MockMvcRequestBuilders.get(CONTEXT_PATH + "/" + testName + "/info")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
-    }
 
-    @Test
-    void addUserHappyFlowTest() {
-        assertNotNull(entityManager);
-        assertNotNull(context);
+        UserInfoResponse userInfoResponse = MAPPER.readValue(userInfo, UserInfoResponse.class);
+        assertNotNull(userInfoResponse);
+        assertEquals(testName, userInfoResponse.getUsername());
+        assertEquals(testEmail, userInfoResponse.getEmail());
     }
 
     @Test
     void updateUserHappyFlowTest() {
+
     }
 
     @Test
     void deleteUserHappyFlowTest() {
+
     }
 }

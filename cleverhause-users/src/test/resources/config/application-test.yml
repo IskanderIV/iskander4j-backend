@@ -1,5 +1,4 @@
 spring:
-  application.name: cleverhause-users
   datasource:
     name: local-users-db
     database: "cleverhause_users_db"

@@ -1,5 +1,9 @@
 package ru.cleverhause.users.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.LazyCollection;
@@ -8,6 +12,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,6 +25,7 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -27,15 +33,38 @@ import java.util.Set;
 @NoArgsConstructor
 @Table(name = "users", schema = "clever_schema")
 public class UserEntity implements Serializable {
-    private Long id;
-    private String username;
-    private String email;
-    private String password;
-    private Set<RoleEntity> roles = Collections.emptySet();
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_ID")
-    @SequenceGenerator(name = "SEQ_ID", sequenceName = "users_id_seq", schema = "clever_schema")
+    @SequenceGenerator(name = "SEQ_ID", sequenceName = "users_id_seq", schema = "clever_schema", allocationSize = 1)
+    private Long id;
+    @Column(name = "username", unique = true)
+    private String username;
+    @Column(name = "email")
+    private String email;
+    @Column(name = "password")
+    private String password;
+
+    @JsonManagedReference
+    @ManyToMany(cascade= CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "clever_schema.user_roles", joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<RoleEntity> roles = new HashSet<>();
+
+    @Builder
+    @JsonCreator
+    public UserEntity(@JsonProperty("id") Long id,
+                      @JsonProperty("username") String username,
+                      @JsonProperty("email") String email,
+                      @JsonProperty("password") String password,
+                      @JsonProperty("roles") Set<RoleEntity> roles) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+    }
+
+
     public Long getId() {
         return id;
     }
@@ -44,7 +73,7 @@ public class UserEntity implements Serializable {
         this.id = id;
     }
 
-    @Column(name = "username", unique = true)
+
     public String getUsername() {
         return username;
     }
@@ -53,7 +82,7 @@ public class UserEntity implements Serializable {
         this.username = username;
     }
 
-    @Column(name = "password")
+
     public String getPassword() {
         return password;
     }
@@ -62,15 +91,13 @@ public class UserEntity implements Serializable {
         this.password = password;
     }
 
-    @Column(name = "email")
+
     public String getEmail() {
         return email;
     }
 
-    @ManyToMany(cascade= CascadeType.ALL)
-    @JoinTable(name = "clever_schema.user_roles", joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    @LazyCollection(value = LazyCollectionOption.FALSE)
+
+//    @LazyCollection(value = LazyCollectionOption.TRUE)
     public Set<RoleEntity> getRoles() {
         return roles;
     }

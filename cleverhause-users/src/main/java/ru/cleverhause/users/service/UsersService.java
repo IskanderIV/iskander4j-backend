@@ -16,5 +16,5 @@ public interface UsersService {
 
     boolean updateUser(UpdateUserRequest userRequest);
 
-    UserInfoResponse deleteUser(String userId);
+    void deleteUser(Long userId);
 }

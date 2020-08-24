@@ -74,10 +74,10 @@ public class UsersController {
     }
 
     @DeleteMapping("/user/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable("id") String userId) {
+    public ResponseEntity<?> deleteUser(@PathVariable("id") Long userId) {
         log.info("Input request deleteUser with id: {}", userId);
-        UserInfoResponse userInfoResponse = userService.deleteUser(userId);
+        userService.deleteUser(userId);
         log.info("User {} was deleted", userId);
-        return ResponseEntity.ok(userInfoResponse);
+        return ResponseEntity.ok().build();
     }
 }

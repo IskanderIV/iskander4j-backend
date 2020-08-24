@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.cleverhause.users.authorities.Role;
 import ru.cleverhause.users.dto.request.AddUserRequest;
 import ru.cleverhause.users.dto.request.UpdateUserRequest;
 import ru.cleverhause.users.dto.response.UserInfoResponse;
@@ -56,7 +57,11 @@ public class UsersServiceImpl implements UsersService {
         newUser.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         newUser.setUsername(userRequest.getUsername());
         newUser.setEmail(userRequest.getEmail());
-        newUser.setRoles(Set.of(new RoleEntity()));
+        RoleEntity role = roleDao.findByRolename(Role.ROLE_USER.name());
+        if (role == null) {
+            role = new RoleEntity();
+        }
+        newUser.setRoles(Set.of(role));
         UserEntity savedUser = userDao.save(newUser);
         userDao.flush();
         return UserInfoResponse.builder()
@@ -91,7 +96,7 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public UserInfoResponse deleteUser(String userId) {
-        return null;
+    public void deleteUser(Long userId) {
+        userDao.deleteById(userId);
     }
 }
