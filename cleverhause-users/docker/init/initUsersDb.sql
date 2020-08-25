@@ -203,3 +203,6 @@ ALTER TABLE clever_schema.user_new_board ALTER id SET DEFAULT nextval('clever_sc
 
 ALTER TABLE clever_schema.users ADD CONSTRAINT unique_username UNIQUE (username);
 ALTER TABLE clever_schema.roles ADD CONSTRAINT unique_rolename UNIQUE (rolename);
+
+INSERT INTO clever_schema.roles VALUES (1, 'ROLE_ADMIN');
+INSERT INTO clever_schema.roles VALUES (2, 'ROLE_USER');

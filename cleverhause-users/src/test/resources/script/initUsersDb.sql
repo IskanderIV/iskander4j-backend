@@ -7,8 +7,7 @@
 -- \connect cleverhause_users_db;
 -- GRANT ALL ON DATABASE cleverhause_users_db TO clever_admin;
 
-CREATE SCHEMA IF NOT EXISTS clever_schema
-    AUTHORIZATION clever_admin;
+CREATE SCHEMA IF NOT EXISTS clever_schema AUTHORIZATION clever_admin;
 
 GRANT ALL ON SCHEMA clever_schema TO clever_admin;
 
@@ -204,3 +203,6 @@ ALTER TABLE clever_schema.user_new_board ALTER id SET DEFAULT nextval('clever_sc
 
 ALTER TABLE clever_schema.users ADD CONSTRAINT unique_username UNIQUE (username);
 ALTER TABLE clever_schema.roles ADD CONSTRAINT unique_rolename UNIQUE (rolename);
+
+INSERT INTO clever_schema.roles VALUES (1, 'ROLE_ADMIN');
+INSERT INTO clever_schema.roles VALUES (2, 'ROLE_USER');
