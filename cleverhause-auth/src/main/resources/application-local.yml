@@ -1,8 +1,4 @@
-server.port: 8081
-
 spring:
-  application.name: cleverhause-auth
-  profiles.active: local
   devtools:
     restart:
       enabled: true
@@ -33,8 +29,3 @@ security:
   #      'authorization_code, client_credentials, password, refresh_token'
         redirectUri:
         scopes: read
-
-eureka:
-  client:
-    enabled: false
-    service-url.defaultZone: 'http://localhost:8010/eureka'

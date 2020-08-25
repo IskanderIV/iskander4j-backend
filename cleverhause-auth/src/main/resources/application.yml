@@ -1,0 +1,14 @@
+server.port: 8081
+
+spring:
+  application.name: cleverhause-auth
+  profiles: local, test
+eureka:
+  client:
+    enabled: false
+    service-url.defaultZone: 'http://localhost:8010/eureka'
+
+---
+
+spring:
+  profiles.active: local
