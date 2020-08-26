@@ -15,7 +15,7 @@ import java.util.Set;
 @Configuration
 @ConfigurationProperties(value = "security.oauth2")
 @Data
-public class OAuth2ClientProperties {
+public class OAuth2OuterClientProperties {
     private Map<String, Client> clients = new HashMap<>();
 
     @Data

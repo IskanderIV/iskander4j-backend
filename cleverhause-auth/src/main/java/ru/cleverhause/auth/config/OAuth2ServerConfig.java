@@ -26,7 +26,7 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
-import ru.cleverhause.auth.config.properties.OAuth2ClientProperties;
+import ru.cleverhause.auth.config.properties.OAuth2OuterClientProperties;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -34,11 +34,11 @@ import java.util.Collections;
 @Configuration
 @EnableAuthorizationServer
 @RequiredArgsConstructor
-public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
+public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 
     private final AuthenticationManager authenticationManager;
 
-    private final OAuth2ClientProperties authClientProperties;
+    private final OAuth2OuterClientProperties authClientProperties;
 
     private final UserDetailsService userDetailsService;
 
@@ -80,7 +80,7 @@ public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
     public ClientDetailsService getClientDetailsService() throws Exception {
         InMemoryClientDetailsServiceBuilder clientDetailsServiceBuilder =
                 new InMemoryClientDetailsServiceBuilder();
-        for (OAuth2ClientProperties.Client client : authClientProperties.getClients().values()) {
+        for (OAuth2OuterClientProperties.Client client : authClientProperties.getClients().values()) {
             clientDetailsServiceBuilder.withClient(client.getClientId())
                     .secret(client.getSecret())
                     .authorizedGrantTypes(client.getGrandTypes().toArray(new String[0]))

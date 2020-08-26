@@ -61,7 +61,7 @@ dependencies {
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.0'
 
 	// LOMBOK
-	compileOnly 'org.projectlombok:lombok'
+	compile 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
 	// TEST
@@ -70,6 +70,7 @@ dependencies {
 	}
 	testImplementation 'org.springframework.kafka:spring-kafka-test'
 	testImplementation 'org.assertj:assertj-core'
+	testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
 dependencyManagement {
