@@ -39,7 +39,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
 	implementation "org.springframework.security.oauth:spring-security-oauth2:${springOauth2Version}"
-//	implementation "org.springframework.security:spring-security-oauth2-jose"
 	implementation 'de.codecentric:spring-boot-admin-starter-client'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
@@ -68,6 +67,7 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
+	testImplementation("org.springframework.cloud:spring-cloud-contract-wiremock:2.1.2.RELEASE")
 	testImplementation 'org.springframework.kafka:spring-kafka-test'
 	testImplementation 'org.assertj:assertj-core'
 	testAnnotationProcessor 'org.projectlombok:lombok'

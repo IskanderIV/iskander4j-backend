@@ -32,3 +32,19 @@ Postgresql
 server - service_name:<inner_port> (postgresql:5432)
 username - postgres
 password - POSTGRES_PASSWORD
+
+### Port forwarding in mac
+$ sudo pfctl -ef port_forwards
+$ sudo nano /etc/pf.conf
+$ sudo pfctl -vnf port_forwards
+$ dscacheutil -flushcache - need only to clean cache of dns names after making changes in /etc/hosts
+$ sudo killall -HUP mDNSResponder
+$ sudo nano /etc/hosts
+$ cd /etc/pf.anchors
+$ sudo mkdir /etc/pf.anchors/port_forwards
+$ mkdir /etc/pf.anchors/port_forwards
+$ sudo pfctl show
+$ sudo iptables -t nat -A OUTPUT -p tcp --dport 80 -d cleverhause.ru -j DNAT --to-destination 127.0.0.1:8080
+$ sudo killall -HUP mDNSResponder
+$ cd /private/etc/hosts
+$ 

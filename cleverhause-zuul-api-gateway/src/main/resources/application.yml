@@ -23,6 +23,10 @@ zuul:
       sensitiveHeaders:
       path: '/oauth/**'
       url: 'http://localhost:8081/oauth'
+    oauth2:
+      sensitiveHeaders:
+      path: '/oauth2/**'
+      url: 'http://localhost:8081/oauth2'
     login:
       sensitiveHeaders:
       path: '/login/**'

@@ -15,7 +15,12 @@ spring:
             clientAuthenticationMethod: 'post'
           google:
             clientId: '400048896634-acal0divdad68tug694b4ifuhcdh71v9.apps.googleusercontent.com'
-            clientSecret: 'qjKeuzeTaN2M9GWfDTYv1qLB'
+            clientSecret:
+        provider:
+          github:
+            tokenUri: "http://localhost:${wiremock.server.port}/login/oauth/access_token"
+            userInfoUri: "http://localhost:${wiremock.server.port}/user"
+            userInfoAuthenticationMethod: 'post'
 security:
   oauth2:
     clients:
@@ -31,4 +36,3 @@ security:
 eureka:
   client:
     enabled: false
-    service-url.defaultZone: 'http://localhost:8010/eureka'
