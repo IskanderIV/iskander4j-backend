@@ -3,6 +3,7 @@ package ru.cleverhause.auth;
 import com.github.tomakehurst.wiremock.client.MappingBuilder;
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,21 +14,21 @@ import static com.github.tomakehurst.wiremock.client.WireMock.matchingXPath;
 
 public class RestStub {
     private static final int DEFAULT_WAS_AMOUNT = 2;
-    private static List<RestStub> restStubs = new ArrayList<>(DEFAULT_WAS_AMOUNT);
+    private static final List<RestStub> restStubs = new ArrayList<>(DEFAULT_WAS_AMOUNT);
 
-    private final MappingBuilder mappingBuilder;
+    private final MappingBuilder initMappingBuilder;
     private final ResponseDefinitionBuilder initResponseBuilder;
 
-    RestStub(ResponseDefinitionBuilder initResponseBuilder, MappingBuilder mappingBuilder) {
+    RestStub(ResponseDefinitionBuilder initResponseBuilder, MappingBuilder initMappingBuilder) {
         this.initResponseBuilder = initResponseBuilder;
-        this.mappingBuilder = mappingBuilder.willReturn(initResponseBuilder);
-        WireMock.stubFor(this.mappingBuilder);
+        this.initMappingBuilder = initMappingBuilder.willReturn(initResponseBuilder);
+        WireMock.stubFor(this.initMappingBuilder);
         restStubs.add(this);
     }
 
     public static void resetAll() {
         for (RestStub restStub : restStubs) {
-            restStub.init();
+            restStub.reset();
         }
     }
 
@@ -36,24 +37,21 @@ public class RestStub {
     }
 
     public RestStub withRequestBody(String xpathToElement, String elementValue) {
-        WireMock.editStub(this.mappingBuilder.withRequestBody(matchingXPath(xpathToElement, containing(elementValue))));
-        return this;
-    }
-    public RestStub withRequestBodyContainingJson(String jsonPath, String elementValue) {
-        WireMock.editStub(this.mappingBuilder.withRequestBody(matchingJsonPath(jsonPath, containing(elementValue))));
+        WireMock.editStub(this.initMappingBuilder.withRequestBody(matchingXPath(xpathToElement, containing(elementValue))));
         return this;
     }
 
-    public MappingBuilder editRequest() {
-        return this.mappingBuilder;
+    public RestStub withRequestBodyContainingJson(String jsonPath, String elementValue) {
+        WireMock.editStub(this.initMappingBuilder.withRequestBody(matchingJsonPath(jsonPath, containing(elementValue))));
+        return this;
     }
 
     public RestStub editResponse(ResponseDefinitionBuilder responseBuilder) {
-        WireMock.editStub(this.mappingBuilder.willReturn(responseBuilder));
+        WireMock.editStub(this.initMappingBuilder.willReturn(responseBuilder));
         return this;
     }
 
-    private void init() {
-        WireMock.editStub(this.mappingBuilder.willReturn(initResponseBuilder));
+    private void reset() {
+        WireMock.editStub(this.initMappingBuilder.willReturn(initResponseBuilder));
     }
 }

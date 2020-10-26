@@ -49,7 +49,8 @@ import static org.springframework.security.web.authentication.www.BasicAuthentic
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.cleverhause.auth.RestStubFactory.getStub;
+import static ru.cleverhause.auth.RestStubFactory.getUserInfoOkStub;
+import static ru.cleverhause.auth.RestStubFactory.postGitHubTokenOkStub;
 
 @Slf4j
 @ExtendWith({SpringExtension.class})
@@ -73,10 +74,8 @@ class CleverhauseAuthApplicationTest {
     @Value("${spring.security.oauth2.client.redirectUrl}")
     private String redirectUrl;
 
-    private final RestStub gitHubGetToken = getStub("responses/json/gitHub_get_token_OK.json",
-            "/login/oauth/access_token");
-    private final RestStub gitHubGetUserInfo = getStub("responses/json/gitHub_get_userinfo_OK.json",
-            "/user");
+    private final RestStub gitHubGetToken = postGitHubTokenOkStub();
+    private final RestStub gitHubGetUserInfo = getUserInfoOkStub();
 
     @LocalServerPort
     int currentPort;
@@ -183,6 +182,7 @@ class CleverhauseAuthApplicationTest {
 
         String gitHubOauthLoginRedirectUrl = gitHubOauthLoginRedirectResponse.getRedirectedUrl();
         assertNotNull(gitHubOauthLoginRedirectUrl);
+
         URI gitHubOauthLoginRedirectUri = URI.create(gitHubOauthLoginRedirectUrl);
         UriComponents uriComponents = UriComponentsBuilder.fromUri(gitHubOauthLoginRedirectUri).build();
         MultiValueMap<String, String> gitHubOauthLoginRedirectUriQueryParams =
@@ -191,16 +191,28 @@ class CleverhauseAuthApplicationTest {
         state = UriUtils.decode(state, StandardCharsets.UTF_8);
 
         // 2. form request to app to get GH token and send redirect for getting auth token
-        String tokenResponse = mockMvc.perform(MockMvcRequestBuilders.get(getTokenByCodeUrl)
+        MockHttpServletResponse redirectGetAppTokenResponse = mockMvc.perform(MockMvcRequestBuilders.get(getTokenByCodeUrl)
                 .param(OAuth2ParameterNames.CODE, code)
                 .param(OAuth2ParameterNames.STATE, state)
                 .session(session)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
+                .andReturn().getResponse();
+        String redirectGetAppTokenUrl = redirectGetAppTokenResponse.getRedirectedUrl();
+        assertNotNull(redirectGetAppTokenUrl);
+
+        log.info("Session attributes: {}, redirect to get app token cookies: {}, headers: {}",
+                session.getAttributeNames(), redirectGetAppTokenResponse.getCookies(), redirectGetAppTokenResponse.getHeaderNames());
+        // 3. get App token
+        String tokenResponse = mockMvc.perform(MockMvcRequestBuilders.get(redirectGetAppTokenUrl)
+                .session(session)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 //        OAuth2AccessToken token = new ObjectMapper().readValue(tokenResponse, DefaultOAuth2AccessToken.class);
-//        log.info("Result url:{}", token);
+        log.info("Result url:{}", tokenResponse);
     }
 
     @Disabled("Redundant")
