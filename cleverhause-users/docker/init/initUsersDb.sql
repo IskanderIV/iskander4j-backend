@@ -27,7 +27,7 @@ GRANT USAGE ON TYPES TO clever_admin WITH GRANT OPTION;
 -- after that I should switch on to clever_admin user. Each table will be owned by the user issuing the command
 
 CREATE TABLE IF NOT EXISTS clever_schema.profiles (
-  id int NOT NULL UNIQUE PRIMARY KEY,
+  id bigserial NOT NULL UNIQUE PRIMARY KEY,
   username varchar(255) NOT NULL,
   sessionId varchar(255),
   isExpired varchar(255),
@@ -45,7 +45,7 @@ ALTER TABLE clever_schema.profiles
 -- Table: users
 
 CREATE TABLE IF NOT EXISTS clever_schema.users (
-  id int NOT NULL UNIQUE PRIMARY KEY,
+  id bigserial NOT NULL UNIQUE PRIMARY KEY,
   username varchar(255) NOT NULL UNIQUE,
   password varchar(255) NOT NULL,
   email varchar(255),
@@ -58,7 +58,7 @@ ALTER TABLE clever_schema.users
 -- Table: roles
 
 CREATE TABLE IF NOT EXISTS clever_schema.roles (
-  id int NOT NULL UNIQUE PRIMARY KEY,
+  id bigserial NOT NULL UNIQUE PRIMARY KEY,
   rolename varchar(100) NOT NULL
 );
 
@@ -68,8 +68,8 @@ ALTER TABLE clever_schema.roles
 -- Table for mapping users and roles: user_roles
 
 CREATE TABLE IF NOT EXISTS clever_schema.user_roles (
-  user_id int NOT NULL,
-  role_id int NOT NULL,
+  user_id bigserial NOT NULL,
+  role_id bigserial NOT NULL,
 
   FOREIGN KEY (user_id) REFERENCES clever_schema.users(id),
   FOREIGN KEY (role_id) REFERENCES clever_schema.roles(id),

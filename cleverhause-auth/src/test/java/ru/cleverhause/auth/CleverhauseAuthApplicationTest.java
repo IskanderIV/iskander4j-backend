@@ -34,7 +34,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.util.UriUtils;
-import ru.cleverhause.auth.config.SuccessOAuth2LoginHandler;
 import ru.cleverhause.auth.config.properties.OAuth2OuterClientProperties;
 
 import java.net.URI;
@@ -63,8 +62,6 @@ class CleverhauseAuthApplicationTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
-    private SuccessOAuth2LoginHandler successOAuth2LoginHandler;
-    @Autowired
     private OAuth2ClientProperties authClientProperties;
     @Autowired
     private OAuth2OuterClientProperties authOuterClientProperties;
@@ -84,7 +81,6 @@ class CleverhauseAuthApplicationTest {
     public void init() {
         RestStub.resetAll();
         String redirectUrlWithLocalPort = StringUtils.replaceOnce(redirectUrl, "{port}", Integer.toString(currentPort));
-        successOAuth2LoginHandler.setRedirectUrl(redirectUrlWithLocalPort);
     }
 
     @Test

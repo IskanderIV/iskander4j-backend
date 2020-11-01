@@ -5,9 +5,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.builders.InMemoryClientDetailsServiceBuilder;
+import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
@@ -19,7 +19,6 @@ import org.springframework.security.oauth2.provider.TokenGranter;
 import org.springframework.security.oauth2.provider.client.ClientCredentialsTokenGranter;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeTokenGranter;
 import org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices;
-import org.springframework.security.oauth2.provider.password.ResourceOwnerPasswordTokenGranter;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
@@ -36,11 +35,12 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 
-    private final AuthenticationManager authenticationManager;
-
     private final OAuth2OuterClientProperties authClientProperties;
 
-    private final UserDetailsService userDetailsService;
+    @Override
+    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+        super.configure(clients);
+    }
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
@@ -49,8 +49,6 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
                 .tokenEnhancer(tokenEnhancerChain())
                 .accessTokenConverter(accessTokenConverter())
                 .tokenGranter(getMixedTokenGranter())
-                .authenticationManager(authenticationManager)
-                .userDetailsService(userDetailsService)
                 .tokenServices(tokenServices())
                 .allowedTokenEndpointRequestMethods(HttpMethod.POST, HttpMethod.GET)
                 .requestFactory(getRequestFactory())
@@ -61,7 +59,8 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) {
         oauthServer
                 .tokenKeyAccess("denyAll()")
-                .checkTokenAccess("isAuthenticated()");
+                .checkTokenAccess("isAuthenticated()")
+                .passwordEncoder(NoOpPasswordEncoder.getInstance());
     }
 
 //    @Override
@@ -117,7 +116,7 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Bean
     public TokenGranter getMixedTokenGranter() throws Exception {
-        return new CompositeTokenGranter(Arrays.asList(getClientCredentialsTokenGranter(), getPasswordTokenGranter()));
+        return new CompositeTokenGranter(Arrays.asList(getClientCredentialsTokenGranter()));
     }
 
     @Bean
@@ -125,12 +124,6 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
         ClientCredentialsTokenGranter tokenGranter = new ClientCredentialsTokenGranter(tokenServices(), getClientDetailsService(), getRequestFactory());
         tokenGranter.setAllowRefresh(true);
         return tokenGranter;
-    }
-
-    @Bean
-    public ResourceOwnerPasswordTokenGranter getPasswordTokenGranter() throws Exception {
-        return new ResourceOwnerPasswordTokenGranter(authenticationManager,
-                tokenServices(), getClientDetailsService(), getRequestFactory());
     }
 
     @Bean

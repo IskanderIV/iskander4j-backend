@@ -6,7 +6,7 @@ spring:
 eureka:
   client:
     enabled: false
-    service-url.defaultZone: 'http://localhost:8010/eureka'
+    service-url.defaultZone: "${EUREKA_URI:http://localhost:8010/eureka}"
 
 ---
 

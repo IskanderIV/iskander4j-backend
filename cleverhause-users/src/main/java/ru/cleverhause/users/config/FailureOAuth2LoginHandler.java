@@ -1,4 +1,4 @@
-package ru.cleverhause.auth.config;
+package ru.cleverhause.users.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
