@@ -23,6 +23,8 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import ru.cleverhause.users.repository.OAuth2AuthorizedClientDao;
+import ru.cleverhause.users.service.oauth2clients.JdbcUsersAndOAuth2AuthorizedClientService;
 
 import javax.servlet.Filter;
 
@@ -38,6 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final AuthenticationSuccessHandler successFormLoginHandler;
     @Qualifier("failureFormLoginHandler")
     private final AuthenticationFailureHandler failureFormLoginHandler;
+
+    private final JdbcUsersAndOAuth2AuthorizedClientService authorizedClientService;
 
     @Override
     public void configure(WebSecurity web) {
@@ -58,6 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable()
                 .httpBasic().disable()
                 .oauth2Login()
+                    .authorizedClientService(authorizedClientService)
                     .successHandler(successOAuth2LoginHandler)
                     .failureHandler(failureOAuth2LoginHandler)
                 .and()

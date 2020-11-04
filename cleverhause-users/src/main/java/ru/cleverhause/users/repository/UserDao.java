@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface UserDao extends JpaRepository<UserEntity, Long> {
 
+//    @Query(value = "SELECT u.id, u.username, u.email FROM UserEntity u WHERE u.username = :username", nativeQuery = true)
     Optional<UserEntity> findByUsername(String username);
 
 //    @Query(value = "SELECT u FROM UserEntity u WHERE u.id = :id OR u.username = :username")

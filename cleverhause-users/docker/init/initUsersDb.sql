@@ -27,18 +27,18 @@ GRANT USAGE ON TYPES TO clever_admin WITH GRANT OPTION;
 -- after that I should switch on to clever_admin user. Each table will be owned by the user issuing the command
 
 CREATE TABLE IF NOT EXISTS clever_schema.profiles (
-  id bigserial NOT NULL UNIQUE PRIMARY KEY,
-  username varchar(255) NOT NULL,
-  sessionId varchar(255),
-  isExpired varchar(255),
-  isLogged varchar(255),
+  user_id varchar(255) NOT NULL UNIQUE PRIMARY KEY,
+  session_id varchar(255),
+  is_expired bool default false,
+  is_logged_in bool default false,
   address varchar(255),
   phone varchar(255),
-  created timestamp,
-  loginTime timestamp,
+  created_at timestamp,
+  last_login_time timestamp,
 
-  CONSTRAINT voidUserName CHECK (username <> '')
+  FOREIGN KEY (user_id) references clever_schema.users(id)
 );
+
 ALTER TABLE clever_schema.profiles
     OWNER to clever_admin;
 
@@ -78,6 +78,29 @@ CREATE TABLE IF NOT EXISTS clever_schema.user_roles (
 );
 
 ALTER TABLE clever_schema.user_roles
+    OWNER to clever_admin;
+
+-- Table: oauth2_authorized_client
+
+CREATE TABLE clever_schema.oauth2_authorized_client (
+  client_registration_id varchar(100) NOT NULL,
+  principal_name varchar(200) NOT NULL,
+  user_id bigserial NOT NULL,
+  access_token_type varchar(100) NOT NULL,
+  access_token_value blob NOT NULL,
+  access_token_issued_at timestamp NOT NULL,
+  access_token_expires_at timestamp NOT NULL,
+  access_token_scopes varchar(1000) DEFAULT NULL,
+  refresh_token_value blob DEFAULT NULL,
+  refresh_token_issued_at timestamp DEFAULT NULL,
+  created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+
+  PRIMARY KEY (client_registration_id, principal_name),
+
+  FOREIGN KEY (user_id) REFERENCES clever_schema.users(id)
+);
+
+ALTER TABLE clever_schema.oauth2_authorized_client
     OWNER to clever_admin;
 
 -- Table: board
