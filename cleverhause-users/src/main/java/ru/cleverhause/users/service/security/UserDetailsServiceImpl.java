@@ -25,7 +25,6 @@ import java.util.Set;
 import static java.util.Locale.Category.DISPLAY;
 
 @Slf4j
-@Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
@@ -37,75 +36,31 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
-        List<UserDetails> users = loadUsersByUsername(username);
+//        List<UserDetails> users = loadUsersByUsername(username);
+//
+//        if (users.size() == 0) {
+//            log.debug("Query returned no results for user '" + username + "'");
+//            throw new UsernameNotFoundException(
+//                    messageSource.getMessage("JdbcDaoImpl.notFound",
+//                            new Object[]{username}, Locale.getDefault(DISPLAY)));
+//        }
+//
+//        UserDetails user = users.get(0); // contains no GrantedAuthority[]
+//
+//        Set<GrantedAuthority> dbAuthsSet = new HashSet<>();
+//        dbAuthsSet.addAll(loadUserAuthorities(user.getUsername()));
+//        dbAuthsSet.addAll(loadGroupAuthorities(user.getUsername()));
 
-        if (users.size() == 0) {
-            log.debug("Query returned no results for user '" + username + "'");
-            throw new UsernameNotFoundException(
-                    messageSource.getMessage("JdbcDaoImpl.notFound",
-                            new Object[]{username}, Locale.getDefault(DISPLAY)));
-        }
-
-        UserDetails user = users.get(0); // contains no GrantedAuthority[]
-
-        Set<GrantedAuthority> dbAuthsSet = new HashSet<>();
-        dbAuthsSet.addAll(loadUserAuthorities(user.getUsername()));
-        dbAuthsSet.addAll(loadGroupAuthorities(user.getUsername()));
-
-        if (dbAuthsSet.size() == 0) {
-            log.debug("User '" + username + "' has no authorities and will be treated as 'not found'");
-
-            throw new UsernameNotFoundException(messageSource.getMessage(
-                    "JdbcDaoImpl.noAuthority", new Object[]{username},
-                    Locale.getDefault(DISPLAY)));
-        }
-
-        return createUserDetails(username, user, dbAuthsSet);
-    }
-
-    /**
-     * Executes the SQL <tt>usersByUsernameQuery</tt> and returns a list of UserDetails
-     * objects. There should normally only be one matching user.
-     */
-    private List<UserDetails> loadUsersByUsername(String username) {
-        String usersByUsernameQuery = "";
-        return this.jdbcOperations.query(usersByUsernameQuery,
-                new String[]{username}, (rs, rowNum) -> {
-                    String username1 = rs.getString(1);
-                    String password = rs.getString(2);
-                    boolean enabled = rs.getBoolean(3);
-                    return new User(username1, password, enabled, true, true, true,
-                            AuthorityUtils.NO_AUTHORITIES);
-                });
-    }
-
-    /**
-     * Loads authorities by executing the SQL from <tt>authoritiesByUsernameQuery</tt>.
-     *
-     * @return a list of GrantedAuthority objects for the user
-     */
-    protected List<GrantedAuthority> loadUserAuthorities(String username) {
-        return getJdbcTemplate().query(this.authoritiesByUsernameQuery,
-                new String[]{username}, (rs, rowNum) -> {
-                    String roleName = JdbcDaoImpl.this.rolePrefix + rs.getString(2);
-
-                    return new SimpleGrantedAuthority(roleName);
-                });
-    }
-
-    /**
-     * Loads authorities by executing the SQL from
-     * <tt>groupAuthoritiesByUsernameQuery</tt>.
-     *
-     * @return a list of GrantedAuthority objects for the user
-     */
-    protected List<GrantedAuthority> loadGroupAuthorities(String username) {
-        return getJdbcTemplate().query(this.groupAuthoritiesByUsernameQuery,
-                new String[]{username}, (rs, rowNum) -> {
-                    String roleName = getRolePrefix() + rs.getString(3);
-
-                    return new SimpleGrantedAuthority(roleName);
-                });
+//        if (dbAuthsSet.size() == 0) {
+//            log.debug("User '" + username + "' has no authorities and will be treated as 'not found'");
+//
+//            throw new UsernameNotFoundException(messageSource.getMessage(
+//                    "JdbcDaoImpl.noAuthority", new Object[]{username},
+//                    Locale.getDefault(DISPLAY)));
+//        }
+//
+//        return createUserDetails(username, user, dbAuthsSet);
+        return null;
     }
 
     /**
@@ -122,9 +77,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                                             UserDetails userFromUserQuery, Collection<GrantedAuthority> combinedAuthorities) {
         String returnUsername = userFromUserQuery.getUsername();
 
-        if (!this.usernameBasedPrimaryKey) {
-            returnUsername = username;
-        }
 
         return new User(returnUsername, userFromUserQuery.getPassword(),
                 userFromUserQuery.isEnabled(), userFromUserQuery.isAccountNonExpired(),

@@ -2,6 +2,7 @@ package ru.cleverhause.users.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -23,7 +24,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
-import ru.cleverhause.users.repository.OAuth2AuthorizedClientDao;
+import ru.cleverhause.users.config.properties.ClientRegistrationMainAttributeTags;
 import ru.cleverhause.users.service.oauth2clients.JdbcUsersAndOAuth2AuthorizedClientService;
 
 import javax.servlet.Filter;
@@ -31,6 +32,7 @@ import javax.servlet.Filter;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableConfigurationProperties(ClientRegistrationMainAttributeTags.class)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Qualifier("successOAuth2LoginHandler")
     private final AuthenticationSuccessHandler successOAuth2LoginHandler;

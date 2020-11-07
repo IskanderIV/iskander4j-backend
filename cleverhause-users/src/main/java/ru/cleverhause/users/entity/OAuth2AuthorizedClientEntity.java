@@ -5,16 +5,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -30,7 +37,10 @@ public class OAuth2AuthorizedClientEntity {
     @Column(name = "principal_name", unique = true, nullable = false)
     private String principalName;
 
-    @OneToOne
+    /**
+     * FK.
+     */
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity user;
 
@@ -47,7 +57,7 @@ public class OAuth2AuthorizedClientEntity {
     private Instant accessTokenExpiresAt;
 
     @Column(name = "access_token_scopes")
-    private Set<String> accessTokenScopes;
+    private String accessTokenScopes;
 
     @Column(name = "refresh_token_value")
     private String refreshTokenValue;
@@ -60,17 +70,17 @@ public class OAuth2AuthorizedClientEntity {
 
     @Builder
     @JsonCreator
-    public OAuth2AuthorizedClientEntity(@JsonProperty("client_registration_id") String clientRegistrationId,
-                                        @JsonProperty("principal_name") String principalName,
-                                        @JsonProperty("user_id") UserEntity user,
-                                        @JsonProperty("access_token_type") String accessTokenType,
-                                        @JsonProperty("access_token_value") String accessTokenValue,
-                                        @JsonProperty("access_token_expires_at") Instant accessTokenIssuedAt,
-                                        @JsonProperty("access_token_expires_at") Instant accessTokenExpiresAt,
-                                        @JsonProperty("access_token_scopes") Set<String> accessTokenScopes,
-                                        @JsonProperty("refresh_token_value") String refreshTokenValue,
-                                        @JsonProperty("refresh_token_issued_at") Instant refreshTokenIssuedAt,
-                                        @JsonProperty("created_at") Instant createdAt) {
+    public OAuth2AuthorizedClientEntity(@JsonProperty("clientRegistrationId") String clientRegistrationId,
+                                        @JsonProperty("principalName") String principalName,
+                                        @JsonProperty("user") UserEntity user,
+                                        @JsonProperty("accessTokenType") String accessTokenType,
+                                        @JsonProperty("accessTokenValue") String accessTokenValue,
+                                        @JsonProperty("accessTokenIssuedAt") Instant accessTokenIssuedAt,
+                                        @JsonProperty("accessTokenExpiresAt") Instant accessTokenExpiresAt,
+                                        @JsonProperty("accessTokenScopes") Set<String> accessTokenScopes,
+                                        @JsonProperty("refreshTokenValue") String refreshTokenValue,
+                                        @JsonProperty("refreshTokenIssuedAt") Instant refreshTokenIssuedAt,
+                                        @JsonProperty("createdAt") Instant createdAt) {
         this.clientRegistrationId = clientRegistrationId;
         this.principalName = principalName;
         this.user = user;
@@ -78,9 +88,25 @@ public class OAuth2AuthorizedClientEntity {
         this.accessTokenValue = accessTokenValue;
         this.accessTokenIssuedAt = accessTokenIssuedAt;
         this.accessTokenExpiresAt = accessTokenExpiresAt;
-        this.accessTokenScopes = accessTokenScopes;
+        setAccessTokenScopes(accessTokenScopes);
         this.refreshTokenValue = refreshTokenValue;
         this.refreshTokenIssuedAt = refreshTokenIssuedAt;
         this.createdAt = createdAt;
+    }
+
+    public Set<String> getAccessTokenScopes() {
+        if (StringUtils.isBlank(accessTokenScopes)) {
+            return Collections.emptySet();
+        } else {
+            return Arrays.stream(StringUtils.split(accessTokenScopes, ",")).collect(Collectors.toSet());
+        }
+    }
+
+    public void setAccessTokenScopes(Set<String> accessTokenScopes) {
+        if (CollectionUtils.isEmpty(accessTokenScopes)) {
+            this.accessTokenScopes =  StringUtils.EMPTY;
+        } else {
+            this.accessTokenScopes = StringUtils.join(accessTokenScopes, ",");
+        }
     }
 }

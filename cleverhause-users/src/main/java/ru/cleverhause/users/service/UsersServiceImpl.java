@@ -57,10 +57,7 @@ public class UsersServiceImpl implements UsersService {
         newUser.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         newUser.setUsername(userRequest.getUsername());
         newUser.setEmail(userRequest.getEmail());
-        RoleEntity role = roleDao.findByRolename(Role.ROLE_USER.name());
-        if (role == null) {
-            role = new RoleEntity();
-        }
+        RoleEntity role = roleDao.findByRolename(Role.ROLE_USER.name()).orElse(new RoleEntity());
         newUser.setRoles(Set.of(role));
         UserEntity savedUser = userDao.save(newUser);
         userDao.flush();

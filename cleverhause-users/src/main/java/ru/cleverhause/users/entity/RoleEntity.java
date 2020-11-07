@@ -3,6 +3,10 @@ package ru.cleverhause.users.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import ru.cleverhause.users.authorities.Role;
 
 import javax.persistence.Column;
@@ -19,7 +23,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(exclude="users")
+@ToString(exclude = "users")
 @Table(name = "roles", schema = "clever_schema")
 public class RoleEntity implements Serializable {
     @Id
@@ -31,7 +38,7 @@ public class RoleEntity implements Serializable {
     private String rolename;
 
     @JsonBackReference
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
     private Set<UserEntity> users = new HashSet<>();
 
     public RoleEntity() {
