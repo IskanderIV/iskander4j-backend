@@ -2,25 +2,13 @@ server.port: 8081
 
 spring:
   application.name: cleverhause-auth
-  profiles.active: local
-  devtools:
-    restart:
-      enabled: true
-
-security:
-  oauth2:
-    clients:
-      clever-ui:
-        clientId: 'client'
-        secret: '{noop}secret'
-        accessTokenLifeSecond: 3600
-        refreshTokenLifeSecond: 50000
-        grandTypes: 'authorization_code, refresh_token'
-  #      'authorization_code, client_credentials, password, refresh_token'
-        redirectUri:
-        scopes: read
-
+  profiles: local, test
 eureka:
   client:
     enabled: false
     service-url.defaultZone: 'http://localhost:8010/eureka'
+
+---
+
+spring:
+  profiles.active: local

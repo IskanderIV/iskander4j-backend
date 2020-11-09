@@ -1,0 +1,17 @@
+spring:
+  devtools:
+    restart:
+      enabled: true
+
+security:
+  oauth2:
+    clients:
+      clever-ui:
+        clientId: 'cleverhause-users'
+        secret: 'secret'
+        accessTokenLifeSecond: 3600
+        refreshTokenLifeSecond: 50000
+        grandTypes: 'password, client_credentials, refresh_token'
+  #      'authorization_code, client_credentials, password, refresh_token'
+        redirectUri:
+        scopes: read

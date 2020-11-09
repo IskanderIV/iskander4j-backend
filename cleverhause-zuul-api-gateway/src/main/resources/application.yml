@@ -23,11 +23,15 @@ zuul:
       sensitiveHeaders:
       path: '/oauth/**'
       url: 'http://localhost:8081/oauth'
+    oauth2:
+      sensitiveHeaders:
+      path: '/oauth2/authorization/**'
+      url: 'http://localhost:8082/oauth2/authorization'
     login:
       sensitiveHeaders:
       path: '/login/**'
-      url: 'http://localhost:8081/login'
+      url: 'http://localhost:8082/login'
     logout:
       sensitiveHeaders:
       path: '/logout/**'
-      url: 'http://localhost:8081/logout'
+      url: 'http://localhost:8082/logout'

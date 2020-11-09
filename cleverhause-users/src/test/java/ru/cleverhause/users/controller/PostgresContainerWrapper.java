@@ -10,9 +10,12 @@ public class PostgresContainerWrapper extends PostgreSQLContainer<PostgresContai
 
     public PostgresContainerWrapper() {
         super(POSTGRES_IMAGE_NAME);
-        this.withLogConsumer(new Slf4jLogConsumer(log));
-//        this.withEnv("POSTGRES_URL", this.getJdbcUrl());
-//        this.withEnv("POSTGRES_USER_NAME", this.getUsername());
-//        this.withEnv("POSTGRES_PASSWORD", this.getPassword());
+//        this.waitingFor(new HostPortWaitStrategy());
+        this.withLogConsumer(new Slf4jLogConsumer(log))
+        .withUsername("clever_admin")
+        .withPassword("WindowsVista123")
+        .withDatabaseName("cleverhause_users_db");
+        log.info("!!! BoundPortNumbers: {}", this.getBoundPortNumbers());
+        log.info("!!! ExposedPorts: {}", this.getExposedPorts());
     }
 }

@@ -1,14 +1,13 @@
 -- I had to write script .bat: invoke plsql using postgres creds after that switch on to my user and call other db scripts
-CREATE ROLE clever_admin WITH LOGIN
-  ENCRYPTED PASSWORD 'WindowsVista123'
-  NOSUPERUSER INHERIT CREATEDB CREATEROLE NOREPLICATION;
+-- CREATE ROLE clever_admin WITH LOGIN
+--   ENCRYPTED PASSWORD 'WindowsVista123'
+--   NOSUPERUSER INHERIT CREATEDB CREATEROLE NOREPLICATION;
+--
+-- CREATE DATABASE cleverhause_users_db WITH OWNER clever_admin ENCODING = 'UTF8' CONNECTION LIMIT = -1;
+-- \connect cleverhause_users_db;
+-- GRANT ALL ON DATABASE cleverhause_users_db TO clever_admin;
 
-CREATE DATABASE cleverhause_users_db WITH OWNER clever_admin ENCODING = 'UTF8' CONNECTION LIMIT = -1;
-\connect cleverhause_users_db;
-GRANT ALL ON DATABASE cleverhause_users_db TO clever_admin;
-
-CREATE SCHEMA IF NOT EXISTS clever_schema
-    AUTHORIZATION clever_admin;
+CREATE SCHEMA IF NOT EXISTS clever_schema AUTHORIZATION clever_admin;
 
 GRANT ALL ON SCHEMA clever_schema TO clever_admin;
 
@@ -24,31 +23,13 @@ GRANT EXECUTE ON FUNCTIONS TO clever_admin WITH GRANT OPTION;
 ALTER DEFAULT PRIVILEGES IN SCHEMA clever_schema
 GRANT USAGE ON TYPES TO clever_admin WITH GRANT OPTION;
 
--- Table: profile
--- after that I should switch on to clever_admin user. Each table will be owned by the user issuing the command
-
-CREATE TABLE IF NOT EXISTS clever_schema.profiles (
-  id int NOT NULL UNIQUE PRIMARY KEY,
-  username varchar(255) NOT NULL,
-  sessionId varchar(255),
-  isExpired varchar(255),
-  isLogged varchar(255),
-  address varchar(255),
-  phone varchar(255),
-  created timestamp,
-  loginTime timestamp,
-
-  CONSTRAINT voidUserName CHECK (username <> '')
-);
-ALTER TABLE clever_schema.profiles
-    OWNER to clever_admin;
-
 -- Table: users
 
 CREATE TABLE IF NOT EXISTS clever_schema.users (
-  id int NOT NULL UNIQUE PRIMARY KEY,
-  username varchar(255) NOT NULL,
+  id bigserial NOT NULL UNIQUE PRIMARY KEY,
+  username varchar(255) NOT NULL UNIQUE,
   password varchar(255) NOT NULL,
+  email varchar(255),
   CONSTRAINT voidUserName CHECK (username <> '')
 );
 
@@ -58,7 +39,7 @@ ALTER TABLE clever_schema.users
 -- Table: roles
 
 CREATE TABLE IF NOT EXISTS clever_schema.roles (
-  id int NOT NULL UNIQUE PRIMARY KEY,
+  id bigserial NOT NULL UNIQUE PRIMARY KEY,
   rolename varchar(100) NOT NULL
 );
 
@@ -68,8 +49,8 @@ ALTER TABLE clever_schema.roles
 -- Table for mapping users and roles: user_roles
 
 CREATE TABLE IF NOT EXISTS clever_schema.user_roles (
-  user_id int NOT NULL,
-  role_id int NOT NULL,
+  user_id bigserial NOT NULL,
+  role_id bigserial NOT NULL,
 
   FOREIGN KEY (user_id) REFERENCES clever_schema.users(id),
   FOREIGN KEY (role_id) REFERENCES clever_schema.roles(id),
@@ -78,6 +59,48 @@ CREATE TABLE IF NOT EXISTS clever_schema.user_roles (
 );
 
 ALTER TABLE clever_schema.user_roles
+    OWNER to clever_admin;
+
+-- Table: profile
+-- after that I should switch on to clever_admin user. Each table will be owned by the user issuing the command
+
+CREATE TABLE IF NOT EXISTS clever_schema.profile (
+    user_id bigserial NOT NULL UNIQUE PRIMARY KEY,
+    session_id varchar(255),
+    is_expired bool default false,
+    is_logged_in bool default false,
+    address varchar(255),
+    phone varchar(255),
+    created_at timestamp,
+    last_login_time timestamp,
+
+    FOREIGN KEY (user_id) references clever_schema.users(id)
+);
+
+ALTER TABLE clever_schema.profile
+    OWNER to clever_admin;
+
+-- Table: oauth2_authorized_client
+
+CREATE TABLE clever_schema.oauth2_authorized_client (
+  client_registration_id varchar(100) NOT NULL,
+  principal_name varchar(200) NOT NULL,
+  user_id bigserial NOT NULL UNIQUE,
+  access_token_type varchar(100) NOT NULL,
+  access_token_value varchar(1000) NOT NULL,
+  access_token_issued_at timestamp NOT NULL,
+  access_token_expires_at timestamp NOT NULL,
+  access_token_scopes varchar(1000) DEFAULT NULL,
+  refresh_token_value varchar(1000) DEFAULT NULL,
+  refresh_token_issued_at timestamp DEFAULT NULL,
+  created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+
+  PRIMARY KEY (client_registration_id, principal_name),
+
+  FOREIGN KEY (user_id) REFERENCES clever_schema.users(id)
+);
+
+ALTER TABLE clever_schema.oauth2_authorized_client
     OWNER to clever_admin;
 
 -- Table: board
@@ -159,10 +182,10 @@ CREATE TABLE IF NOT EXISTS clever_schema.user_new_board (
 ALTER TABLE clever_schema.user_new_board
     OWNER to clever_admin;
 
-CREATE SEQUENCE clever_schema.profiles_id_seq MINVALUE 1;
-ALTER SEQUENCE clever_schema.profiles_id_seq OWNER TO clever_admin;
-ALTER SEQUENCE clever_schema.profiles_id_seq OWNED BY clever_schema.profiles.id;
-ALTER TABLE clever_schema.profiles ALTER id SET DEFAULT nextval('clever_schema.profiles_id_seq');
+-- CREATE SEQUENCE clever_schema.profiles_id_seq MINVALUE 1;
+-- ALTER SEQUENCE clever_schema.profiles_id_seq OWNER TO clever_admin;
+-- ALTER SEQUENCE clever_schema.profiles_id_seq OWNED BY clever_schema.profiles.user_id;
+-- ALTER TABLE clever_schema.profiles ALTER user_id SET DEFAULT nextval('clever_schema.profiles_id_seq');
 
 CREATE SEQUENCE clever_schema.users_id_seq MINVALUE 3;
 ALTER SEQUENCE clever_schema.users_id_seq OWNER TO clever_admin;
@@ -203,3 +226,6 @@ ALTER TABLE clever_schema.user_new_board ALTER id SET DEFAULT nextval('clever_sc
 
 ALTER TABLE clever_schema.users ADD CONSTRAINT unique_username UNIQUE (username);
 ALTER TABLE clever_schema.roles ADD CONSTRAINT unique_rolename UNIQUE (rolename);
+
+INSERT INTO clever_schema.roles VALUES (1, 'ROLE_ADMIN');
+INSERT INTO clever_schema.roles VALUES (2, 'ROLE_USER');

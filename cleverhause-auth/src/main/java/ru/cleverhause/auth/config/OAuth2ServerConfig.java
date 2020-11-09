@@ -4,51 +4,53 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.builders.InMemoryClientDetailsServiceBuilder;
+import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.CompositeTokenGranter;
 import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
+import org.springframework.security.oauth2.provider.TokenGranter;
 import org.springframework.security.oauth2.provider.client.ClientCredentialsTokenGranter;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeTokenGranter;
 import org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices;
-import org.springframework.security.oauth2.provider.password.ResourceOwnerPasswordTokenGranter;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
-import ru.cleverhause.auth.config.properties.OAuth2ClientProperties;
+import ru.cleverhause.auth.config.properties.OAuth2OuterClientProperties;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
 @EnableAuthorizationServer
 @RequiredArgsConstructor
-public class Oauth2SecurityConfig extends AuthorizationServerConfigurerAdapter {
+public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 
-    private final AuthenticationManager authenticationManager;
+    private final OAuth2OuterClientProperties authClientProperties;
 
-    private final OAuth2ClientProperties authClientProperties;
-
-    private final UserDetailsService userDetailsService;
+    @Override
+    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+        super.configure(clients);
+    }
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints
-                .authorizationCodeServices(getAuthorizationCodeServices())
                 .tokenStore(tokenStore())
                 .tokenEnhancer(tokenEnhancerChain())
                 .accessTokenConverter(accessTokenConverter())
-                .tokenGranter(getAuthorizationCodeTokenGranter())
-                .authenticationManager(authenticationManager)
-                .userDetailsService(userDetailsService)
+                .tokenGranter(getMixedTokenGranter())
                 .tokenServices(tokenServices())
+                .allowedTokenEndpointRequestMethods(HttpMethod.POST, HttpMethod.GET)
                 .requestFactory(getRequestFactory())
                 .setClientDetailsService(getClientDetailsService());
     }
@@ -57,7 +59,8 @@ public class Oauth2SecurityConfig extends AuthorizationServerConfigurerAdapter {
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) {
         oauthServer
                 .tokenKeyAccess("denyAll()")
-                .checkTokenAccess("isAuthenticated()");
+                .checkTokenAccess("isAuthenticated()")
+                .passwordEncoder(NoOpPasswordEncoder.getInstance());
     }
 
 //    @Override
@@ -76,7 +79,7 @@ public class Oauth2SecurityConfig extends AuthorizationServerConfigurerAdapter {
     public ClientDetailsService getClientDetailsService() throws Exception {
         InMemoryClientDetailsServiceBuilder clientDetailsServiceBuilder =
                 new InMemoryClientDetailsServiceBuilder();
-        for (OAuth2ClientProperties.Client client : authClientProperties.getClients().values()) {
+        for (OAuth2OuterClientProperties.Client client : authClientProperties.getClients().values()) {
             clientDetailsServiceBuilder.withClient(client.getClientId())
                     .secret(client.getSecret())
                     .authorizedGrantTypes(client.getGrandTypes().toArray(new String[0]))
@@ -112,16 +115,15 @@ public class Oauth2SecurityConfig extends AuthorizationServerConfigurerAdapter {
     }
 
     @Bean
+    public TokenGranter getMixedTokenGranter() throws Exception {
+        return new CompositeTokenGranter(Arrays.asList(getClientCredentialsTokenGranter()));
+    }
+
+    @Bean
     public ClientCredentialsTokenGranter getClientCredentialsTokenGranter() throws Exception {
         ClientCredentialsTokenGranter tokenGranter = new ClientCredentialsTokenGranter(tokenServices(), getClientDetailsService(), getRequestFactory());
         tokenGranter.setAllowRefresh(true);
         return tokenGranter;
-    }
-
-    @Bean
-    public ResourceOwnerPasswordTokenGranter getPasswordTokenGranter() throws Exception {
-        return new ResourceOwnerPasswordTokenGranter(authenticationManager,
-                tokenServices(), getClientDetailsService(), getRequestFactory());
     }
 
     @Bean

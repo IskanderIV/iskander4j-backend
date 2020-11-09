@@ -1,13 +1,13 @@
 package ru.cleverhause.users.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Value;
 
 import java.io.Serializable;
 
-@Data
-@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+@Value
+@Builder
 public class UserInfoRequest implements Serializable {
-    private Long userId;
-    private String userName;
+    private final Long userId;
+    private final String userName;
 }

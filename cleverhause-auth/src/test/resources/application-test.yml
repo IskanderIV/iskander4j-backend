@@ -1,0 +1,38 @@
+spring:
+  profiles.active: test
+  devtools:
+    restart:
+      enabled: true
+  security:
+    oauth2:
+      client:
+        redirectUrl: "http://localhost:{port}/oauth/token"
+        registration:
+          github:
+            clientId: 'b4ccc96cfd49bff036a6'
+            clientSecret: '178119e291c3b07a4684d1b31c35bb94b058329d'
+            redirect_uri: 'http://cleverhause.ru/login/oauth2/code/github'
+            clientAuthenticationMethod: 'post'
+          google:
+            clientId: '400048896634-acal0divdad68tug694b4ifuhcdh71v9.apps.googleusercontent.com'
+            clientSecret:
+        provider:
+          github:
+            tokenUri: "http://localhost:${wiremock.server.port}/login/oauth/access_token"
+            userInfoUri: "http://localhost:${wiremock.server.port}/user"
+            userInfoAuthenticationMethod: 'post'
+security:
+  oauth2:
+    clients:
+      clever-ui:
+        clientId: 'client'
+        secret: '{noop}secret'
+        accessTokenLifeSecond: 3600
+        refreshTokenLifeSecond: 50000
+        grandTypes: 'password, client_credentials, refresh_token'
+        redirectUri:
+        scopes: read
+
+eureka:
+  client:
+    enabled: false

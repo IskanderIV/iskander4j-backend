@@ -11,12 +11,10 @@ import java.io.Serializable;
 @Data
 @Builder
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
-public class UserRequest implements Serializable {
-    @NotNull
-    private Long userId;
+public class AddUserRequest implements Serializable {
     @NotBlank
     private String username;
-//    private String username; //googleName
     private String email;
+    @NotBlank
     private String password;
 }

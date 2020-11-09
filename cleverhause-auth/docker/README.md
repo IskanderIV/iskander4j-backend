@@ -32,3 +32,19 @@ Postgresql
 server - service_name:<inner_port> (postgresql:5432)
 username - postgres
 password - POSTGRES_PASSWORD
+
+### Port forwarding in mac
+I save in hosts that cleverhause.ru maps to 127.0.0.6 and then create /etc/pf.anchors/port_forwards 
+where I config that 127.0.0.6:80 maps to 127.0.0.1:8080. 
+$ cd /etc/pf.anchors
+$ sudo pfctl -ef port_forwards - main command
+$ sudo nano /etc/pf.conf
+$ sudo pfctl -vnf port_forwards
+$ dscacheutil -flushcache - need only to clean cache of dns names after making changes in /etc/hosts
+$ sudo killall -HUP mDNSResponder
+$ sudo nano /etc/hosts
+$ sudo mkdir /etc/pf.anchors/port_forwards - need only on first steps
+$ sudo pfctl show
+$ sudo iptables -t nat -A OUTPUT -p tcp --dport 80 -d cleverhause.ru -j DNAT --to-destination 127.0.0.1:8080 - do not work on mac
+$ cd /private/etc/hosts
+$ 
