@@ -6,7 +6,7 @@ plugins {
 
 group = 'ru.cleverhause'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = JavaVersion.VERSION_11
 
 configurations {
     developmentOnly
@@ -37,6 +37,7 @@ ext {
     set('logback_version', '6.3')
     set('junit-jupiter.version', '5.5.1')
     set('springOauth2Version', "2.2.0.RELEASE")
+    set('testcontainers_version', '1.15.0-rc2')
 }
 
 dependencies {
@@ -84,9 +85,9 @@ dependencies {
     testCompile "org.junit.jupiter:junit-jupiter-params"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 
-    testCompile "org.testcontainers:postgresql:1.14.+"
-    testCompile "org.testcontainers:testcontainers:1.14.+"
-    testCompile "org.testcontainers:junit-jupiter:1.14.+"
+    testCompile "org.testcontainers:postgresql:${testcontainers_version}"
+    testCompile "org.testcontainers:testcontainers:${testcontainers_version}"
+    testCompile "org.testcontainers:junit-jupiter:${testcontainers_version}"
     testAnnotationProcessor 'org.projectlombok:lombok'
 }
 

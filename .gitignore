@@ -18,7 +18,9 @@
 
 # Gradle:
 .idea/**/gradle.xml
+.gradle/**
 .idea/**/libraries
+!gradle/wrapper/gradle-wrapper.jar
 
 # CMake
 cmake-build-debug/

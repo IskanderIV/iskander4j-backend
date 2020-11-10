@@ -1,0 +1,6 @@
+rootProject.name = 'cleverhause'
+include 'cleverhause-auth'
+include 'cleverhause-users'
+include 'cleverhause-devices'
+include 'cleverhause-zuul-api-gateway'
+include 'eureka-discovery-service'
