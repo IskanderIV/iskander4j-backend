@@ -11,7 +11,12 @@ security:
         secret: 'secret'
         accessTokenLifeSecond: 3600
         refreshTokenLifeSecond: 50000
-        grandTypes: 'password, client_credentials, refresh_token'
+        grandTypes: 'authorization_code, refresh_token'
   #      'authorization_code, client_credentials, password, refresh_token'
         redirectUri:
         scopes: read
+  authentication:
+    providers:
+      formLogin:
+        providerClassName: "ru.cleverhause.auth.provider.FormLoginIdentityProvider"
+        responseConverterClassName: "ru.cleverhause.auth.provider.FormLoginIdentityProvider"

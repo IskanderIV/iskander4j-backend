@@ -50,7 +50,7 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
                 .tokenStore(tokenStore())
                 .tokenEnhancer(tokenEnhancerChain())
                 .accessTokenConverter(accessTokenConverter())
-                .tokenGranter(getMixedTokenGranter())
+                .tokenGranter(getAuthorizationCodeTokenGranter())
                 .tokenServices(tokenServices())
                 .allowedTokenEndpointRequestMethods(HttpMethod.POST, HttpMethod.GET)
                 .requestFactory(getRequestFactory())
@@ -118,7 +118,7 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Bean
     public TokenGranter getMixedTokenGranter() throws Exception {
-        return new CompositeTokenGranter(Arrays.asList(getClientCredentialsTokenGranter()));
+        return new CompositeTokenGranter(Arrays.asList(getClientCredentialsTokenGranter(), getAuthorizationCodeTokenGranter()));
     }
 
     @Bean
