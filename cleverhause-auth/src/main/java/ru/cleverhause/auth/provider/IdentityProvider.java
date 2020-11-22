@@ -1,11 +1,13 @@
 package ru.cleverhause.auth.provider;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import ru.cleverhause.auth.dto.AuthenticationBaseDto;
+import ru.cleverhause.auth.config.ExistentProvidersMap;
 
 import javax.servlet.http.HttpServletRequest;
 
 public interface IdentityProvider {
 
-    AuthenticationBaseDto authenticate(HttpServletRequest request) throws AuthenticationException;
+    Authentication authenticate(HttpServletRequest request,
+                                ExistentProvidersMap.AuthenticationProviderInfo providerInfo) throws AuthenticationException;
 }

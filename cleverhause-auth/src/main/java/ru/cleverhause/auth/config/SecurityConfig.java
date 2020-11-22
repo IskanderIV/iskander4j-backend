@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
@@ -23,17 +24,17 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.Filter;
 
+@Order(1)
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableConfigurationProperties(ExistentProvidersMap.class)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    @Qualifier("successFormLoginHandler")
-    private final AuthenticationSuccessHandler successFormLoginHandler;
-    @Qualifier("failureFormLoginHandler")
-    private final AuthenticationFailureHandler failureFormLoginHandler;
+    @Qualifier("successHandler")
+    private final AuthenticationSuccessHandler successHandler;
+    @Qualifier("failureHandler")
+    private final AuthenticationFailureHandler failureHandler;
 
-    private final SimpleAuthenticationProviderInfoResolver authProviderUrlResolver;
+    private final AuthenticationProviderInfoResolver authenticationProviderInfoResolver;
 
     @Override
     public void configure(WebSecurity web) {
@@ -45,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
-                .requestMatcher(new AntPathRequestMatcher("/oauth/token", HttpMethod.POST.name()))
+                .requestMatcher(new AntPathRequestMatcher("/oauth/authorize/**"))
                 .csrf().disable()
                 .formLogin().disable()
                 .httpBasic().disable()
@@ -56,12 +57,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.NEVER);
     }
 
-    private Filter getAuthenticationFilter() throws Exception {
-        AbstractAuthenticationProcessingFilter formLoginFilter = new AuthenticationFilter("/oauth/token", );
+    @Bean("authenticationFilter")
+    public Filter getAuthenticationFilter() throws Exception {
+        AbstractAuthenticationProcessingFilter formLoginFilter =
+                new AuthenticationFilter("/oauth/authorize", authenticationProviderInfoResolver);
         formLoginFilter.setAuthenticationManager(authenticationManagerBean());
-        formLoginFilter.setAuthenticationSuccessHandler(successFormLoginHandler);
-        formLoginFilter.setAuthenticationFailureHandler(failureFormLoginHandler);
-        formLoginFilter.setFilterProcessesUrl("/login");
+        formLoginFilter.setAuthenticationSuccessHandler(successHandler);
+        formLoginFilter.setAuthenticationFailureHandler(failureHandler);
+        formLoginFilter.setContinueChainBeforeSuccessfulAuthentication(true);
         formLoginFilter.afterPropertiesSet();
         return formLoginFilter;
     }
@@ -69,6 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public RestTemplate restTemplate() {
         ClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-        RestTemplate template = new RestTemplate();
+        RestTemplate template = new RestTemplate(requestFactory);
+        return template;
     }
 }

@@ -3,6 +3,7 @@ package ru.cleverhause.users.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,6 +52,14 @@ public class UsersController {
         UserInfoResponse userInfoResponse = userService.userInfo(user);
         log.info("User '{}' info: {}", user, userInfoResponse);
         return ResponseEntity.ok(userInfoResponse);
+    }
+
+    @GetMapping("/{name}")
+    public ResponseEntity<UserDetails> getUserDetails(@PathVariable("name") String user) {
+        log.info("Input request getUserDetails for user: {}", user);
+        UserDetails userDetails = userService.userDetails(user);
+        log.info("User details: {}", userDetails);
+        return ResponseEntity.ok(userDetails);
     }
 
     @PostMapping("/user")

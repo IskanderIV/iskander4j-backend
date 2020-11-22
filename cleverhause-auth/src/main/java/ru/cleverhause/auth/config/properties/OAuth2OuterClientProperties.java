@@ -1,8 +1,10 @@
 package ru.cleverhause.auth.config.properties;
 
 import lombok.Data;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,8 +17,13 @@ import java.util.Set;
 @Configuration
 @ConfigurationProperties(value = "security.oauth2")
 @Data
-public class OAuth2OuterClientProperties {
+public class OAuth2OuterClientProperties implements InitializingBean {
     private Map<String, Client> clients = new HashMap<>();
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        Assert.notEmpty(clients, "There are no one clients configuration");
+    }
 
     @Data
     public static class Client {

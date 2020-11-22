@@ -17,6 +17,7 @@ security:
         scopes: read
   authentication:
     providers:
-      formLogin:
+      form:
         providerClassName: "ru.cleverhause.auth.provider.FormLoginIdentityProvider"
-        responseConverterClassName: "ru.cleverhause.auth.provider.FormLoginIdentityProvider"
+        responseType: "org.springframework.security.authentication.UsernamePasswordAuthenticationToken"
+        providerUrl: "http://localhost:8083/login"

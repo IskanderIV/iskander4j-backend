@@ -8,12 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 @RequiredArgsConstructor
 public class SimpleAuthenticationProviderInfoResolver implements AuthenticationProviderInfoResolver {
-    private static final String PROVIDER_TYPE = "type";
+    private static final String PROVIDER_TYPE_KEY = "type";
 
     private final ExistentProvidersMap providersMap;
 
     public ExistentProvidersMap.AuthenticationProviderInfo resolveProvider(HttpServletRequest request) {
-        String type = request.getParameter(PROVIDER_TYPE);
+        String type = request.getParameter(PROVIDER_TYPE_KEY);
         return providersMap.getByType(type);
     }
 }

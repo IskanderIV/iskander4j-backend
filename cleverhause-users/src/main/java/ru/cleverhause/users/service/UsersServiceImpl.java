@@ -3,6 +3,10 @@ package ru.cleverhause.users.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.cleverhause.users.authorities.Role;
@@ -49,6 +53,17 @@ public class UsersServiceImpl implements UsersService {
                 .username(u.getUsername())
                 .build())
                 .orElseThrow(() -> new UserNotFoundException(String.format(UserNotFoundException.MSG_PATTERN, username)));
+    }
+
+    @Override
+    public UserDetails userDetails(String username) {
+//        Optional<UserEntity> savedUser = userDao.findByUsername(username);
+        return User.withUsername(username)
+                .password("password")
+                .accountExpired(false)
+                .accountLocked(false)
+                .authorities(new SimpleGrantedAuthority("USER"))
+                .build();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package ru.cleverhause.auth.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -28,6 +29,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import ru.cleverhause.auth.config.properties.OAuth2OuterClientProperties;
 
+import javax.servlet.Filter;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -38,6 +40,8 @@ import java.util.Collections;
 public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 
     private final OAuth2OuterClientProperties authClientProperties;
+    @Qualifier("authenticationFilter")
+    private final Filter authenticationFilter;
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -63,6 +67,7 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
                 .tokenKeyAccess("denyAll()")
                 .checkTokenAccess("isAuthenticated()")
                 .passwordEncoder(NoOpPasswordEncoder.getInstance());
+//                .addTokenEndpointAuthenticationFilter(authenticationFilter);
     }
 
 //    @Override

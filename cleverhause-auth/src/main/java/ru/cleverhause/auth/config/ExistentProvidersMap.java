@@ -2,14 +2,18 @@ package ru.cleverhause.auth.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.util.Assert;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Data
+@Configuration
 @ConfigurationProperties("security.authentication")
-public class ExistentProvidersMap {
+public class ExistentProvidersMap implements InitializingBean {
 
     private Map<String, AuthenticationProviderInfo> providers = new HashMap<>();
 
@@ -17,10 +21,15 @@ public class ExistentProvidersMap {
         return providers.get(type);
     }
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        Assert.notEmpty(providers, "There are no one providers configurations found");
+    }
+
     @Data
-    @AllArgsConstructor
     public static class AuthenticationProviderInfo {
         private String providerClassName;
-        private String responseConverterClassName;
+        private String responseType;
+        private String providerUrl;
     }
 }

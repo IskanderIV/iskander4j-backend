@@ -1,0 +1,15 @@
+spring:
+  devtools:
+    restart:
+      enabled: true
+
+feign:
+  clients:
+    auth-server:
+      name: "cleverhause-users"
+      url: "http://localhost:8082"
+      path: "/oauth/token"
+    users:
+      name: "cleverhause-users"
+      url: "http://localhost:8082"
+      path: "/api/users/{username}"
