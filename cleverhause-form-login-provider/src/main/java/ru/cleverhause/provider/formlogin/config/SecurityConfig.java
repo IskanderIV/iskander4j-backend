@@ -1,5 +1,6 @@
 package ru.cleverhause.provider.formlogin.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -8,24 +9,20 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.jackson2.CoreJackson2Module;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AndRequestMatcher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
@@ -38,10 +35,7 @@ import javax.servlet.Filter;
 @RequiredArgsConstructor
 @EnableConfigurationProperties
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    @Qualifier("successFormLoginHandler")
-    private final AuthenticationSuccessHandler successFormLoginHandler;
-    @Qualifier("failureFormLoginHandler")
-    private final AuthenticationFailureHandler failureFormLoginHandler;
+
     private final FormLoginUserDetailsService formLoginUserDetailsService;
 
     @Override
@@ -80,17 +74,33 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private Filter getFormLoginAuthenticationFilter() throws Exception {
         AbstractAuthenticationProcessingFilter formLoginFilter =
-                new FormLoginAuthenticationFilter(new AntPathRequestMatcher("/login", HttpMethod.POST.name()));
+                new FormLoginAuthenticationFilter(new AntPathRequestMatcher("/login", HttpMethod.POST.name()), objectMapper());
         formLoginFilter.setAuthenticationManager(authenticationManager());
-        formLoginFilter.setAuthenticationSuccessHandler(successFormLoginHandler);
-        formLoginFilter.setAuthenticationFailureHandler(failureFormLoginHandler);
-//        formLoginFilter.setFilterProcessesUrl("/login");
+        formLoginFilter.setAuthenticationSuccessHandler(successHandler());
+        formLoginFilter.setAuthenticationFailureHandler(failureHandler());
         formLoginFilter.afterPropertiesSet();
         return formLoginFilter;
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() throws Exception {
+    public PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new CoreJackson2Module());
+        return mapper;
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler successHandler() {
+        return new SuccessFormLoginHandler(objectMapper());
+    }
+
+    @Bean
+    public AuthenticationFailureHandler failureHandler() {
+        return new FailureFormLoginHandler(objectMapper());
     }
 }

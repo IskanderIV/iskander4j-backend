@@ -13,15 +13,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-@Component(value = "successFormLoginHandler")
 @RequiredArgsConstructor
 public class SuccessFormLoginHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private final ObjectMapper mapper;
 
     @Override
     protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-        String json = MAPPER.writeValueAsString(authentication);
+        String json = mapper.writeValueAsString(authentication);
         response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8.toString());

@@ -1,8 +1,6 @@
 package ru.cleverhause.provider.formlogin.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
