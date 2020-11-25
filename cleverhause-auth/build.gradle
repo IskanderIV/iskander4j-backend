@@ -42,6 +42,10 @@ dependencies {
 	implementation 'de.codecentric:spring-boot-admin-starter-client'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
+	// CLOUD
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-hystrix'
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
 	//JWT
 	implementation("org.springframework.security:spring-security-jwt:1.0.9.RELEASE")
 

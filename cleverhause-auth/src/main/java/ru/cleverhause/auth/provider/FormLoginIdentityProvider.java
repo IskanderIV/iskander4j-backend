@@ -1,25 +1,25 @@
 package ru.cleverhause.auth.provider;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import ru.cleverhause.auth.config.ExistentProvidersMap;
-import ru.cleverhause.auth.dto.request.AuthenticationRequest;
-import ru.cleverhause.auth.dto.request.FormLoginAuthenticationRequest;
-import ru.cleverhause.auth.dto.response.FormLoginAuthenticationResponse;
+import ru.cleverhause.auth.service.FormLoginProviderFeignClient;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
-import java.nio.file.attribute.UserPrincipalNotFoundException;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class FormLoginIdentityProvider implements IdentityProvider {
@@ -28,26 +28,41 @@ public class FormLoginIdentityProvider implements IdentityProvider {
     public static final String PASSWORD_KEY = "password";
 
     private final RestTemplate restTemplate;
+    private final FormLoginProviderFeignClient providerFeignClient;
 
     @Override
     public Authentication authenticate(HttpServletRequest request, ExistentProvidersMap.AuthenticationProviderInfo providerInfo) throws AuthenticationException {
-        String url = providerInfo.getProviderUrl();
+//        String url = providerInfo.getProviderUrl();
         String username = obtainUsername(request);
         String password = obtainPassword(request);
-        FormLoginAuthenticationRequest body = new FormLoginAuthenticationRequest();
-        body.setUsername(username);
-        body.setPassword(password);
-        RequestEntity<AuthenticationRequest> authRequest = RequestEntity
-                .post(URI.create(url))
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(body, FormLoginAuthenticationRequest.class);
-        ResponseEntity<FormLoginAuthenticationResponse> response =
-                restTemplate.exchange(authRequest, FormLoginAuthenticationResponse.class);
-
-        if (response.getStatusCode().is2xxSuccessful()) {
-            return response.getBody().getAuthentication();
+        Authentication authentication = new UsernamePasswordAuthenticationToken(username, password);
+//        RequestEntity<Authentication> authRequest = RequestEntity
+//                .post(URI.create(url))
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .body(body, UsernamePasswordAuthenticationToken.class);
+//        ResponseEntity<UsernamePasswordAuthenticationToken> response =
+//                restTemplate.exchange(authRequest, UsernamePasswordAuthenticationToken.class);
+        log.info("Launching form login provider with authorization: {}", authentication);
+        Authentication result = providerFeignClient.getUserByUsername(authentication);
+        if (result != null && result.isAuthenticated()) {
+            updateSecurityContext(result);
+            return result;
+        } else {
+            throw new AuthenticationServiceException("Problems!!");
         }
-        throw new AuthenticationServiceException("Problems!!");
+
+
+//        if (response.getStatusCode().is2xxSuccessful()) {
+//            return response.getBody();
+//        }
+//
+    }
+
+    private void updateSecurityContext(Authentication authentication) {
+        SecurityContextHolder.clearContext();
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authentication);
+        SecurityContextHolder.setContext(context);
     }
 
     private String obtainUsername(HttpServletRequest request) {

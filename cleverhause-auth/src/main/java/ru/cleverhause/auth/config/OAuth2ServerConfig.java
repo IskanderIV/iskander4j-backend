@@ -1,12 +1,11 @@
 package ru.cleverhause.auth.config;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.builders.InMemoryClientDetailsServiceBuilder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -14,10 +13,13 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.AuthorizationRequest;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.CompositeTokenGranter;
 import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.TokenGranter;
+import org.springframework.security.oauth2.provider.approval.DefaultUserApprovalHandler;
+import org.springframework.security.oauth2.provider.approval.UserApprovalHandler;
 import org.springframework.security.oauth2.provider.client.ClientCredentialsTokenGranter;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeTokenGranter;
 import org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices;
@@ -29,7 +31,6 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import ru.cleverhause.auth.config.properties.OAuth2OuterClientProperties;
 
-import javax.servlet.Filter;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -40,8 +41,8 @@ import java.util.Collections;
 public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 
     private final OAuth2OuterClientProperties authClientProperties;
-    @Qualifier("authenticationFilter")
-    private final Filter authenticationFilter;
+//    @Qualifier("authenticationFilter")
+//    private final Filter authenticationFilter;
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -56,9 +57,10 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
                 .accessTokenConverter(accessTokenConverter())
                 .tokenGranter(getAuthorizationCodeTokenGranter())
                 .tokenServices(tokenServices())
-                .allowedTokenEndpointRequestMethods(HttpMethod.POST, HttpMethod.GET)
+//                .allowedTokenEndpointRequestMethods(HttpMethod.POST, HttpMethod.GET)
                 .requestFactory(getRequestFactory())
-                .setClientDetailsService(getClientDetailsService());
+                .userApprovalHandler(userApprovalHandler());
+        endpoints.setClientDetailsService(getClientDetailsService());
     }
 
     @Override
@@ -92,7 +94,8 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
                     .authorizedGrantTypes(client.getGrandTypes().toArray(new String[0]))
                     .scopes(client.getScopes().toArray(new String[0]))
                     .accessTokenValiditySeconds(client.getAccessTokenLifeSecond())
-                    .refreshTokenValiditySeconds(client.getRefreshTokenLifeSecond());
+                    .refreshTokenValiditySeconds(client.getRefreshTokenLifeSecond())
+                    .redirectUris(client.getRegisteredRedirectUri());
         }
         return clientDetailsServiceBuilder.build();
     }
@@ -155,5 +158,16 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
         tokenEnhancerChain.setTokenEnhancers(
                 Collections.singletonList(accessTokenConverter()));
         return tokenEnhancerChain;
+    }
+
+    @Bean
+    @Primary
+    public UserApprovalHandler userApprovalHandler() {
+        return new DefaultUserApprovalHandler() {
+            @Override
+            public boolean isApproved(AuthorizationRequest authorizationRequest, Authentication userAuthentication) {
+                return true;
+            }
+        };
     }
 }

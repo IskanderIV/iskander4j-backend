@@ -14,10 +14,8 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.util.ClassUtils;
 import ru.cleverhause.auth.provider.IdentityProvider;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @Slf4j
 public class AuthenticationFilter extends AbstractAuthenticationProcessingFilter implements ApplicationContextAware {
@@ -35,6 +33,7 @@ public class AuthenticationFilter extends AbstractAuthenticationProcessingFilter
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         var providerInfo = resolver.resolveProvider(request);
+        log.info("Attempt authentication with provider info: {}", providerInfo);
         if (providerInfo != null
                 && StringUtils.isNotBlank(providerInfo.getProviderClassName())
                 && StringUtils.isNotBlank(providerInfo.getResponseType()) ) {

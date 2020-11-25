@@ -74,7 +74,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private Filter getFormLoginAuthenticationFilter() throws Exception {
         AbstractAuthenticationProcessingFilter formLoginFilter =
-                new FormLoginAuthenticationFilter(new AntPathRequestMatcher("/login", HttpMethod.POST.name()), objectMapper());
+                new FormLoginAuthenticationFilter(new AntPathRequestMatcher("/login", HttpMethod.GET.name()), objectMapper());
         formLoginFilter.setAuthenticationManager(authenticationManager());
         formLoginFilter.setAuthenticationSuccessHandler(successHandler());
         formLoginFilter.setAuthenticationFailureHandler(failureHandler());

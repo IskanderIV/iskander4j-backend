@@ -7,13 +7,14 @@ security:
   oauth2:
     clients:
       clever-ui:
-        clientId: 'cleverhause-users'
+        clientId: 'cleverhause-ui'
         secret: 'secret'
         accessTokenLifeSecond: 3600
         refreshTokenLifeSecond: 50000
         grandTypes: 'authorization_code, refresh_token'
-  #      'authorization_code, client_credentials, password, refresh_token'
-        redirectUri:
+#        redirectUri - is uri of client that will get token after authorization (/oauth/authorization) process
+#        it will get code and state parameters, add some other such like his clientId, secret and others and will get token
+        registeredRedirectUri: "http://localhost:8081/oauth/token?grant_type=authorization_code"
         scopes: read
   authentication:
     providers:
@@ -21,3 +22,11 @@ security:
         providerClassName: "ru.cleverhause.auth.provider.FormLoginIdentityProvider"
         responseType: "org.springframework.security.authentication.UsernamePasswordAuthenticationToken"
         providerUrl: "http://localhost:8083/login"
+
+feign:
+  clients:
+    formLoginProvider:
+      name: "cleverhause-form-login-provider"
+      url: "http://localhost:8083"
+      path: "/login"
+

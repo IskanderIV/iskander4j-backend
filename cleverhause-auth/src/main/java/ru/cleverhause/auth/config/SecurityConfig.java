@@ -1,10 +1,12 @@
 package ru.cleverhause.auth.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequestFactory;
@@ -14,17 +16,22 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.jackson2.CoreJackson2Module;
+import org.springframework.security.oauth2.provider.AuthorizationRequest;
+import org.springframework.security.oauth2.provider.approval.DefaultUserApprovalHandler;
+import org.springframework.security.oauth2.provider.approval.UserApprovalHandler;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.savedrequest.RequestCacheAwareFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.Filter;
 
-@Order(1)
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -50,11 +57,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .formLogin().disable()
                 .httpBasic().disable()
-                .addFilterBefore(getAuthenticationFilter(), AnonymousAuthenticationFilter.class)
+                .addFilterBefore(getAuthenticationFilter(), RequestCacheAwareFilter.class)
                 .exceptionHandling().accessDeniedHandler(new AccessDeniedHandlerImpl())
                 .and()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.NEVER);
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
     }
 
     @Bean("authenticationFilter")
@@ -74,5 +81,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         ClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
         RestTemplate template = new RestTemplate(requestFactory);
         return template;
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new CoreJackson2Module());
+        return mapper;
     }
 }

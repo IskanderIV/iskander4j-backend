@@ -30,7 +30,7 @@ public class OAuth2OuterClientProperties implements InitializingBean {
         private Set<String> resourceIds;
         private String clientId;
         private String secret;
-        private String redirectUri;
+        private String[] registeredRedirectUri;
         private Set<String> grandTypes;
         private Set<String> scopes;
         private int accessTokenLifeSecond;
