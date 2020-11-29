@@ -2,8 +2,9 @@ package ru.cleverhause.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,22 +13,39 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.Base64Utils;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.util.UriUtils;
 import ru.cleverhause.auth.config.properties.OAuth2OuterClientProperties;
 
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.security.oauth2.core.AuthorizationGrantType.AUTHORIZATION_CODE;
 import static org.springframework.security.web.authentication.www.BasicAuthenticationConverter.AUTHENTICATION_SCHEME_BASIC;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.cleverhause.auth.RestStubFactory.getFormLoginProviderStub;
+import static ru.cleverhause.auth.config.UrlParameterAuthenticationProviderInfoResolver.PROVIDER_TYPE_KEY;
 
 @Slf4j
 @ExtendWith({SpringExtension.class})
@@ -41,9 +59,12 @@ class CleverhauseAuthApplicationTest {
     private MockMvc mockMvc;
     @Autowired
     private OAuth2OuterClientProperties authOuterClientProperties;
+    @Autowired
+    private ClientDetailsService clientDetailsService;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-//    private final RestStub gitHubGetToken = postGitHubTokenOkStub();
-//    private final RestStub gitHubGetUserInfo = getUserInfoOkStub();
+    private final RestStub getFormLoginProvider = getFormLoginProviderStub();
 
     @LocalServerPort
     int currentPort;
@@ -51,10 +72,15 @@ class CleverhauseAuthApplicationTest {
     @BeforeEach
     public void init() {
         RestStub.resetAll();
-//        String redirectUrlWithLocalPort = StringUtils.replaceOnce(redirectUrl, "{port}", Integer.toString(currentPort));
+        Set<String> clients = clientDetailsService.loadClientByClientId("testId").getRegisteredRedirectUri();
+        for (int i = 0; i < clients.size(); i++) {
+            String url = clients.iterator().next();
+            String newUrl = StringUtils.replaceOnce(url, "{port}", Integer.toString(currentPort));
+            clients.remove(url);
+            clients.add(newUrl);
+        }
     }
 
-    @Disabled
     @Test
     void healthCheck() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/actuator/health")
@@ -64,37 +90,69 @@ class CleverhauseAuthApplicationTest {
                 .andExpect(content().json(TestUtils.fromFile("responses/json/actuator_health_ok.json")));
     }
 
-    @Disabled
     @Test
-    void getAndCheckTokenClientCredentialsFlow() throws Exception {
-        OAuth2OuterClientProperties.Client client = authOuterClientProperties.getClients().get("clever-ui");
-        String getTokenUrl = "/oauth/token";
-        String checkTokenUrl = "/oauth/check_token";
-        byte[] creds = (client.getClientId() + ":secret").getBytes();
-        String encodedCreds = new String(Base64Utils.encode(creds));
-        String authHeader = AUTHENTICATION_SCHEME_BASIC + " " + encodedCreds;
-        String tokenResponse = mockMvc.perform(MockMvcRequestBuilders.post(getTokenUrl)
+    void tryFormLoginTest() throws Exception {
+        // prepare form login request
+        String loginUrl = "/oauth/authorize";
+        MultiValueMap<String, String> queryCodeParams = new LinkedMultiValueMap<>(Map.of(
+                OAuth2ParameterNames.RESPONSE_TYPE, List.of(OAuth2ParameterNames.CODE),
+                OAuth2ParameterNames.STATE, List.of(RandomStringUtils.randomAlphanumeric(10)),
+                OAuth2ParameterNames.CLIENT_ID, List.of("testId"),
+                OAuth2ParameterNames.SCOPE, List.of("read"),
+                OAuth2ParameterNames.REDIRECT_URI, List.of("http://localhost:" + currentPort),
+                PROVIDER_TYPE_KEY, List.of("form")
+        ));
+        MockHttpSession session = new MockHttpSession();
+        MockHttpServletResponse codeResponse = mockMvc.perform(MockMvcRequestBuilders.post(loginUrl)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .accept(MediaType.APPLICATION_JSON)
-                .header(AUTHORIZATION, authHeader)
-                .param(OAuth2ParameterNames.GRANT_TYPE, AuthorizationGrantType.PASSWORD.getValue())
-                .param(OAuth2ParameterNames.SCOPE, "read")
+                .session(session)
+                .queryParams(queryCodeParams)
                 .param(OAuth2ParameterNames.USERNAME, "username")
                 .param(OAuth2ParameterNames.PASSWORD, "password"))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-        OAuth2AccessToken token = new ObjectMapper().readValue(tokenResponse, DefaultOAuth2AccessToken.class);
+                .andExpect(status().is3xxRedirection())
+                .andReturn().getResponse();
 
-        mockMvc.perform(MockMvcRequestBuilders.get(checkTokenUrl)
-                .contentType(MediaType.TEXT_HTML)
-                .header(AUTHORIZATION, authHeader)
+        String redirectUrl = codeResponse.getRedirectedUrl();
+        assertTrue(StringUtils.isNotBlank(redirectUrl));
+
+        URI redirectUri = URI.create(redirectUrl);
+        UriComponents uriComponents = UriComponentsBuilder.fromUri(redirectUri).build();
+        MultiValueMap<String, String> gitHubOauthLoginRedirectUriQueryParams =
+                uriComponents.getQueryParams();
+        String state = gitHubOauthLoginRedirectUriQueryParams.get(OAuth2ParameterNames.STATE).get(0);
+        state = UriUtils.decode(state, StandardCharsets.UTF_8);
+        String code = gitHubOauthLoginRedirectUriQueryParams.get(OAuth2ParameterNames.CODE).get(0);
+        code = UriUtils.decode(code, StandardCharsets.UTF_8);
+
+
+        byte[] creds = ("testId" + ":secret").getBytes();
+        String encodedCreds = new String(Base64Utils.encode(creds));
+        String authHeader = AUTHENTICATION_SCHEME_BASIC + " " + encodedCreds;
+
+        MultiValueMap<String, String> queryTokenParams = new LinkedMultiValueMap<>(Map.of(
+                OAuth2ParameterNames.GRANT_TYPE, List.of(AUTHORIZATION_CODE.getValue()),
+                OAuth2ParameterNames.STATE, List.of(state),
+                OAuth2ParameterNames.CODE, List.of(code),
+                OAuth2ParameterNames.REDIRECT_URI, List.of("http://localhost:" + currentPort)
+        ));
+
+        MockHttpServletResponse tokenResponse = mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:" + currentPort + "/oauth/token")
+                .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .param("token", token.getValue()))
+                .header(AUTHORIZATION, authHeader)
+                .queryParams(queryTokenParams)
+                .session(session))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+//                .andExpect(content().json(TestUtils.fromFile("__files/json/getFormLoginAuthenticationOk.json")))
+                .andReturn().getResponse();
+//
+        OAuth2AccessToken token = objectMapper.readValue(tokenResponse.getContentAsByteArray(), DefaultOAuth2AccessToken.class);
+        log.info("Token: {}", token);
     }
-// TODO replace to users ms
+// TODO transfer to users ms
 //    @Disabled("Disabled because it is a wrong way. Butt I still want to fix th whole path of getting token!")
 //    @Test
 //    void getTokenThroughGitHubLoginWithRealGHServer() throws Exception {

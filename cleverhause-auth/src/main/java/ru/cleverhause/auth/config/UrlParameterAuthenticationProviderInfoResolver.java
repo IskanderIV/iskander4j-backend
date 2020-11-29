@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 @RequiredArgsConstructor
 public class UrlParameterAuthenticationProviderInfoResolver implements AuthenticationProviderInfoResolver {
-    private static final String PROVIDER_TYPE_KEY = "type";
+    public static final String PROVIDER_TYPE_KEY = "type";
 
     private final ExistentProvidersMap providersMap;
 

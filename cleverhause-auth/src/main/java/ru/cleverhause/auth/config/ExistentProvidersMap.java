@@ -1,6 +1,5 @@
 package ru.cleverhause.auth.config;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -23,6 +22,7 @@ public class ExistentProvidersMap implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        // todo check availability of all needed classes. If not then do not include it in providers map
         Assert.notEmpty(providers, "There are no one providers configurations found");
     }
 

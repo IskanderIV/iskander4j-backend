@@ -41,8 +41,6 @@ import java.util.Collections;
 public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 
     private final OAuth2OuterClientProperties authClientProperties;
-//    @Qualifier("authenticationFilter")
-//    private final Filter authenticationFilter;
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -53,11 +51,11 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints
                 .tokenStore(tokenStore())
+                .authorizationCodeServices(getAuthorizationCodeServices())
                 .tokenEnhancer(tokenEnhancerChain())
                 .accessTokenConverter(accessTokenConverter())
                 .tokenGranter(getAuthorizationCodeTokenGranter())
                 .tokenServices(tokenServices())
-//                .allowedTokenEndpointRequestMethods(HttpMethod.POST, HttpMethod.GET)
                 .requestFactory(getRequestFactory())
                 .userApprovalHandler(userApprovalHandler());
         endpoints.setClientDetailsService(getClientDetailsService());
@@ -69,19 +67,7 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
                 .tokenKeyAccess("denyAll()")
                 .checkTokenAccess("isAuthenticated()")
                 .passwordEncoder(NoOpPasswordEncoder.getInstance());
-//                .addTokenEndpointAuthenticationFilter(authenticationFilter);
     }
-
-//    @Override
-//    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-//        for (OAuth2ClientProperties.Client client : authClientProperties.getClients().values()) {
-//            clients.inMemory().withClient(client.getClientId())
-//                    .secret(client.getSecret())
-//                    .authorizedGrantTypes(client.getGrandTypes().toArray(new String[0]))
-//                    .scopes(client.getScopes().toArray(new String[0]))
-//                    .accessTokenValiditySeconds(client.getAccessTokenLifeSecond());
-//        }
-//    }
 
     @Bean
     @Primary

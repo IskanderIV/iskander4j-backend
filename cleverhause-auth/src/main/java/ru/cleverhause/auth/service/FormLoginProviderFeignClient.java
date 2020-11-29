@@ -10,5 +10,5 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface FormLoginProviderFeignClient {
 
     @GetMapping(path = "${feign.clients.formLoginProvider.path}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    Authentication getUserByUsername(@RequestBody Authentication authentication);
+    Authentication authenticateUserByUsername(@RequestBody Authentication authentication);
 }
