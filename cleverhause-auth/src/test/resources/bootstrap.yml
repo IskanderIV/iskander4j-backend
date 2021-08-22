@@ -1,0 +1,3 @@
+spring:
+  application.name: iskander4j-bakend-gateway
+  profiles.active: test

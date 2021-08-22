@@ -48,3 +48,7 @@ $ sudo pfctl show
 $ sudo iptables -t nat -A OUTPUT -p tcp --dport 80 -d cleverhause.ru -j DNAT --to-destination 127.0.0.1:8080 - do not work on mac
 $ cd /private/etc/hosts
 $ 
+
+
+docker build -t cerberus-web . -f /Users/aleksandriv/Projects/clever/cleverhause/cleverhause-auth/docker/Dockerfile-cerberus-web
+docker run -p 9090:9090 cerberus-web
