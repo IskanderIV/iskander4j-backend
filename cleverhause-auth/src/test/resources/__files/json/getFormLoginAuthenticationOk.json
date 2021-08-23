@@ -1,0 +1,33 @@
+{
+  "@class": "org.springframework.security.authentication.UsernamePasswordAuthenticationToken",
+  "authorities": [
+    "java.util.Collections$UnmodifiableRandomAccessList",
+    [
+      {
+        "@class": "org.springframework.security.core.authority.SimpleGrantedAuthority",
+        "authority": "USER"
+      }
+    ]
+  ],
+  "details": null,
+  "authenticated": true,
+  "principal": {
+    "@class": "org.springframework.security.core.userdetails.User",
+    "password": null,
+    "username": "username",
+    "authorities": [
+      "java.util.Collections$UnmodifiableSet",
+      [
+        {
+          "@class": "org.springframework.security.core.authority.SimpleGrantedAuthority",
+          "authority": "USER"
+        }
+      ]
+    ],
+    "accountNonExpired": true,
+    "accountNonLocked": true,
+    "credentialsNonExpired": true,
+    "enabled": true
+  },
+  "credentials": null
+}

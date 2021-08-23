@@ -1,38 +1,88 @@
+uri:
+  my:
+    host: 'localhost:8080'
+  auth:
+    server:
+      host: 'localhost:8080'
+      login-path: '/login'
+      token-path: '/oauth/token'
+      favicon-path: '/favicon.ico'
+  file:
+    list:
+      host: 'http://${uri.my.host}'
+      path: '/api/file/list'
+    upload:
+      host: "http://${uri.my.host}"
+      path: '/api/file/upload'
+    download:
+      host: 'http://${uri.my.host}'
+      path: '/api/file/download'
+  redirect:
+    default:
+      host: 'http://${uri.my.host}'
+      path: '/'
+
+
 spring:
-  profiles.active: test
-  devtools:
-    restart:
-      enabled: true
   security:
     oauth2:
       client:
-        redirectUrl: "http://localhost:{port}/oauth/token"
-        registration:
-          github:
-            clientId: 'b4ccc96cfd49bff036a6'
-            clientSecret: '178119e291c3b07a4684d1b31c35bb94b058329d'
-            redirect_uri: 'http://cleverhause.ru/login/oauth2/code/github'
-            clientAuthenticationMethod: 'post'
-          google:
-            clientId: '400048896634-acal0divdad68tug694b4ifuhcdh71v9.apps.googleusercontent.com'
-            clientSecret:
         provider:
-          github:
-            tokenUri: "http://localhost:${wiremock.server.port}/login/oauth/access_token"
-            userInfoUri: "http://localhost:${wiremock.server.port}/user"
-            userInfoAuthenticationMethod: 'post'
-security:
-  oauth2:
-    clients:
-      clever-ui:
-        clientId: 'client'
-        secret: '{noop}secret'
-        accessTokenLifeSecond: 3600
-        refreshTokenLifeSecond: 50000
-        grandTypes: 'password, client_credentials, refresh_token'
-        redirectUri:
-        scopes: read
+          azon-minio-auth-server:
+            token-uri: 'http://${uri.auth.server.host}${uri.auth.server.token-path}'
+            authorization-uri: 'http://${uri.auth.server.host}/oauth/authorize'
+            jwkSetUri: 'http://${uri.auth.server.host}/.well-known/jwks.json'
+        registration:
+          gateway:
+            provider: 'azon-minio-auth-server'
+            client-id: 'gateway'
+            client-secret: 'secret'
+            authorization-grant-type: 'authorization_code'
+            redirect-uri: 'http://${uri.my.host}${uri.auth.server.token-path}'
+    cloud:
+      gateway:
+        routes:
+          # Application routes
+          - id: 'get_file_list'
+            uri: '${uri.file.list.host}${uri.file.list.path}'
+            predicates:
+              - Path=${uri.file.list.path}
+            filters:
+              - RemoveRequestHeader=Cookie
+          - id: 'file_upload'
+            uri: '${uri.file.upload.host}${uri.file.upload.path}'
+            predicates:
+              - Path=${uri.file.upload.path}
+            filters:
+              - RemoveRequestHeader=Cookie
+          - id: 'file_download'
+            uri: '${uri.file.download.host}${uri.file.download.path}'
+            predicates:
+              - Path=${uri.file.download.path}
+            filters:
+              - RemoveRequestHeader=Cookie
 
-eureka:
-  client:
-    enabled: false
+          # Authorization routes
+          - id: 'auth_server_user_authentication'
+            uri: 'http://${uri.auth.server.host}${uri.auth.server.login-path}'
+            predicates:
+              - Path=${uri.auth.server.login-path}
+            filters:
+              - RewriteLocationResponseHeader
+          #        - id: 'auth-server-client-authorization'
+          #          uri: 'http://${AUTH_SERVER_HOST}/oauth/authorize'
+          #          predicates:
+          #            - Path=/oauth/authorize
+          - id: 'auth_server_authorization_code'
+            uri: 'http://${uri.auth.server.host}${uri.auth.server.token-path}'
+            predicates:
+              - Path=${uri.auth.server.token-path}
+          - id: 'default_uri'
+            uri: '${uri.redirect.default.host}${uri.redirect.default.path}'
+            predicates:
+              - Path=${uri.redirect.default.path}
+          - id: 'favicon'
+            uri: 'http://${uri.auth.server.host}/favicon.ico'
+            predicates:
+              - Path=${uri.auth.server.favicon-path}
+

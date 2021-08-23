@@ -1,8 +1,12 @@
 package ru.cleverhause.users.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.jackson2.CoreJackson2Module;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,11 +25,18 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
 public class UsersController {
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+    static {
+        MAPPER.registerModule(new CoreJackson2Module());
+    }
 
     private final UsersService userService;
 
@@ -51,6 +62,15 @@ public class UsersController {
         UserInfoResponse userInfoResponse = userService.userInfo(user);
         log.info("User '{}' info: {}", user, userInfoResponse);
         return ResponseEntity.ok(userInfoResponse);
+    }
+
+    @GetMapping(value = "/{name}", produces = APPLICATION_JSON_VALUE)
+    public String getUserDetails(@PathVariable("name") String user) throws JsonProcessingException {
+        log.info("Input request getUserDetails for user: {}", user);
+        UserDetails userDetails = userService.userDetails(user);
+        String json = MAPPER.writeValueAsString(userDetails);
+        log.info("User details: {}", json);
+        return json;
     }
 
     @PostMapping("/user")

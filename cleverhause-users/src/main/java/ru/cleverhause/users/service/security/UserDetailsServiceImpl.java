@@ -70,7 +70,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * @param username            the name originally passed to loadUserByUsername
      * @param userFromUserQuery   the object returned from the execution of the
      * @param combinedAuthorities the combined array of authorities from all the authority
-     *                            loading queries.
+                loading queries.
      * @return the final UserDetails which should be used in the system.
      */
     protected UserDetails createUserDetails(String username,
