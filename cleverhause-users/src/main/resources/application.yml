@@ -1,6 +1,6 @@
 server.port: 8082
 spring:
-  application.name: cleverhause-users
+  application.name: iskander4j-backend-users
   profiles: local, test
 
 eureka:

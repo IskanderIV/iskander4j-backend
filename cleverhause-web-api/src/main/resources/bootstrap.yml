@@ -1,4 +1,4 @@
 spring:
-  application.name: cleverhause-web-api
+  application.name: iskander4j-backend-web-api
   profiles:
     active: local
