@@ -1,19 +1,15 @@
 package ru.cleverhause.devices;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
-import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 @EnableEurekaClient
-public class CleverhauseDevicesApplication {
+public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(CleverhauseDevicesApplication.class, args);
+        SpringApplication.run(Application.class, args);
     }
 
 //    @Bean

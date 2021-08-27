@@ -14,7 +14,9 @@ nimbusVersion = "7.3"
 springSecurityJwtVersion = "1.0.9.RELEASE"
 # test
 springCloudWiremockVersion = "2.1.2.RELEASE"
-junit-jupiter.version = "5.5.1"
+junitJupiterVersion = "5.5.1"
+testcontainersVersion = "1.15.0-rc2"
+mockitoJunitJupiterVersion = "3.3.3"
 
 [libraries]
 # logback
@@ -32,13 +34,23 @@ groovy-all = { module = "org.codehaus.groovy:groovy-all", version = "2.5.8" }
 jaxb-core = { module = "com.sun.xml.bind:jaxb-core", version = "2.3.0.1" }
 jaxb-impl = { module = "com.sun.xml.bind:jaxb-impl", version.ref = "jaxbVersion" }
 jaxb-api = { module = "javax.xml.bind:jaxb-api", version.ref = "jaxbVersion" }
-# wiremock
-wiremock = { module = "org.springframework.cloud:spring-cloud-contract-wiremock", version.ref = "springCloudWiremockVersion" }
+
 # jwt
 nimbus-jose-jwt = { module = "com.nimbusds:nimbus-jose-jwt", version.ref = "nimbusVersion" }
 spring-security-jwt = { module = "org.springframework.security:spring-security-jwt", version.ref = "springSecurityJwtVersion" }
+
+# TEST
+# wiremock
+wiremock = { module = "org.springframework.cloud:spring-cloud-contract-wiremock", version.ref = "springCloudWiremockVersion" }
+# testcontainers
+testcontainers-core = { module = "org.testcontainers:testcontainers", version.ref = "testcontainersVersion" }
+testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainersVersion" }
+testcontainers-mongodb = { module = "org.testcontainers:mongodb", version.ref = "testcontainersVersion" }
+# mockito
+mockito-junit-jupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockitoJunitJupiterVersion" }
 
 [bundles]
 hazelcast = ["hazelcast-core", "hazelcast-client", "hazelcast-spring"]
 mapstruct = ["mapstruct-core", "mapstruct-processor"]
 jaxb = ["jaxb-core", "jaxb-impl", "jaxb-api"]
+testcontainers = ["testcontainers-core", "testcontainers-junit-jupiter", "testcontainers-mongodb"]
