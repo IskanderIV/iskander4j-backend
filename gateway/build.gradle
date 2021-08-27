@@ -1,0 +1,79 @@
+plugins {
+	id 'org.springframework.boot'
+	id 'io.spring.dependency-management'
+	id 'java'
+}
+println "!!! Configuration stage message " + project.buildDir
+
+group = 'com.iskander4j.backend'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	set('springCloudVersion', "Hoxton.SR8")
+	set('springOauth2Version', "2.3.7.RELEASE")
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
+	implementation "org.springframework.security.oauth:spring-security-oauth2:${springOauth2Version}"
+	implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
+	implementation 'org.springframework.cloud:spring-cloud-starter-security'
+	implementation 'org.springframework.session:spring-session-core'
+	implementation 'org.springframework.session:spring-session-hazelcast'
+
+	//JWT+JWK
+	implementation libs.nimbus.jose.jwt
+	implementation libs.spring.security.jwt
+
+	//Hazelcast
+	implementation libs.bundles.hazelcast
+
+	// ELK
+	implementation libs.logback.encoder
+	implementation libs.groovy.all
+
+	// JAXB
+	runtimeOnly libs.bundles.jaxb
+
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+	// LOMBOK
+	implementation 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	//UTIL
+	implementation libs.bundles.mapstruct
+	implementation 'org.apache.commons:commons-lang3'
+	implementation ('com.google.guava:guava') {
+		exclude group:'com.google.guava', module:'guava'
+	}
+
+	//MONGO
+//	implementation "org.springframework.boot:spring-boot-starter-data-mongodb-reactive"
+//	implementation "com.github.cloudyrock.mongock:mongock-core:2.0.2"
+//	implementation "com.github.cloudyrock.mongock:mongock-spring:2.0.2"
+
+	// TEST
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	testImplementation libs.wiremock
+	testImplementation 'org.assertj:assertj-core'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+
+test {
+	useJUnitPlatform()
+}

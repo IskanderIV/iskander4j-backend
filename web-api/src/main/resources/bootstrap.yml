@@ -1,0 +1,4 @@
+spring:
+  application.name: iskander4j-backend-web-api
+  profiles:
+    active: local

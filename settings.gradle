@@ -1,5 +1,15 @@
-rootProject.name = 'iskander4j'
-include 'iskander4j-bakend-gateway'
-include 'cleverhause-users'
-include 'cleverhause-devices'
+pluginManagement {
+    plugins {
+        id 'org.springframework.boot' version '2.2.6.RELEASE'
+        id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    }
+}
+
+enableFeaturePreview('VERSION_CATALOGS')
+
+rootProject.name = 'iskander4j-backend'
+include 'gateway'
+include 'users'
+include 'devices'
+include 'web-api'
 include 'eureka-discovery-service'

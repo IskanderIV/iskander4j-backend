@@ -1,0 +1,16 @@
+spring:
+  profiles.active: local
+  data:
+    mongodb:
+      uri: 'mongodb://clever_admin:admin@localhost:27017/cleverhause_devices_db?authMechanism=SCRAM-SHA-1'
+#  devtools:
+#    restart:
+#      enabled: true
+
+logging.level.org.springframework.data: debug
+
+# replaced to common application.yml
+#eureka:
+#  client:
+#    enabled: false
+#    service-url.defaultZone: 'http://localhost:8010/eureka'

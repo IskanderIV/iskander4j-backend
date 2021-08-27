@@ -1,0 +1,64 @@
+plugins {
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id 'java'
+}
+
+group = 'com.iskander4j.backend'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    set('springCloudVersion', "Hoxton.SR8")
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // ELK
+    implementation libs.logback.encoder
+
+    // CLOUD
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
+    // LOMBOK
+    implementation 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    //UTIL
+    implementation 'org.apache.commons:commons-lang3'
+    implementation ('com.google.guava:guava') {
+        exclude group:'com.google.guava', module:'guava'
+    }
+
+    // TEST
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'junit', module: 'junit'
+    }
+    testImplementation libs.wiremock
+    testImplementation 'org.assertj:assertj-core'
+    testImplementation "org.junit.jupiter:junit-jupiter-api"
+    testImplementation "org.junit.jupiter:junit-jupiter-params"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+    testImplementation libs.mockito.junit.jupiter
+
+    implementation libs.bundles.testcontainers
+    implementation libs.testcontainers.mongodb
+    testAnnotationProcessor 'org.projectlombok:lombok'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
