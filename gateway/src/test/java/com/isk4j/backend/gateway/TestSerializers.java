@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.DefaultSerializerProvider;
-import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.assertj.core.util.Files;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.jackson2.CoreJackson2Module;
@@ -18,10 +17,11 @@ import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessTokenJackson2Serializer;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 
-import static org.apache.commons.lang.CharEncoding.UTF_8;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class TestSerializers {
 
@@ -45,8 +45,8 @@ public class TestSerializers {
         Class<?> mixinClassForOAuth2AccessToken = mapper.getSerializationConfig().findMixInClassFor(OAuth2AccessToken.class);
         OAuth2AccessToken oAuth2AccessToken = new DefaultOAuth2AccessToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDY2MTk5NjQsInVzZXJfbmFtZSI6InVzZXJuYW1lIiwiYXV0aG9yaXRpZXMiOlsiVVNFUiJdLCJqdGkiOiJhN2ZhMTA3Ny0wMDE3LTRiOWMtYTVjNC0zNzRiNTQ0Y2EyMzYiLCJjbGllbnRfaWQiOiJ0ZXN0SWQiLCJzY29wZSI6WyJyZWFkIl19.ZCO_FWDZhDMPBPTaygmnyb-GC_1yLNsZ5qZQRf42Cp8");
 
-        try (Writer writer = new FileWriterWithEncoding(Files.newTemporaryFile(), UTF_8)) {
-            new OAuth2AccessTokenJackson2Serializer().serialize(oAuth2AccessToken, mapper.createGenerator(writer), new DefaultSerializerProvider.Impl());
+        try (Writer writer = new FileWriter(Files.newTemporaryFile(), UTF_8)) {
+            new OAuth2AccessTokenJackson2Serializer().serialize(oAuth2AccessToken, mapper.getFactory().createGenerator(writer), new DefaultSerializerProvider.Impl());
         } catch (Exception e) {
             e.printStackTrace();
         }

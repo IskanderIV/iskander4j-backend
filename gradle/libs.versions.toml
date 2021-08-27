@@ -1,0 +1,44 @@
+[versions]
+spring-boot-version = "2.3.6.RELEASE"
+spring-dependency-management-version = "1.0.10.RELEASE"
+springCloudVersion = "Hoxton.SR8"
+springSecurityVersion = "5.3.1.RELEASE"
+springOauth2Version = "2.3.7.RELEASE"
+springOauth2ClientVersion = "5.3.1.RELEASE"
+assertj.version = "3.12.2"
+logback_version = "6.3"
+mapstructVersion = "1.4.1.Final"
+jaxbVersion = "2.3.1"
+hazelcastVersion = "3.10.6"
+nimbusVersion = "7.3"
+springSecurityJwtVersion = "1.0.9.RELEASE"
+# test
+springCloudWiremockVersion = "2.1.2.RELEASE"
+junit-jupiter.version = "5.5.1"
+
+[libraries]
+# logback
+logback-encoder = { module = "net.logstash.logback:logstash-logback-encoder", version.ref = "logback_version" }
+# hazelcast
+hazelcast-core = { module = "com.hazelcast:hazelcast", version.ref = "hazelcastVersion" }
+hazelcast-client = { module = "com.hazelcast:hazelcast-client", version.ref = "hazelcastVersion" }
+hazelcast-spring = { module = "com.hazelcast:hazelcast-spring", version.ref = "hazelcastVersion" }
+# mapstruct
+mapstruct-core = { module = "org.mapstruct:mapstruct", version.ref = "mapstructVersion" }
+mapstruct-processor = { module = "org.mapstruct:mapstruct-processor", version.ref = "mapstructVersion" }
+# groovy
+groovy-all = { module = "org.codehaus.groovy:groovy-all", version = "2.5.8" }
+# jaxb
+jaxb-core = { module = "com.sun.xml.bind:jaxb-core", version = "2.3.0.1" }
+jaxb-impl = { module = "com.sun.xml.bind:jaxb-impl", version.ref = "jaxbVersion" }
+jaxb-api = { module = "javax.xml.bind:jaxb-api", version.ref = "jaxbVersion" }
+# wiremock
+wiremock = { module = "org.springframework.cloud:spring-cloud-contract-wiremock", version.ref = "springCloudWiremockVersion" }
+# jwt
+nimbus-jose-jwt = { module = "com.nimbusds:nimbus-jose-jwt", version.ref = "nimbusVersion" }
+spring-security-jwt = { module = "org.springframework.security:spring-security-jwt", version.ref = "springSecurityJwtVersion" }
+
+[bundles]
+hazelcast = ["hazelcast-core", "hazelcast-client", "hazelcast-spring"]
+mapstruct = ["mapstruct-core", "mapstruct-processor"]
+jaxb = ["jaxb-core", "jaxb-impl", "jaxb-api"]

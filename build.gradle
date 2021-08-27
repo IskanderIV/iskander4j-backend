@@ -1,5 +1,2 @@
-apply plugin: 'java' // adds 'test' task
 
-test {
-    failFast = false
-}
+
