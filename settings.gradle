@@ -9,7 +9,7 @@ enableFeaturePreview('VERSION_CATALOGS')
 
 rootProject.name = 'iskander4j-backend'
 include 'gateway'
-//include 'users'
+include 'users'
 include 'devices'
 //include 'web-api'
 //include 'eureka-discovery-service'

@@ -1,6 +1,6 @@
 plugins {
     id 'org.springframework.boot'
-    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'io.spring.dependency-management'
     id 'java'
 }
 
@@ -12,22 +12,8 @@ repositories {
     mavenCentral()
 }
 
-configurations {
-    implementation {
-        exclude group:'de.codecentric', module:'spring-boot-admin-starter-client'
-        exclude group:'de.codecentric', module:'spring-boot-admin-client'
-    }
-}
-
 ext {
-    set('springBootAdminVersion', "2.2.1")
-    set('springCloudVersion', "Hoxton.SR3")
-    set('springSecurityVersion', "5.3.1.RELEASE")
-    set('postgresql_version', '2.9')
-    set('logback_version', '6.3')
-    set('junit-jupiter.version', '5.5.1')
-    set('springOauth2Version', "2.2.0.RELEASE")
-    set('testcontainers_version', '1.15.0-rc2')
+    set('springCloudVersion', "Hoxton.SR8")
 }
 
 dependencies {
@@ -36,14 +22,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
     implementation "org.springframework.security.oauth:spring-security-oauth2:2.3.7.RELEASE"
-    implementation 'de.codecentric:spring-boot-admin-starter-client'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     // Feign
-    implementation("org.springframework.cloud:spring-cloud-starter-openfeign:2.1.3.RELEASE")
+    implementation libs.openfeign
 
     // ELK
-    implementation "net.logstash.logback:logstash-logback-encoder:${logback_version}"
+    implementation libs.logback.encoder
 
     // DB
     implementation 'org.liquibase:liquibase-core'
@@ -58,34 +42,30 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     //UTIL
-    implementation 'org.mapstruct:mapstruct:1.4.1.Final'
-    implementation 'org.mapstruct:mapstruct-processor:1.4.1.Final'
-    implementation 'org.apache.commons:commons-lang3:3.10'
-    implementation ('com.google.guava:guava:29.0-jre') {
-        exclude group:'com.google.guava', module:'guava:28.2-android'
+    implementation libs.bundles.mapstruct
+    implementation 'org.apache.commons:commons-lang3'
+    implementation ('com.google.guava:guava') {
+        exclude group:'com.google.guava', module:'guava'
     }
 
     // TEST
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'junit', module: 'junit'
     }
-    testImplementation("org.springframework.cloud:spring-cloud-contract-wiremock:2.1.2.RELEASE")
+    testImplementation libs.wiremock
     testImplementation 'org.assertj:assertj-core'
     testImplementation "org.junit.jupiter:junit-jupiter-api"
     testImplementation "org.junit.jupiter:junit-jupiter-params"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 
-    testImplementation "org.testcontainers:postgresql:${testcontainers_version}"
-    testImplementation "org.testcontainers:testcontainers:${testcontainers_version}"
-    testImplementation "org.testcontainers:junit-jupiter:${testcontainers_version}"
+    implementation libs.bundles.testcontainers
+    implementation libs.testcontainers.postgresql
     testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
 dependencyManagement {
     imports {
-        mavenBom "de.codecentric:spring-boot-admin-dependencies:${springBootAdminVersion}"
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-        mavenBom "org.springframework.security:spring-security-bom:${springSecurityVersion}"
     }
 }
 

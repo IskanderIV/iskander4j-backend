@@ -49,6 +49,7 @@ dependencies {
     testImplementation libs.mockito.junit.jupiter
 
     implementation libs.bundles.testcontainers
+    implementation libs.testcontainers.mongodb
     testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
