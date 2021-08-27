@@ -1,29 +1,19 @@
 plugins {
-    id 'org.springframework.boot' version '2.2.6.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
     id 'java'
 }
 
 group = 'com.iskander4j.backend'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
     mavenCentral()
 }
 
-configurations {
-    implementation {
-        exclude group:'de.codecentric', module:'spring-boot-admin-starter-client'
-        exclude group:'de.codecentric', module:'spring-boot-admin-client'
-    }
-}
-
 ext {
-    set('springBootAdminVersion', "2.2.1")
-    set('springCloudVersion', "Hoxton.SR3")
-    set('logback_version', '6.3')
-    set('junit-jupiter.version', '5.5.1')
+    set('springCloudVersion', "Hoxton.SR8")
 }
 
 dependencies {
@@ -32,25 +22,21 @@ dependencies {
 //    implementation 'org.springframework.boot:spring-boot-starter-mail'
 //    implementation 'org.springframework.boot:spring-boot-starter-quartz'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'de.codecentric:spring-boot-admin-starter-client'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     // ELK
-    implementation "net.logstash.logback:logstash-logback-encoder:${logback_version}"
+    implementation libs.logback.encoder
 
     // CLOUD
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation libs.openfeign
 
     // LOMBOK
     implementation 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
     //UTIL
-    implementation 'org.apache.commons:commons-lang3:3.10'
-    implementation ('com.google.guava:guava:29.0-jre') {
-        exclude group:'com.google.guava', module:'guava:28.2-android'
-    }
+    implementation 'org.apache.commons:commons-lang3'
+    implementation 'com.google.guava:guava'
 
     // METRICS
     runtimeOnly 'io.micrometer:micrometer-registry-graphite'
@@ -60,7 +46,7 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'junit', module: 'junit'
     }
-    testImplementation("org.springframework.cloud:spring-cloud-contract-wiremock:2.1.2.RELEASE")
+    testImplementation libs.wiremock
     testImplementation 'org.assertj:assertj-core'
     testImplementation "org.junit.jupiter:junit-jupiter-api"
     testImplementation "org.junit.jupiter:junit-jupiter-params"
@@ -70,7 +56,6 @@ dependencies {
 
 dependencyManagement {
     imports {
-        mavenBom "de.codecentric:spring-boot-admin-dependencies:${springBootAdminVersion}"
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
 }

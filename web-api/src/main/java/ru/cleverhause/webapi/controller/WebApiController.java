@@ -3,10 +3,12 @@ package ru.cleverhause.webapi.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Slf4j
 @RestController
@@ -14,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class WebApiController {
 
-    @DeleteMapping(value = {"/user"})
-    public ResponseEntity<?> deleteUser(@RequestParam String userId) {
-        log.debug("Delete user with his whole devices");
+    @GetMapping(value = {"/dummy"})
+    public ResponseEntity<?> dummy(@CookieValue(AUTHORIZATION) String authorizationHeader) {
+        log.debug("Authorization Header: {}", authorizationHeader);
         return ResponseEntity.ok().build();
     }
 }
