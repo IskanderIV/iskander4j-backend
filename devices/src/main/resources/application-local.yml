@@ -8,9 +8,3 @@ spring:
 #      enabled: true
 
 logging.level.org.springframework.data: debug
-
-# replaced to common application.yml
-#eureka:
-#  client:
-#    enabled: false
-#    service-url.defaultZone: 'http://localhost:8010/eureka'
