@@ -4,7 +4,3 @@ spring:
   devtools:
     restart:
       enabled: true
-eureka:
-  client:
-    enabled: false
-    service-url.defaultZone: 'http://localhost:8010/eureka'
