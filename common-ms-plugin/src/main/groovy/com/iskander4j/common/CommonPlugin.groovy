@@ -51,7 +51,7 @@ class CommonPlugin implements Plugin<Project> {
                 runtimeOnly "javax.xml.bind:jaxb-api:2.3.1"
 
                 // TEST
-                testImplementation('org.springframework.boot:spring-boot-starter-test')
+                testImplementation 'org.springframework.boot:spring-boot-starter-test'
                 testImplementation 'org.junit.vintage:junit-vintage-engine'
                 testImplementation 'org.junit.jupiter:junit-jupiter'
                 testImplementation 'org.junit.jupiter:junit-jupiter-params'
