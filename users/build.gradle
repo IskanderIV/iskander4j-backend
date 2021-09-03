@@ -1,7 +1,5 @@
 plugins {
-    id 'org.springframework.boot'
-    id 'io.spring.dependency-management'
-    id 'java'
+	id 'com.iskander4j.backend.common'
 }
 
 group = 'com.iskander4j.backend'
@@ -13,62 +11,29 @@ repositories {
 }
 
 ext {
-    set('springCloudVersion', "Hoxton.SR8")
+	set('springOauth2Version', "2.3.7.RELEASE")
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
-    implementation "org.springframework.security.oauth:spring-security-oauth2:2.3.7.RELEASE"
+    implementation "org.springframework.security.oauth:spring-security-oauth2:${springOauth2Version}"
 
     // Feign
     implementation libs.openfeign
-
-    // ELK
-    implementation libs.logback.encoder
 
     // DB
     implementation 'org.liquibase:liquibase-core'
     runtimeOnly 'org.postgresql:postgresql'
     implementation "org.hibernate:hibernate-entitymanager"
 
-    // CLOUD
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-
-    // LOMBOK
-    implementation 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-
     //UTIL
     implementation libs.bundles.mapstruct
-    implementation 'org.apache.commons:commons-lang3'
-    implementation ('com.google.guava:guava') {
-        exclude group:'com.google.guava', module:'guava'
-    }
 
     // TEST
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'junit', module: 'junit'
-    }
     testImplementation libs.wiremock
-    testImplementation 'org.assertj:assertj-core'
-    testImplementation "org.junit.jupiter:junit-jupiter-api"
-    testImplementation "org.junit.jupiter:junit-jupiter-params"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 
     implementation libs.bundles.testcontainers
     implementation libs.testcontainers.postgresql
-    testAnnotationProcessor 'org.projectlombok:lombok'
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-    }
-}
-
-test {
-    useJUnitPlatform()
 }
