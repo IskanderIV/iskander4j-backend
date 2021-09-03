@@ -10,6 +10,6 @@ enableFeaturePreview('VERSION_CATALOGS')
 rootProject.name = 'iskander4j-backend'
 include 'gateway'
 include 'users'
-//include 'devices'
+include 'devices'
 //include 'web-api'
 
