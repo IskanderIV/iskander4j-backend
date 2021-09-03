@@ -1,0 +1,29 @@
+plugins {
+    id 'groovy'
+    id 'java-gradle-plugin'
+}
+
+repositories {
+    maven { url "https://plugins.gradle.org/m2/" }
+    maven { url "https://repo.gradle.org/gradle/libs-releases-local/" }
+}
+
+group 'com.iskander4j.backend.common'
+version '0.0.1-SNAPSHOT'
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-gradle-plugin:2.2.6.RELEASE'
+    implementation 'io.spring.gradle:dependency-management-plugin:1.0.10.RELEASE'
+
+    testImplementation 'com.netflix.nebula:nebula-test:9.0.0'
+
+}
+
+gradlePlugin {
+    plugins {
+        commonDependenciesPlugin {
+            id = "com.iskander4j.backend.common"
+            implementationClass = "com.iskander4j.common.CommonPlugin"
+        }
+    }
+}
