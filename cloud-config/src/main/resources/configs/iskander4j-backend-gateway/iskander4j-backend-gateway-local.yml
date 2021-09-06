@@ -1,3 +1,100 @@
+HOST: 'localhost:${server.port}'
 uri:
   balancer:
-    host: 'http://digitalocean'
+    host: 'http://${HOST}'
+  auth:
+    server:
+      host: 'http://localhost:8080'
+      login-path: '/login'
+      token-path: '/oauth/token'
+      favicon-path: '/favicon.ico'
+  login:
+    target: '${uri.balancer.host}/oauth2/authorization/${spring.security.oauth2.client.registration.gateway.client-id}'
+  front:
+    host: 'http://localhost:8082'
+    services:
+      file: '/api/file/list'
+      upload: '/api/file/upload'
+      download: '/api/file/download'
+  redirect:
+    default:
+      host: '${uri.balancer.host}'
+      path: '/'
+    unauthorized: '${uri.auth.server.host}${uri.auth.server.login-path}'
+
+hazelcast:
+  login: ufrazoncore
+  password: mbJkh5r7fmXb5Xtm
+  hosts: ufrappdev1:5725
+
+spring:
+  devtools:
+    restart:
+      enabled: true
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            issuer-uri: 'http://localhost:8080/auth/realms/test'
+            check-token-uri: 'http://localhost:8080/auth/realms/test/protocol/openid-connect/token/introspect'
+            token-uri: 'http://localhost:8080/auth/realms/test/protocol/openid-connect/token'
+            authorization-uri: 'http://localhost:8080/auth/realms/test/protocol/openid-connect/auth'
+            user-info-uri: 'http://localhost:8080/auth/realms/test/protocol/openid-connect/userinfo'
+            jwkSetUri: 'http://localhost:8080/auth/realms/test/protocol/openid-connect/certs'
+            #            checkTokenEndpointUrl: '${uri.auth.server.host}/oauth/check_token'
+            user-name-attribute: 'preferred_username'
+        registration:
+          gateway:
+            provider: 'keycloak'
+            client-id: 'gateway'
+            client-secret: '6828be41-d93f-4a66-ac78-55cc6d01ffaa'
+            client-name: 'Minio Authorization Server/Identity Provider'
+            scope: 'openid,profile,all'
+            authorization-grant-type: 'authorization_code'
+            redirect-uri: '{baseUrl}/login/oauth2/code/keycloak'
+  #            '${uri.balancer.host}${uri.auth.server.token-path}'
+  #
+  cloud:
+    gateway:
+      routes:
+        # Application routes
+        - id: 'get_file_list'
+          uri: '${uri.front.host}${uri.front.services.file}'
+          predicates:
+            - Path=${uri.front.services.file}
+          filters:
+            - RemoveRequestHeader=Cookie
+        - id: 'file_upload'
+          uri: '${uri.front.host}${uri.front.services.upload}'
+          predicates:
+            - Path=${uri.front.services.upload}
+          filters:
+            - RemoveRequestHeader=Cookie
+        - id: 'file_download'
+          uri: '${uri.front.host}${uri.front.services.download}'
+          predicates:
+            - Path=${uri.front.services.download}
+          filters:
+            - RemoveRequestHeader=Cookie
+
+        # Authorization routes
+
+        - id: 'auth_server_user_authentication_get_login'
+          uri: '${uri.auth.server.host}${uri.auth.server.login-path}'
+          predicates:
+            - Method=GET
+            - Path=${uri.auth.server.login-path}
+          filters:
+            - SaveSession
+
+        - id: 'default_uri'
+          uri: 'http://localhost:9090/'
+          predicates:
+            - Path=${uri.redirect.default.path}
+
+        - id: 'favicon'
+          uri: '${uri.auth.server.host}/${uri.auth.server.favicon-path}'
+          filters:
+          predicates:
+            - Path=${uri.auth.server.favicon-path}
