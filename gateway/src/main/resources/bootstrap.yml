@@ -3,6 +3,10 @@ spring:
     name: iskander4j-bakend-gateway
   profiles:
     active: local
+  config:
+    import:
+      optional:
+        configserver: http://myconfigserver.com
 
 ---
 

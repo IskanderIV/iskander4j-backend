@@ -23,7 +23,7 @@ class CommonPlugin implements Plugin<Project> {
         println "Project name: " + project.name
         println "Configurations: " + project.configurations
         project.plugins.apply(JavaPlugin)
-        project.plugins.apply(GroovyPlugin)
+//        project.plugins.apply(GroovyPlugin)
         project.plugins.apply(SpringBootPlugin)
         project.plugins.apply(MavenPublishPlugin)
         project.plugins.apply(DependencyManagementPlugin)
@@ -32,6 +32,7 @@ class CommonPlugin implements Plugin<Project> {
 
             project.dependencies {
                 //SPRING
+                annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
                 implementation 'org.springframework.boot:spring-boot-starter-actuator'
                 implementation 'io.micrometer:micrometer-registry-prometheus'
                 // UTILS

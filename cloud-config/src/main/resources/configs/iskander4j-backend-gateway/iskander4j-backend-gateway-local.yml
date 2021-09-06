@@ -1,0 +1,3 @@
+uri:
+  balancer:
+    host: 'http://digitalocean'
