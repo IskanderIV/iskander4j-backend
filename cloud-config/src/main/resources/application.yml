@@ -1,0 +1,34 @@
+spring:
+  application.name: iskander4j-bakend-cloud-config
+  profiles:
+    active: composite, local
+
+---
+
+spring:
+  profiles: composite
+  cloud:
+    config:
+      server:
+        composite:
+          - type: native
+            search-locations: classpath:configs/{application}, classpath:configs
+        bootstrap: true
+
+---
+
+spring:
+  profiles: test
+  cloud:
+    config:
+      server:
+        git:
+          force-pull: true
+          label: 'main'
+          searchPaths: '{application}'
+          basedir: '${HOME}/cloud-config/config-repo'
+          uri: 'git@github.com:IskanderIV/iskander4j-config-repo.git'
+          cloneOnStart: true
+          skipSslValidation: false
+          ignore-local-ssh-settings: true
+          private-key: "${SSH_KEY}"

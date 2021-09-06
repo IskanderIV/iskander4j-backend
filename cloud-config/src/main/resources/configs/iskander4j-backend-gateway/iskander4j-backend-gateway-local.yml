@@ -1,4 +1,3 @@
-server.port: 8090
 HOST: 'localhost:${server.port}'
 uri:
   balancer:

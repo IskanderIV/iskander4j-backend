@@ -23,6 +23,9 @@ dependencies {
 	implementation 'org.springframework.session:spring-session-core'
 	implementation 'org.springframework.session:spring-session-hazelcast'
 
+	//Cloud
+	implementation "org.springframework.cloud:spring-cloud-starter-config"
+
 	//JWT+JWK
 	implementation libs.nimbus.jose.jwt
 	implementation libs.spring.security.jwt
