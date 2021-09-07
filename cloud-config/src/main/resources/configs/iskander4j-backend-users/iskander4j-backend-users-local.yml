@@ -65,7 +65,7 @@ feign:
           id: "cleverhause-auth"
           clientId: "cleverhause-users"
           clientSecret: "secret"
-#          TODO bug #62
+          #          TODO bug #62
           scope: "all"
           accessTokenUri: "http://localhost:8081/oauth/token"
           type: "client_credentials"
