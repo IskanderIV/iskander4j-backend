@@ -16,6 +16,9 @@ dependencies {
 //    implementation 'org.springframework.boot:spring-boot-starter-quartz'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
+    //Cloud
+    implementation "org.springframework.cloud:spring-cloud-starter-config"
+
     // CLOUD
     implementation libs.openfeign
 

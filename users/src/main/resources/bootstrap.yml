@@ -1,6 +1,6 @@
 spring:
   application:
-    name: iskander4j-backend-web-api
+    name: iskander4j-backend-users
   profiles:
     active: local
   cloud:

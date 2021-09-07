@@ -20,6 +20,9 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
     implementation "org.springframework.security.oauth:spring-security-oauth2:${springOauth2Version}"
 
+    //Cloud
+    implementation "org.springframework.cloud:spring-cloud-starter-config"
+
     // Feign
     implementation libs.openfeign
 
