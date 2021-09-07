@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: iskander4j-backend-devices
+  profiles:
+    active: local
+  cloud:
+    config:
+      uri: 'http://localhost:8888'
+
+---
+
+spring:
+  profiles: local
+  cloud:
+    config:
+      enabled: true
+      fail-fast: true
